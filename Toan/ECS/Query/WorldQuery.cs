@@ -10,10 +10,7 @@ public class WorldQuery : IWorldQuery
 {
     protected HashSet<Type> _types = new();
 
-    public virtual IReadOnlySet<Type> Types()
-    {
-        return _types;
-    }
+    public virtual IReadOnlySet<Type> Types() => _types;
 
     public IReadOnlySet<Guid> GetEntities(World world)
     {
