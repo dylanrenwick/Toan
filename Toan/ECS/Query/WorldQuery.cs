@@ -4,7 +4,7 @@ using System.Linq;
 
 using Toan.ECS.Components;
 
-namespace Toan.ECS;
+namespace Toan.ECS.Query;
 
 public class WorldQuery : IWorldQuery
 {
@@ -15,17 +15,17 @@ public class WorldQuery : IWorldQuery
         return _types;
     }
 
-	public IReadOnlySet<Guid> GetEntities(World world)
-	{
-		var entities = world.Entities;
-		QueryExecutor executor = new QueryExecutor
-		{
-			Entities = entities,
-			Types = Types(),
-		};
+    public IReadOnlySet<Guid> GetEntities(World world)
+    {
+        var entities = world.Entities;
+        QueryExecutor executor = new QueryExecutor
+        {
+            Entities = entities,
+            Types = Types(),
+        };
 
-		return executor.Execute();
-	}
+        return executor.Execute();
+    }
 
     public static WorldQuery FromTypes(IReadOnlySet<Type> types)
     {
@@ -39,17 +39,17 @@ public class WorldQuery<TComponent> : WorldQuery
 {
     public override IReadOnlySet<Type> Types()
     {
-		if (_types.Count != 1)
-		{
-			_types.Clear();
-			_types.Add(typeof(TComponent));
-		}
+        if (_types.Count != 1)
+        {
+            _types.Clear();
+            _types.Add(typeof(TComponent));
+        }
 
-		return base.Types(); 
+        return base.Types();
     }
 
     public IEnumerable<(Guid, TComponent)> Enumerate(World world)
-        => Enumerate(world, this.GetEntities(world));
+        => Enumerate(world, GetEntities(world));
 
     public IEnumerable<(Guid, TComponent)> Enumerate(World world, IReadOnlySet<Guid> entityIds)
     {
@@ -71,18 +71,18 @@ public class WorldQuery<TComponent1, TComponent2> : WorldQuery
 {
     public override IReadOnlySet<Type> Types()
     {
-		if (_types.Count != 1)
-		{
-			_types.Clear();
-			_types.Add(typeof(TComponent1));
-			_types.Add(typeof(TComponent2));
-		}
+        if (_types.Count != 1)
+        {
+            _types.Clear();
+            _types.Add(typeof(TComponent1));
+            _types.Add(typeof(TComponent2));
+        }
 
-		return base.Types(); 
+        return base.Types();
     }
 
     public IEnumerable<(Guid, TComponent1, TComponent2)> Enumerate(World world)
-        => Enumerate(world, this.GetEntities(world));
+        => Enumerate(world, GetEntities(world));
 
     public IEnumerable<(Guid, TComponent1, TComponent2)> Enumerate(World world, IReadOnlySet<Guid> entityIds)
     {
@@ -106,26 +106,26 @@ public class WorldQuery<TComponent1, TComponent2, TComponent3> : WorldQuery
 {
     public override IReadOnlySet<Type> Types()
     {
-		if (_types.Count != 1)
-		{
-			_types.Clear();
-			_types.Add(typeof(TComponent1));
-			_types.Add(typeof(TComponent2));
-			_types.Add(typeof(TComponent3));
-		}
+        if (_types.Count != 1)
+        {
+            _types.Clear();
+            _types.Add(typeof(TComponent1));
+            _types.Add(typeof(TComponent2));
+            _types.Add(typeof(TComponent3));
+        }
 
-		return base.Types(); 
+        return base.Types();
     }
 
     public IEnumerable<
         (Guid, TComponent1, TComponent2, TComponent3)
-    > Enumerate(World world) => Enumerate(world, this.GetEntities(world));
+    > Enumerate(World world) => Enumerate(world, GetEntities(world));
 
     public IEnumerable<
         (Guid, TComponent1, TComponent2, TComponent3)
     > Enumerate(World world, IReadOnlySet<Guid> entityIds)
     {
-        return entityIds 
+        return entityIds
             .Select(entityId =>
             {
                 var components = world.Components(entityId);
@@ -147,32 +147,32 @@ public class WorldQuery<TComponent1, TComponent2, TComponent3, TComponent4> : Wo
 {
     public override IReadOnlySet<Type> Types()
     {
-		if (_types.Count != 1)
-		{
-			_types.Clear();
-			_types.Add(typeof(TComponent1));
-			_types.Add(typeof(TComponent2));
-			_types.Add(typeof(TComponent3));
-			_types.Add(typeof(TComponent4));
-		}
+        if (_types.Count != 1)
+        {
+            _types.Clear();
+            _types.Add(typeof(TComponent1));
+            _types.Add(typeof(TComponent2));
+            _types.Add(typeof(TComponent3));
+            _types.Add(typeof(TComponent4));
+        }
 
-		return base.Types(); 
+        return base.Types();
     }
 
     public IEnumerable<
         (Guid, TComponent1, TComponent2, TComponent3, TComponent4)
-    > Enumerate(World world) => Enumerate(world, this.GetEntities(world));
+    > Enumerate(World world) => Enumerate(world, GetEntities(world));
 
     public IEnumerable<
         (Guid, TComponent1, TComponent2, TComponent3, TComponent4)
     > Enumerate(World world, IReadOnlySet<Guid> entityIds)
     {
-        return entityIds 
+        return entityIds
             .Select(entityId =>
             {
                 var components = world.Components(entityId);
                 return (
-                    entityId, 
+                    entityId,
                     components.Get<TComponent1>(),
                     components.Get<TComponent2>(),
                     components.Get<TComponent3>(),

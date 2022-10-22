@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Toan.ECS.Query;
 
 namespace Toan.ECS.Systems;
 

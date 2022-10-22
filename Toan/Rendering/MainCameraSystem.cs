@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 
 using Toan.ECS;
 using Toan.ECS.Components;
+using Toan.ECS.Query;
 using Toan.ECS.Systems;
 
 namespace Toan.Rendering;
