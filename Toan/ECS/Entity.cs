@@ -67,4 +67,15 @@ public struct Entity
         if (found.Any()) Components.Remove(found.First());
         return this;
     }
+
+    public bool Has<TComponent>()
+        where TComponent : GameComponent
+    => Components.Has<TComponent>();
+
+    public bool Has(Type type)
+    => Components.Has(type);
+
+    public TComponent Get<TComponent>()
+        where TComponent : GameComponent
+    => Components.Get<TComponent>();
 }
