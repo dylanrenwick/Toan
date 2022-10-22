@@ -78,13 +78,14 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Transforms a dictionary into a sequence of (<typeparamref name="TKey"/>, <typeparamref name="TValue"/>) tuples
+    /// Transforms a dictionary into a readonly sequence of (<typeparamref name="TKey"/>, <typeparamref name="TValue"/>) tuples
     /// </summary>
-    /// <returns>An <see cref="IEnumerable{T}"/> of (<typeparamref name="TKey"/>, <typeparamref name="TValue"/>) tuples</returns>
-	internal static IEnumerable<(TKey, TValue)> Tuplize<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> self)
+    /// <returns>An <see cref="IReadOnlySet{T}"/> of (<typeparamref name="TKey"/>, <typeparamref name="TValue"/>) tuples</returns>
+	internal static IReadOnlySet<(TKey, TValue)> Tuplize<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> self)
 	{
 		return self
-			.Select(kvp => (kvp.Key, kvp.Value));
+			.Select(kvp => (kvp.Key, kvp.Value))
+            .ToHashSet();
 	}
     #endregion
 }
