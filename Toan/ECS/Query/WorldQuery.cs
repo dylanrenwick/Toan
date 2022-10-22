@@ -45,18 +45,18 @@ public class WorldQuery<TComponent> : WorldQuery
         return base.Types();
     }
 
-    public IEnumerable<(Guid, TComponent)> Enumerate(World world)
+    public IEnumerable<(Entity, TComponent)> Enumerate(World world)
         => Enumerate(world, GetEntities(world));
 
-    public IEnumerable<(Guid, TComponent)> Enumerate(World world, IReadOnlySet<Guid> entityIds)
+    public IEnumerable<(Entity, TComponent)> Enumerate(World world, IReadOnlySet<Guid> entityIds)
     {
         return entityIds
             .Select(entityId =>
             {
-                var components = world.Components(entityId);
+                var entity = world.Entity(entityId);
                 return (
-                    entityId,
-                    components.Get<TComponent>()
+                    entity,
+                    entity.Get<TComponent>()
                );
             });
     }
@@ -78,19 +78,19 @@ public class WorldQuery<TComponent1, TComponent2> : WorldQuery
         return base.Types();
     }
 
-    public IEnumerable<(Guid, TComponent1, TComponent2)> Enumerate(World world)
+    public IEnumerable<(Entity, TComponent1, TComponent2)> Enumerate(World world)
         => Enumerate(world, GetEntities(world));
 
-    public IEnumerable<(Guid, TComponent1, TComponent2)> Enumerate(World world, IReadOnlySet<Guid> entityIds)
+    public IEnumerable<(Entity, TComponent1, TComponent2)> Enumerate(World world, IReadOnlySet<Guid> entityIds)
     {
         return entityIds
             .Select(entityId =>
             {
-                var components = world.Components(entityId);
+                var entity = world.Entity(entityId);
                 return (
-                    entityId,
-                    components.Get<TComponent1>(),
-                    components.Get<TComponent2>()
+                    entity,
+                    entity.Get<TComponent1>(),
+                    entity.Get<TComponent2>()
                 );
             });
     }
@@ -115,22 +115,22 @@ public class WorldQuery<TComponent1, TComponent2, TComponent3> : WorldQuery
     }
 
     public IEnumerable<
-        (Guid, TComponent1, TComponent2, TComponent3)
+        (Entity, TComponent1, TComponent2, TComponent3)
     > Enumerate(World world) => Enumerate(world, GetEntities(world));
 
     public IEnumerable<
-        (Guid, TComponent1, TComponent2, TComponent3)
+        (Entity, TComponent1, TComponent2, TComponent3)
     > Enumerate(World world, IReadOnlySet<Guid> entityIds)
     {
         return entityIds
             .Select(entityId =>
             {
-                var components = world.Components(entityId);
+                var entity = world.Entity(entityId);
                 return (
-                    entityId,
-                    components.Get<TComponent1>(),
-                    components.Get<TComponent2>(),
-                    components.Get<TComponent3>()
+                    entity,
+                    entity.Get<TComponent1>(),
+                    entity.Get<TComponent2>(),
+                    entity.Get<TComponent3>()
                 );
             });
     }
@@ -157,23 +157,23 @@ public class WorldQuery<TComponent1, TComponent2, TComponent3, TComponent4> : Wo
     }
 
     public IEnumerable<
-        (Guid, TComponent1, TComponent2, TComponent3, TComponent4)
+        (Entity, TComponent1, TComponent2, TComponent3, TComponent4)
     > Enumerate(World world) => Enumerate(world, GetEntities(world));
 
     public IEnumerable<
-        (Guid, TComponent1, TComponent2, TComponent3, TComponent4)
+        (Entity, TComponent1, TComponent2, TComponent3, TComponent4)
     > Enumerate(World world, IReadOnlySet<Guid> entityIds)
     {
         return entityIds
             .Select(entityId =>
             {
-                var components = world.Components(entityId);
+                var entity = world.Entity(entityId);
                 return (
-                    entityId,
-                    components.Get<TComponent1>(),
-                    components.Get<TComponent2>(),
-                    components.Get<TComponent3>(),
-                    components.Get<TComponent4>()
+                    entity,
+                    entity.Get<TComponent1>(),
+                    entity.Get<TComponent2>(),
+                    entity.Get<TComponent3>(),
+                    entity.Get<TComponent4>()
                 );
             });
     }
