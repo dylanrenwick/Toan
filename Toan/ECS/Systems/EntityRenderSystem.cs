@@ -11,12 +11,7 @@ public abstract class EntityRenderSystem : EntitySystem, IRenderable
         foreach (var entityId in _entities)
         {
             RenderEntity(
-                new()
-                {
-                    World      = world,
-                    Id         = entityId,
-                    Components = world.Components(entityId),
-                },
+                world.Entity(entityId),
                 renderer,
                 gameTime
             );

@@ -22,12 +22,7 @@ public abstract class EntityChangedSystem : IGameSystem, IEntitySystem
 	{
 		foreach (var entityId in _entities)
 		{
-			EntityChanged(new()
-			{
-				World      = world,
-				Id         = entityId,
-				Components = world.Components(entityId),
-			});
+			EntityChanged(world.Entity(entityId));
 		}
 	}
 

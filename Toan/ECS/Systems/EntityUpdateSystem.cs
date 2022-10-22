@@ -18,11 +18,7 @@ public abstract class EntityUpdateSystem : EntitySystem, IUpdatable
         foreach (var entityId in _entities)
         {
             UpdateEntity(
-                new() {
-                    World      = world,
-                    Id         = entityId,
-                    Components = world.Components(entityId),
-                },
+                world.Entity(entityId),
                 gameTime
             );
         }
