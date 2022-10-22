@@ -9,7 +9,7 @@ namespace Toan.Input;
 
 public class PlayerInputSystem : EntityUpdateSystem
 {
-    public override IQuery Archetype => new Query<Motor, PlayerInput>();
+    public override IWorldQuery Archetype => new WorldQuery<Motor, PlayerInput>();
 
     protected override void UpdateEntity(Entity entity, GameTime time)
     {

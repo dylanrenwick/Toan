@@ -5,7 +5,7 @@ namespace Toan.ECS.Systems;
 
 public interface IEntitySystem
 {
-    public IQuery Archetype { get; }
+    public IWorldQuery Archetype { get; }
 
 	public void UpdateComponents(World world, IReadOnlySet<Guid> entities);
 }

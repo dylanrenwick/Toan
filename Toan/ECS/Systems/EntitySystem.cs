@@ -5,7 +5,7 @@ namespace Toan.ECS.Systems;
 
 public abstract class EntitySystem : IGameSystem, IEntitySystem
 {
-    public abstract IQuery Archetype { get; }
+    public abstract IWorldQuery Archetype { get; }
 
     protected HashSet<Guid> _entities = new();
 

@@ -6,7 +6,7 @@ using Toan.ECS.Components;
 
 namespace Toan.ECS;
 
-public class Query : IQuery
+public class WorldQuery : IWorldQuery
 {
     protected HashSet<Type> _types = new();
 
@@ -27,14 +27,14 @@ public class Query : IQuery
 		return executor.Execute();
 	}
 
-    public static Query FromTypes(IReadOnlySet<Type> types)
+    public static WorldQuery FromTypes(IReadOnlySet<Type> types)
     {
-        Query query = new() { _types = types.ToHashSet() };
+        WorldQuery query = new() { _types = types.ToHashSet() };
         return query;
     }
 }
 
-public class Query<TComponent> : Query
+public class WorldQuery<TComponent> : WorldQuery
     where TComponent : GameComponent
 {
     public override IReadOnlySet<Type> Types()
@@ -65,7 +65,7 @@ public class Query<TComponent> : Query
     }
 }
 
-public class Query<TComponent1, TComponent2> : Query
+public class WorldQuery<TComponent1, TComponent2> : WorldQuery
     where TComponent1 : GameComponent
     where TComponent2 : GameComponent
 {
@@ -99,7 +99,7 @@ public class Query<TComponent1, TComponent2> : Query
     }
 }
 
-public class Query<TComponent1, TComponent2, TComponent3> : Query
+public class WorldQuery<TComponent1, TComponent2, TComponent3> : WorldQuery
     where TComponent1 : GameComponent
     where TComponent2 : GameComponent
     where TComponent3 : GameComponent
@@ -139,7 +139,7 @@ public class Query<TComponent1, TComponent2, TComponent3> : Query
     }
 }
 
-public class Query<TComponent1, TComponent2, TComponent3, TComponent4> : Query
+public class WorldQuery<TComponent1, TComponent2, TComponent3, TComponent4> : WorldQuery
     where TComponent1 : GameComponent
     where TComponent2 : GameComponent
     where TComponent3 : GameComponent

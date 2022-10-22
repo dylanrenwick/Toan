@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Toan.ECS;
 
-public interface IQuery
+public interface IWorldQuery
 {
     public IReadOnlySet<Type> Types();
 

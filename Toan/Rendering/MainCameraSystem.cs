@@ -11,7 +11,7 @@ namespace Toan.Rendering;
 
 public class MainCameraSystem : EntityRenderSystem
 {
-    public override IQuery Archetype => new Query<Camera, MainCamera, Transform>();
+    public override IWorldQuery Archetype => new WorldQuery<Camera, MainCamera, Transform>();
 
     public override void Render(World scene, Renderer renderer, GameTime gameTime)
     {

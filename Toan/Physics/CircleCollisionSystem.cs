@@ -8,7 +8,7 @@ namespace Toan.Physics;
 
 public class CircleCollisionSystem : EntityUpdateSystem
 {
-    public override Query<CircleCollider, Transform> Archetype => new();
+    public override WorldQuery<CircleCollider, Transform> Archetype => new();
 
     protected override void UpdateEntity(Entity entity, GameTime gameTime)
     {

@@ -7,7 +7,7 @@ namespace Toan.ECS.Systems;
 
 public class TextSystem : EntityRenderSystem
 {
-    public override Query<Text, Transform, Visible> Archetype => new(); 
+    public override WorldQuery<Text, Transform, Visible> Archetype => new(); 
 
     protected override void RenderEntity(Entity entity, Renderer renderer, GameTime gameTime)
     {

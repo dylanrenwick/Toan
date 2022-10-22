@@ -7,7 +7,7 @@ namespace Toan.ECS.Systems;
 
 public class SpriteSystem : EntityRenderSystem
 {
-    public override Query<Sprite, Transform, Visible> Archetype => new();
+    public override WorldQuery<Sprite, Transform, Visible> Archetype => new();
 
     protected override void RenderEntity(Entity entity, Renderer renderer, GameTime gameTime)
     {

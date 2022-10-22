@@ -6,7 +6,7 @@ namespace Toan.ECS.Systems;
 
 public class MotorSystem : EntityUpdateSystem
 {
-    public override Query<Motor, Transform> Archetype => new();
+    public override WorldQuery<Motor, Transform> Archetype => new();
 
     protected override void UpdateEntity(Entity entity, GameTime time)
     {
