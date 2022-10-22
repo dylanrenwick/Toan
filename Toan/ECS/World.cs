@@ -121,12 +121,6 @@ public class World
         };
     }
 
-    public ComponentSet Components(Guid entityId)
-    {
-        if (!_entities.ContainsKey(entityId)) throw new ArgumentException($"Entity {entityId} does not exist in scene");
-        return _entities[entityId];
-    }
-
     public Resource Resource(Guid resourceId)
     {
         if (!_resources.ContainsKey(resourceId)) throw new ArgumentException($"Resource {resourceId} does not exist in scene");

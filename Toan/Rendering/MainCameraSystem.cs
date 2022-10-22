@@ -19,9 +19,9 @@ public class MainCameraSystem : EntityRenderSystem
         if (_entities.Count == 0) return;
         if (_entities.Count > 1) throw new Exception("Cannot have more than one MainCamera in the world!");
 
-        var components = scene.Components(_entities.First());
-        Camera camera = components.Get<Camera>();
-        Transform transform = components.Get<Transform>();
+        var entity = scene.Entity(_entities.First());
+        Camera camera = entity.Get<Camera>();
+        Transform transform = entity.Get<Transform>();
 
         camera.WorldPosition = transform.GlobalPosition;
         renderer.MainCamera = camera;
