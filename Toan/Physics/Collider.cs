@@ -11,4 +11,6 @@ public abstract class Collider : GameComponent
     public required CollisionMask Mask { get; set; }
     
     public required ulong Layer { get; set; }
+
+    public abstract FloatRect AxisAlignedBoundingBox { get; }
 }

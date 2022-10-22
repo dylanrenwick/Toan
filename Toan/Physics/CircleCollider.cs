@@ -3,4 +3,6 @@
 public class CircleCollider : Collider
 {
     public required float Radius { get; set; }
+
+    public override FloatRect AxisAlignedBoundingBox => new FloatRect(Origin.X - Radius, Origin.Y - Radius, Radius * 2, Radius * 2);
 }
