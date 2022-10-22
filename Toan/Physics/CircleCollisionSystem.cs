@@ -23,9 +23,9 @@ public class CircleCollisionSystem : EntityUpdateSystem
 			: new Collisions();
 
         collisions.Clear();
-        foreach ((var otherId, var otherCircle, var otherTransform) in Archetype.Enumerate(entity.World))
+        foreach ((var other, var otherCircle, var otherTransform) in Archetype.Enumerate(entity.World))
         {
-            if (otherId == entity.Id) continue;
+            if (other.Id == entity.Id) continue;
             if (!circle.Mask.Has(otherCircle.Layer)) continue;
 
             var threshold = scaledRadius + (otherCircle.Radius * otherTransform.GlobalScale.X);
@@ -37,7 +37,7 @@ public class CircleCollisionSystem : EntityUpdateSystem
                 distance.Normalize();
                 collisions.Add(new Collision
                 {
-                    Other = otherId,
+                    Other = other.Id,
                     CollisionNormal = distance,
                 });
             }
