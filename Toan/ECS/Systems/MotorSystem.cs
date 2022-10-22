@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 
 using Toan.ECS.Components;
+using Toan.ECS.Query;
 
 namespace Toan.ECS.Systems;
 
