@@ -116,6 +116,13 @@ public class World
         return entityId;
     }
 
+    /// <summary>
+    /// Attempts to destroy an item with the Id <paramref name="destroyId"/>.
+    /// First checks if the Id is associated with a Resource
+    /// If it is, removes it, otherwise, check if the Id is associated with an Entity
+    /// If it is, flag it to be destroyed, otherwise, do nothing
+    /// </summary>
+    /// <param name="destroyId">The Id to destroy</param>
 	public void Destroy(Guid destroyId)
 	{
         if (!_resources.Remove(destroyId))
@@ -123,6 +130,12 @@ public class World
                 _toBeDestroyed.Add(destroyId);
     }
 
+    /// <summary>
+    /// Creates an <see cref="ECS.Entity">Entity</see> representing the entity indicated by <paramref name="entityId"/>
+    /// </summary>
+    /// <param name="entityId">The Id of the entity to fetch</param>
+    /// <returns>The created <see cref="ECS.Entity">Entity</see></returns>
+    /// <exception cref="ArgumentException">The entityId does not correspond to an entity in the world</exception>
     public Entity Entity(Guid entityId)
     {
         if (!_entities.ContainsKey(entityId)) throw new ArgumentException($"Entity {entityId} does not exist in scene!");
