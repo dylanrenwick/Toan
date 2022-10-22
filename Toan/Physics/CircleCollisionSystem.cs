@@ -13,13 +13,13 @@ public class CircleCollisionSystem : EntityUpdateSystem
 
     protected override void UpdateEntity(Entity entity, GameTime gameTime)
     {
-        var circle = entity.Components.Get<CircleCollider>();
-        var transform = entity.Components.Get<Transform>();
+        var circle = entity.Get<CircleCollider>();
+        var transform = entity.Get<Transform>();
         var circleOrigin = transform.GlobalPosition + (circle.Origin * transform.GlobalScale);
         var scaledRadius = circle.Radius * transform.GlobalScale.X;
 
-        var collisions = entity.Components.Has<Collisions>()
-			? entity.Components.Get<Collisions>()
+        var collisions = entity.Has<Collisions>()
+			? entity.Get<Collisions>()
 			: new Collisions();
 
         collisions.Clear();
@@ -43,7 +43,7 @@ public class CircleCollisionSystem : EntityUpdateSystem
             }
         }
 
-		if (collisions.Count > 0 || !entity.Components.Has<Collisions>())
+		if (collisions.Count > 0 || !entity.Has<Collisions>())
 		{
 			entity.With(collisions);
 		}

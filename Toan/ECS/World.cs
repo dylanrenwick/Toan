@@ -78,12 +78,12 @@ public class World
     public Entity CreateEntity()
     {
         Guid entity = AddNewEntity();
-        return new Entity
-        {
-            Components = _entities[entity],
-            Id = entity,
-            World = this,
-		};
+        return new
+        (
+            entity,
+            this,
+            _entities[entity]
+		);
     }
     public Entity CreateEntity(Vector2 pos)
     {
@@ -114,11 +114,11 @@ public class World
     {
         if (!_entities.ContainsKey(entityId)) throw new ArgumentException($"Entity {entityId} does not exist in scene!");
         return new Entity
-        {
-            Components = _entities[entityId],
-            Id = entityId,
-            World = this,
-        };
+        (
+            entityId,
+            this,
+            _entities[entityId]
+        );
     }
 
     public Resource Resource(Guid resourceId)

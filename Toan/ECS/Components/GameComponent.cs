@@ -14,7 +14,7 @@ public abstract class GameComponent : IWorldQueryable
         Type typeToFind = GetType();
 
         return entities
-            .Where(entity => world.Entity(entity).Components.Has(typeToFind))
+            .Where(entity => world.Entity(entity).Has(typeToFind))
             .ToHashSet();
     }
 }

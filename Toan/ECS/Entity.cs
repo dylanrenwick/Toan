@@ -10,9 +10,18 @@ namespace Toan.ECS;
 /// </summary>
 public struct Entity
 {
-    public required World World { get; init; }
-    public required Guid Id { get; init; }
-    public required ComponentSet Components { get; init; }
+    public Guid Id { get; init; }
+    public World World { get; init; }
+
+    private ComponentSet _components { get; init; }
+
+    public Entity(Guid id, World world, ComponentSet components)
+    {
+        Id = id;
+        World = world;
+
+        _components = components;
+    }
 
     /// <summary>
     /// Adds a new component of type <typeparamref name="TComponent"/> to the entity
@@ -28,7 +37,7 @@ public struct Entity
     public Entity With(GameComponent component)
     {
         World.Dirty();
-        Components.Add(component);
+        _components.Add(component);
         return this;
     } 
     /// <summary>
@@ -40,7 +49,7 @@ public struct Entity
         World.Dirty();
         foreach (var component in components)
         {
-            Components.Add(component);
+            _components.Add(component);
         }
         return this;
     }
@@ -53,7 +62,7 @@ public struct Entity
         where TComponent : GameComponent
     {
         World.Dirty();
-        Components.Remove<TComponent>();
+        _components.Remove<TComponent>();
         return this;
     }
     /// <summary>
@@ -63,19 +72,19 @@ public struct Entity
     public Entity Without(Guid componentId)
     {
         World.Dirty();
-        var found = Components.Where(component => component.Id == componentId);
-        if (found.Any()) Components.Remove(found.First());
+        var found = _components.Where(component => component.Id == componentId);
+        if (found.Any()) _components.Remove(found.First());
         return this;
     }
 
     public bool Has<TComponent>()
         where TComponent : GameComponent
-    => Components.Has<TComponent>();
+    => _components.Has<TComponent>();
 
     public bool Has(Type type)
-    => Components.Has(type);
+    => _components.Has(type);
 
     public TComponent Get<TComponent>()
         where TComponent : GameComponent
-    => Components.Get<TComponent>();
+    => _components.Get<TComponent>();
 }
