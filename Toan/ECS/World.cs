@@ -75,6 +75,10 @@ public class World
         }
     }
 
+    /// <summary>
+    /// Adds a new Entity to the world and returns an <see cref="ECS.Entity">Entity</see> representing it
+    /// </summary>
+    /// <returns>An <see cref="ECS.Entity">Entity</see> representing the newly added entity</returns>
     public Entity CreateEntity()
     {
         Guid entity = AddNewEntity();
@@ -85,12 +89,21 @@ public class World
             _entities[entity]
 		);
     }
+    /// <summary>
+    /// Adds a new Entity to the world with a <see cref="Transform"/> component at position <paramref name="pos"/>, and returns an <see cref="ECS.Entity">Entity</see> representing it
+    /// </summary>
+    /// <param name="pos">The position in world-space to initialize the <see cref="Transform"/> component to</param>
+    /// <returns>An <see cref="ECS.Entity">Entity</see> representing the newly added entity</returns>
     public Entity CreateEntity(Vector2 pos)
     {
         Transform transform = new() { LocalPosition = pos };
         return CreateEntity().With(transform);
     }
 
+    /// <summary>
+    /// Adds a new entity to the world and returns it's Id
+    /// </summary>
+    /// <returns>The Id of the newly added entity</returns>
     public Guid AddNewEntity()
     {
         Guid entityId = GetNewGuid();
