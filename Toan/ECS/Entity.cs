@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Toan.ECS.Bundles;
 using Toan.ECS.Components;
 
 namespace Toan.ECS;
@@ -41,6 +42,13 @@ public struct Entity
         _components.Add<T>(Id, component);
         return this;
     } 
+
+    public Entity WithBundle(IBundle bundle)
+    {
+        World.Dirty();
+        bundle.AddBundle(Id, _components);
+        return this;
+    }
 
     /// <summary>
     /// Removes a component of type <typeparamref name="T"/> from the entity
