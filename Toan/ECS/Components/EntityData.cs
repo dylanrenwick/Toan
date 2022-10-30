@@ -1,6 +1,6 @@
 ﻿namespace Toan.ECS.Components;
 
-public class EntityData : GameComponent
+public struct EntityData : IComponent
 {
 	public required float CreatedAt { get; init; }
 

@@ -1,13 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-using Toan.ECS.Components;
-
 namespace Toan.Physics;
 
-public class Collisions : GameComponent, IList<Collision>
+public struct Collisions : IList<Collision>
 {
     private readonly List<Collision> _collisions = new();
+
+    public Collisions() { }
 
     #region IList implementation
     public Collision this[int index] { get => ((IList<Collision>)_collisions)[index]; set => ((IList<Collision>)_collisions)[index] = value; }

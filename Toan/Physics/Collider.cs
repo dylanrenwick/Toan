@@ -1,16 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 
-using GameComponent = Toan.ECS.Components.GameComponent;
+using Toan.ECS.Components;
 
 namespace Toan.Physics;
 
-public abstract class Collider : GameComponent
+public struct Collider : IComponent
 {
+    public required ColliderShape Shape { get; init; }
+
     public required Vector2 Origin { get; set; }
 
     public required CollisionMask Mask { get; set; }
     
     public required ulong Layer { get; set; }
-
-    public abstract FloatRect AxisAlignedBoundingBox { get; }
 }

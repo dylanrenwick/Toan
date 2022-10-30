@@ -87,5 +87,24 @@ public static class Extensions
 			.Select(kvp => (kvp.Key, kvp.Value))
             .ToHashSet();
 	}
+
+    internal static void EnsureLength<T>(this T[] arr, int minLength, int maxLength = int.MaxValue)
+    {
+        if (minLength > arr.Length)
+        {
+            int newLength = arr.Length;
+            do
+            {
+                newLength *= 2;
+                if (newLength < 0)
+                {
+                    newLength = minLength + 1;
+                }
+            }
+            while (newLength < minLength);
+            newLength = Math.Min(newLength, maxLength);
+            Array.Resize(ref arr, newLength);
+        }
+    }
     #endregion
 }

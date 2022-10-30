@@ -18,7 +18,7 @@ public class TextSystem : EntityRenderSystem
         renderer.DrawString(new()
         {
             Font = text.Font,
-            Position = transform.GlobalPosition,
+            Position = transform.Position,
             Text = text.Content,
             Color = text.Color,
         });

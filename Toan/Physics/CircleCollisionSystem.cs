@@ -9,27 +9,33 @@ namespace Toan.Physics;
 
 public class CircleCollisionSystem : EntityUpdateSystem
 {
-    public override WorldQuery<CircleCollider, Transform> Archetype => new();
+    public override WorldQuery<CircleCollider, Collider, Transform> Archetype => new();
 
     protected override void UpdateEntity(Entity entity, GameTime gameTime)
     {
+        var collider = entity.Get<Collider>();
         var circle = entity.Get<CircleCollider>();
         var transform = entity.Get<Transform>();
-        var circleOrigin = transform.GlobalPosition + (circle.Origin * transform.GlobalScale);
-        var scaledRadius = circle.Radius * transform.GlobalScale.X;
+        var circleOrigin = transform.Position + (collider.Origin * transform.Scale);
+        var scaledRadius = circle.Radius * transform.Scale.X;
 
         var collisions = entity.Has<Collisions>()
 			? entity.Get<Collisions>()
 			: new Collisions();
 
         collisions.Clear();
+        /*
+         * Temporarily commented out collision code whilst spatial map is being implemented
+         * 
+         * This collision code iterates over every other collider in the world and checks for collisions.
+         * 
         foreach ((var other, var otherCircle, var otherTransform) in Archetype.Enumerate(entity.World))
         {
             if (other.Id == entity.Id) continue;
             if (!circle.Mask.Has(otherCircle.Layer)) continue;
 
-            var threshold = scaledRadius + (otherCircle.Radius * otherTransform.GlobalScale.X);
-            var otherOrigin = otherTransform.GlobalPosition + (otherCircle.Origin * otherTransform.GlobalScale);
+            var threshold = scaledRadius + (otherCircle.Radius * otherTransform.Scale.X);
+            var otherOrigin = otherTransform.Position + (otherCircle.Origin * otherTransform.Scale);
             var distance = otherOrigin - circleOrigin;
 
             if (distance.LengthSquared() < threshold && distance.Length() < threshold)
@@ -42,6 +48,7 @@ public class CircleCollisionSystem : EntityUpdateSystem
                 });
             }
         }
+        */
 
 		if (collisions.Count > 0 || !entity.Has<Collisions>())
 		{

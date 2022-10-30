@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace Toan.ECS.Components;
 
-public class Motor : GameComponent, ICloneable<Motor>
+public struct Motor : IComponent, ICloneable<Motor>
 {
     public MotorMode Mode { get; set; } = MotorMode.Local;
 
@@ -38,6 +38,8 @@ public class Motor : GameComponent, ICloneable<Motor>
 
     private Vector2 _acceleration = Vector2.Zero;
     private Vector2 _input        = Vector2.Zero;
+
+    public Motor() { }
 
     public Motor Clone() => new()
     {

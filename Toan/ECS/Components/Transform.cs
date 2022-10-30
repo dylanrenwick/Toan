@@ -2,40 +2,20 @@
 
 namespace Toan.ECS.Components;
 
-public class Transform : GameComponent, ICloneable<Transform>
+public struct Transform : IComponent, ICloneable<Transform>
 {
-    public Vector2 LocalPosition { get; set; } = Vector2.Zero;
-    public Vector2 GlobalPosition
-    {
-        get => LocalPosition + ParentPosition;
-        set => LocalPosition = value - ParentPosition;
-    }
+    public Vector2 Position { get; set; } = Vector2.Zero;
 
-    public Vector2 LocalScale { get; set; } = Vector2.One;
-    public Vector2 GlobalScale
-    {
-        get => LocalScale * ParentScale;
-        set => LocalScale = value / ParentScale;
-    }
+    public Vector2 Scale { get; set; } = Vector2.One;
 
-    public float LocalRotation { get; set; } = 0f;
-    public float GlobalRotation
-    {
-        get => LocalRotation + ParentRotation;
-        set => LocalRotation = value - ParentRotation;
-    }
+    public float Rotation { get; set; }
 
-    public Transform? Parent { get; set; }
-
-    private Vector2 ParentPosition => Parent?.GlobalPosition ?? Vector2.Zero;
-    private Vector2 ParentScale => Parent?.GlobalPosition ?? Vector2.One;
-    private float ParentRotation => Parent?.GlobalRotation ?? 0f;
+    public Transform() { }
 
     public Transform Clone() => new()
     {
-        LocalPosition = LocalPosition,
-        LocalRotation = LocalRotation,
-        LocalScale = LocalScale,
-        Parent = Parent,
+        Position = Position,
+        Rotation = Rotation,
+        Scale = Scale,
     };
 }

@@ -1,19 +1,10 @@
-﻿using Microsoft.Xna.Framework;
-
-using Toan.ECS.Components;
-using Toan.ECS;
-using GameComponent = Toan.ECS.Components.GameComponent;
+﻿using Toan.ECS.Components;
 
 namespace Toan.Physics;
 
-public class RigidBody : GameComponent, IPhysicsUpdateable
+public struct RigidBody : IComponent
 {
     public required Motor Motor;
     public required Collider Collider;
-
-    public void PhysicsUpdate(World scene, GameTime time)
-    {
-
-    }
 }
 

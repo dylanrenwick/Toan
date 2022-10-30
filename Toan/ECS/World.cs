@@ -5,19 +5,19 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 
 using Toan.ECS.Components;
-using Toan.Rendering;
+using Toan.ECS.Query;
 using Toan.ECS.Resources;
 using Toan.ECS.Systems;
-using GameComponent = Toan.ECS.Components.GameComponent;
+using Toan.Rendering;
 
 namespace Toan.ECS;
 
 public class World
 {
-    private readonly Dictionary<Guid, ComponentSet> _entities = new();
-    private readonly Dictionary<Guid, Resource> _resources = new();
+    private readonly ComponentRepository _componentRepo = new();
+    private readonly HashSet<Guid> _entities = new();
 	private readonly HashSet<Guid> _toBeDestroyed = new();
-	public IReadOnlyDictionary<Guid, ComponentSet> Entities => _entities;
+    private readonly Dictionary<Guid, Resource> _resources = new();
 
     private readonly HashSet<IUpdatable> _updateSystems = new();
     private readonly HashSet<IRenderable> _renderSystems = new();
@@ -86,7 +86,7 @@ public class World
         (
             entity,
             this,
-            _entities[entity]
+            _componentRepo
 		);
     }
     /// <summary>
@@ -96,7 +96,7 @@ public class World
     /// <returns>An <see cref="ECS.Entity">Entity</see> representing the newly added entity</returns>
     public Entity CreateEntity(Vector2 pos)
     {
-        Transform transform = new() { LocalPosition = pos };
+        Transform transform = new() { Position = pos };
         return CreateEntity().With(transform);
     }
 
@@ -107,11 +107,7 @@ public class World
     public Guid AddNewEntity()
     {
         Guid entityId = GetNewGuid();
-        ComponentSet components = new()
-        {
-            new EntityData { CreatedAt = Timestamp }
-        };
-        _entities.Add(entityId, components);
+        _componentRepo.Add(entityId, new EntityData { CreatedAt = Timestamp });
         _isDirty = true;
         return entityId;
     }
@@ -126,7 +122,7 @@ public class World
 	public void Destroy(Guid destroyId)
 	{
         if (!_resources.Remove(destroyId))
-            if (_entities.ContainsKey(destroyId))
+            if (_entities.Contains(destroyId))
                 _toBeDestroyed.Add(destroyId);
     }
 
@@ -138,12 +134,12 @@ public class World
     /// <exception cref="ArgumentException">The entityId does not correspond to an entity in the world</exception>
     public Entity Entity(Guid entityId)
     {
-        if (!_entities.ContainsKey(entityId)) throw new ArgumentException($"Entity {entityId} does not exist in scene!");
+        if (!_entities.Contains(entityId)) throw new ArgumentException($"Entity {entityId} does not exist in scene!");
         return new Entity
         (
             entityId,
             this,
-            _entities[entityId]
+            _componentRepo
         );
     }
 
@@ -169,13 +165,6 @@ public class World
             if (resource is T res) return res;
         }
         throw new ArgumentException($"No resource of type {typeof(T).Name} found");
-    }
-
-    public bool AddComponent(Guid entity, GameComponent component)
-    {
-        if (!_entities.ContainsKey(entity)) throw new ArgumentException($"Entity {entity} does not exist in scene");
-        _isDirty = true;
-        return _entities[entity].Add(component);
     }
 
     public Guid AddResource(Resource resource)
@@ -206,19 +195,25 @@ public class World
 
     public void AddPlugin<TPlugin>()
         where TPlugin : Plugin, new()
-    {
-        AddPlugin(new TPlugin());
-    }
+    => AddPlugin(new TPlugin());
     public void AddPlugin(Plugin plugin)
     {
         plugin.Build(this);
     }
 
+    public QueryExecutor GetQueryExecutor(IReadOnlySet<Type> types)
+    => new()
+    {
+        Components = _componentRepo,
+        Entities   = _entities,
+        Types      = types,
+    };
+
     private Guid GetNewGuid()
     {
         Guid guid;
         do guid = Guid.NewGuid();
-        while (_entities.ContainsKey(guid));
+        while (_entities.Contains(guid));
         return guid;
     }
 

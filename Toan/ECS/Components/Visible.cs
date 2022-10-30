@@ -1,6 +1,6 @@
 ﻿namespace Toan.ECS.Components;
 
-public class Visible : GameComponent, ICloneable<Visible>
+public struct Visible : IComponent, ICloneable<Visible>
 {
     public Visible Clone() => new();
 }

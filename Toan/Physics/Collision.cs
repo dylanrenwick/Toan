@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace Toan.Physics;
 
-public record Collision
+public readonly struct Collision
 {
     public required Guid Other { get; init; }
     public required Vector2 CollisionNormal { get; init; }

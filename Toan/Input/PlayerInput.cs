@@ -2,5 +2,5 @@
 
 namespace Toan.Input;
 
-public class PlayerInput : GameComponent { }
+public struct PlayerInput : IComponent { }
 

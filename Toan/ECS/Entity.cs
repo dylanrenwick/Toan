@@ -13,9 +13,9 @@ public struct Entity
     public Guid Id { get; init; }
     public World World { get; init; }
 
-    private ComponentSet _components { get; init; }
+    private ComponentRepository _components { get; init; }
 
-    public Entity(Guid id, World world, ComponentSet components)
+    public Entity(Guid id, World world, ComponentRepository components)
     {
         Id = id;
         World = world;
@@ -24,67 +24,45 @@ public struct Entity
     }
 
     /// <summary>
-    /// Adds a new component of type <typeparamref name="TComponent"/> to the entity
+    /// Adds a new component of type <typeparamref name="T"/> to the entity
     /// </summary>
     /// <returns>This <see cref="Entity"/> for chaining purposes</returns>
-    public Entity With<TComponent>()
-        where TComponent : GameComponent, new()
-    => With(new TComponent());
+    public Entity With<T>()
+        where T : struct
+    => With<T>(new T());
     /// <summary>
     /// Adds a component to the entity
     /// </summary>
     /// <returns>This <see cref="Entity"/> for chaining purposes</returns>
-    public Entity With(GameComponent component)
+    public Entity With<T>(T component)
+        where T : struct
     {
         World.Dirty();
-        _components.Add(component);
+        _components.Add<T>(Id, component);
         return this;
     } 
-    /// <summary>
-    /// Adds a sequence of components to the entity
-    /// </summary>
-    /// <returns>This <see cref="Entity"/> for chaining purposes</returns>
-    public Entity With(IEnumerable<GameComponent> components)
-    {
-        World.Dirty();
-        foreach (var component in components)
-        {
-            _components.Add(component);
-        }
-        return this;
-    }
 
     /// <summary>
-    /// Removes a component of type <typeparamref name="TComponent"/> from the entity
+    /// Removes a component of type <typeparamref name="T"/> from the entity
     /// </summary>
     /// <returns>This <see cref="Entity"/> for chaining purposes</returns>
-    public Entity Without<TComponent>()
-        where TComponent : GameComponent
+    public Entity Without<T>()
+        where T : struct
     {
         World.Dirty();
-        _components.Remove<TComponent>();
-        return this;
-    }
-    /// <summary>
-    /// Removes a component from the entity by component <see cref="Guid"/>
-    /// </summary>
-    /// <returns>This <see cref="Entity"/> for chaining purposes</returns>
-    public Entity Without(Guid componentId)
-    {
-        World.Dirty();
-        var found = _components.Where(component => component.Id == componentId);
-        if (found.Any()) _components.Remove(found.First());
+        _components.Remove<T>(Id);
         return this;
     }
 
     public bool Has<TComponent>()
-        where TComponent : GameComponent
-    => _components.Has<TComponent>();
+        where TComponent : struct
+    => _components.Has<TComponent>(Id);
 
     public bool Has(Type type)
-    => _components.Has(type);
+    => _components.Has(Id, type);
 
     public TComponent Get<TComponent>()
-        where TComponent : GameComponent
-    => _components.Get<TComponent>();
+        where TComponent : struct
+    => _components.Get<TComponent>(Id)
+        ?? throw new ArgumentException($"Entity {Id} does not have a component of type {typeof(TComponent).FullName}");
 }

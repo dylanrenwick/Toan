@@ -21,10 +21,10 @@ public class SpriteSystem : EntityRenderSystem
         renderer.Draw(new()
         {
             Color    = sprite.Color,
-            Position = transform.GlobalPosition,
-            Rotation = MathUtil.DegToRad(transform.GlobalRotation),
+            Position = transform.Position,
+            Rotation = MathUtil.DegToRad(transform.Rotation),
             Origin   = spriteOrigin,
-            Scale    = transform.GlobalScale,
+            Scale    = transform.Scale,
             Texture  = sprite.Texture,
         });
     }

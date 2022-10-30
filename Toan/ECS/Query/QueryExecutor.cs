@@ -1,25 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+
 using Toan.ECS.Components;
 
 namespace Toan.ECS.Query;
 
 public class QueryExecutor
 {
-    public required IReadOnlyDictionary<Guid, ComponentSet> Entities { get; init; }
-    public required IReadOnlySet<Type> Types { get; init; }
+    public required ComponentRepository Components { private get; init; }
+    public required IReadOnlySet<Guid> Entities { private get; init; }
+    public required IReadOnlySet<Type> Types { private get; init; }
 
     public IReadOnlySet<Guid> Execute()
     {
-        HashSet<Guid> results = new();
+        IReadOnlySet<Guid> queryResults = Entities;
 
-        foreach ((var entityId, var components) in Entities.Tuplize())
+        foreach (var queryType in Types)
         {
-            if (Types.All(components.Has))
-                results.Add(entityId);
+            var result = queryType
+                .GetMethod("Reduce")
+                ?.Invoke(
+                    null,
+                    new object[]
+                    {
+                        queryResults,
+                        Components
+                    }
+                );
+
+            if (result is IReadOnlySet<Guid> resultSet)
+                queryResults = resultSet;
+            else
+                throw new ArgumentException($"{queryType.FullName} is not a valid IWorldQueryable");
         }
 
-        return results;
+        return queryResults;
     }
 }

@@ -1,8 +1,8 @@
-﻿namespace Toan.Physics;
+﻿using Toan.ECS.Components;
 
-public class CircleCollider : Collider
+namespace Toan.Physics;
+
+public struct CircleCollider : IComponent
 {
-    public required float Radius { get; set; }
-
-    public override FloatRect AxisAlignedBoundingBox => new(Origin.X - Radius, Origin.Y - Radius, Radius * 2, Radius * 2);
+    public float Radius { get; set; }
 }

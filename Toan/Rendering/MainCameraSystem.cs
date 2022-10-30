@@ -12,7 +12,7 @@ namespace Toan.Rendering;
 
 public class MainCameraSystem : EntityRenderSystem
 {
-    public override IWorldQuery Archetype => new WorldQuery<Camera, MainCamera, Transform>();
+    public override WorldQuery<Camera, MainCamera, Transform> Archetype => new();
 
     public override void Render(World scene, Renderer renderer, GameTime gameTime)
     {
@@ -23,7 +23,7 @@ public class MainCameraSystem : EntityRenderSystem
         Camera camera = entity.Get<Camera>();
         Transform transform = entity.Get<Transform>();
 
-        camera.WorldPosition = transform.GlobalPosition;
+        camera.WorldPosition = transform.Position;
         renderer.MainCamera = camera;
     }
 

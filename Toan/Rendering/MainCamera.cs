@@ -2,5 +2,5 @@
 
 namespace Toan.Rendering;
     
-public class MainCamera : GameComponent { }
+public struct MainCamera : IComponent { }
 

@@ -56,10 +56,10 @@ public class MotorSystem : EntityUpdateSystem
         switch (motor.Mode)
         {
             case MotorMode.Local:
-                transform.LocalPosition += motor.Velocity;
+                transform.Position += motor.Velocity;
                 break;
             case MotorMode.Global:
-                transform.GlobalPosition += motor.Velocity;
+                transform.Position += motor.Velocity;
                 break;
         }
     }

@@ -1,10 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 
-using GameComponent = Toan.ECS.Components.GameComponent;
+using Toan.ECS.Components;
 
 namespace Toan.Rendering;
 
-public class Camera : GameComponent
+public struct Camera : IComponent
 {
     public CameraAnchor Anchor { get; init; } = CameraAnchor.TopLeft;
 
@@ -25,6 +25,8 @@ public class Camera : GameComponent
         CameraAnchor.BottomRight => new(1f, 1f),
         _ => Vector2.Zero,
     };
+
+    public Camera() { }
 }
 public enum CameraAnchor
 {
