@@ -1,4 +1,5 @@
 ﻿namespace Toan.Physics;
+
 public struct CollisionMask
 {
     public static CollisionMask All => new() { Mask = ulong.MaxValue };
