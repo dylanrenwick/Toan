@@ -107,6 +107,7 @@ public class World
     public Guid AddNewEntity()
     {
         Guid entityId = GetNewGuid();
+        _entities.Add(entityId);
         _componentRepo.Add(entityId, new EntityData { CreatedAt = Timestamp });
         _isDirty = true;
         return entityId;
