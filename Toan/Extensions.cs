@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 
 using Microsoft.Xna.Framework;
 
@@ -88,23 +89,12 @@ public static class Extensions
             .ToHashSet();
 	}
 
-    internal static void EnsureLength<T>(this T[] arr, int minLength, int maxLength = int.MaxValue)
+    internal static bool ImplementsInterface(this Type self, Type toCheck)
     {
-        if (minLength > arr.Length)
-        {
-            int newLength = arr.Length;
-            do
-            {
-                newLength *= 2;
-                if (newLength < 0)
-                {
-                    newLength = minLength + 1;
-                }
-            }
-            while (newLength < minLength);
-            newLength = Math.Min(newLength, maxLength);
-            Array.Resize(ref arr, newLength);
-        }
+        if (!toCheck.IsInterface)
+            return false;
+
+        return self.GetInterface(toCheck.Name) != null;
     }
     #endregion
 }
