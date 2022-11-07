@@ -13,9 +13,9 @@ public class CircleCollisionSystem : EntityUpdateSystem
 
     protected override void UpdateEntity(Entity entity, GameTime gameTime)
     {
-        var collider = entity.Get<Collider>();
-        var circle = entity.Get<CircleCollider>();
-        var transform = entity.Get<Transform>();
+        ref var collider = ref entity.Get<Collider>();
+        ref var circle = ref entity.Get<CircleCollider>();
+        ref var transform = ref entity.Get<Transform>();
         var circleOrigin = transform.Position + (collider.Origin * transform.Scale);
         var scaledRadius = circle.Radius * transform.Scale.X;
 

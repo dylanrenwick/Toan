@@ -12,8 +12,8 @@ public class TextSystem : EntityRenderSystem
 
     protected override void RenderEntity(Entity entity, Renderer renderer, GameTime gameTime)
     {
-        var text      = entity.Get<Text>();
-        var transform = entity.Get<Transform>();
+        ref var text      = ref entity.Get<Text>();
+        ref var transform = ref entity.Get<Transform>();
 
         renderer.DrawString(new()
         {

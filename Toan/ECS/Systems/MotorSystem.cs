@@ -11,17 +11,17 @@ public class MotorSystem : EntityUpdateSystem
 
     protected override void UpdateEntity(Entity entity, GameTime time)
     {
-        var motor     = entity.Get<Motor>();
-        var transform = entity.Get<Transform>();
+        ref var motor     = ref entity.Get<Motor>();
+        ref var transform = ref entity.Get<Transform>();
         var deltaTime = (float)time.ElapsedGameTime.TotalSeconds;
 
-        UpdateAcceleration(motor, deltaTime);
+        UpdateAcceleration(ref motor, deltaTime);
         
-        UpdateVelocity(motor, deltaTime);
-        UpdatePosition(transform, motor);
+        UpdateVelocity(ref motor, deltaTime);
+        UpdatePosition(ref transform, ref motor);
     }
 
-    private static void UpdateAcceleration(Motor motor, float deltaTime)
+    private static void UpdateAcceleration(ref Motor motor, float deltaTime)
     {
         bool accelerating = motor.HasInput;
         Vector2 input = (accelerating ? motor.Input : motor.Velocity);
@@ -37,7 +37,7 @@ public class MotorSystem : EntityUpdateSystem
             motor.Acceleration = input * deccelerationFlag;
         }
     }
-    private static void UpdateVelocity(Motor motor, float deltaTime)
+    private static void UpdateVelocity(ref Motor motor, float deltaTime)
     {
         float moveDelta = motor.MaxSpeed * deltaTime;
         motor.Velocity = moveDelta * motor.Acceleration;
@@ -51,7 +51,7 @@ public class MotorSystem : EntityUpdateSystem
         }
     }
 
-    private static void UpdatePosition(Transform transform, Motor motor)
+    private static void UpdatePosition(ref Transform transform, ref Motor motor)
     {
         switch (motor.Mode)
         {

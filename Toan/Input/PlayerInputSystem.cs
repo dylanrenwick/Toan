@@ -14,7 +14,7 @@ public class PlayerInputSystem : EntityUpdateSystem
 
     protected override void UpdateEntity(Entity entity, GameTime time)
     {
-        Motor motor = entity.Get<Motor>();
+        ref var motor = ref entity.Get<Motor>();
 
         var input = entity.World.Resource<InputState>();
         Vector2 inputDir = Vector2.Zero;

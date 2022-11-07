@@ -12,8 +12,8 @@ public class SpriteSystem : EntityRenderSystem
 
     protected override void RenderEntity(Entity entity, Renderer renderer, GameTime gameTime)
     {
-        var sprite    = entity.Get<Sprite>();
-        var transform = entity.Get<Transform>();
+        ref var sprite    = ref entity.Get<Sprite>();
+        ref var transform = ref entity.Get<Transform>();
 
 		Vector2 spriteSize   = new(sprite.Texture.Width, sprite.Texture.Height);
         Vector2 spriteOrigin = sprite.Origin * spriteSize;
