@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -41,14 +41,14 @@ public class ComponentPool<TComponent> : IComponentPool, IEnumerable<TComponent>
         return _entityMappings.ContainsKey(entityId);
     }
 
-    public TComponent? Get(Guid entityId)
+    public ref TComponent Get(Guid entityId)
     {
         if (_entityMappings.TryGetValue(entityId, out int componentIndex))
         {
-            return _components[componentIndex];
+            return ref _components[componentIndex];
         }
         else
-            return null;
+            throw new ArgumentException($"Could not find component of type {typeof(TComponent).FullName} on entity {entityId}");
     }
 
     public bool Remove(Guid entityId)

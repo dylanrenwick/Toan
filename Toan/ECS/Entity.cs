@@ -69,8 +69,7 @@ public struct Entity
     public bool Has(Type type)
     => _components.Has(Id, type);
 
-    public TComponent Get<TComponent>()
+    public ref TComponent Get<TComponent>()
         where TComponent : struct
-    => _components.Get<TComponent>(Id)
-        ?? throw new ArgumentException($"Entity {Id} does not have a component of type {typeof(TComponent).FullName}");
+    => ref _components.Get<TComponent>(Id);
 }

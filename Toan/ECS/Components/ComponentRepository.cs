@@ -52,13 +52,13 @@ public class ComponentRepository
         return _componentPools[t].HasEntity(entityId);
     }
 
-    public T? Get<T>(Guid entityId)
+    public ref T Get<T>(Guid entityId)
         where T : struct
     {
         if (!HasPool<T>())
-            return null;
+            throw new ArgumentException($"No component pool exists for component type {typeof(T).FullName}");
 
         var pool = (ComponentPool<T>)_componentPools[typeof(T)];
-        return pool.Get(entityId);
+        return ref pool.Get(entityId);
     }
 }
