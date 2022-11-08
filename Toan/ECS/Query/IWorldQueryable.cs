@@ -7,5 +7,5 @@ namespace Toan.ECS.Query;
 
 public interface IWorldQueryable
 {
-    public ISet<Guid> Reduce(ISet<Guid> entities, ComponentRepository componentRepo);
+    public ISet<Guid> Reduce(World world, ISet<Guid> entities, ComponentRepository componentRepo);
 }

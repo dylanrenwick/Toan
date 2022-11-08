@@ -12,6 +12,7 @@ public class QueryExecutor
     public required ComponentRepository Components { private get; init; }
     public required ISet<Guid> Entities { private get; init; }
     public required IReadOnlySet<Type> Types { private get; init; }
+    public required World World { private get; init; }
 
     public IReadOnlySet<Guid> Execute()
     {
@@ -22,7 +23,7 @@ public class QueryExecutor
             if (queryType.ImplementsInterface(typeof(IComponent)))
                 queryResults = ComponentReduce(queryResults, Components, queryType);
             else if (Activator.CreateInstance(queryType) is IWorldQueryable query)
-                queryResults = query.Reduce(queryResults, Components);
+                queryResults = query.Reduce(World, queryResults, Components);
             else
                 throw new ArgumentException($"{queryType.FullName} is not a valid IWorldQueryable");
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -208,6 +208,7 @@ public class World
         Components = _componentRepo,
         Entities   = _entities,
         Types      = types,
+        World      = this,
     };
 
     private Guid GetNewGuid()
