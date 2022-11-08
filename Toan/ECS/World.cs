@@ -68,8 +68,8 @@ public class World
 				DestroyEntity(toDestroy);
 			}
 
-			UpdateComponents();
 			_toBeDestroyed.Clear();
+            Dirty();
 		}
     }
     /// <summary>
