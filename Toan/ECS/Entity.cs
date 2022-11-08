@@ -49,8 +49,8 @@ public struct Entity
     public Entity Without<T>()
         where T : struct
     {
-        Dirty();
-        Components.Remove<T>(Id);
+        if (Components.Remove<T>(Id))
+            Dirty();
         return this;
     }
 
