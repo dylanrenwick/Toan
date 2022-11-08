@@ -55,6 +55,7 @@ public class World
 		_lastGameTime = gameTime;
 
         if (_isDirty) UpdateComponents();
+        _entityEvents.Clear();
 
         foreach (var system in _updateSystems)
         {
