@@ -20,43 +20,17 @@ public class QueryExecutor
         foreach (var queryType in Types)
         {
             if (queryType.ImplementsInterface(typeof(IComponent)))
-            {
-                queryResults = Reduce(queryResults, Components, queryType);
-                continue;
-            }
-
-            var reduceMethod = queryType.GetMethod(
-                "Reduce",
-                BindingFlags.Public
-                | BindingFlags.NonPublic
-                | BindingFlags.Static
-                | BindingFlags.FlattenHierarchy
-            );
-
-            if (reduceMethod != null)
-            {
-                var result = reduceMethod.Invoke(
-                        null,
-                        new object[]
-                        {
-                            queryResults,
-                            Components
-                        }
-                    );
-
-                if (result is ISet<Guid> resultSet)
-                    queryResults = resultSet;
-                else
-                    throw new ArgumentException($"{queryType.FullName} is not a valid IWorldQueryable");
-            }
+                queryResults = ComponentReduce(queryResults, Components, queryType);
+            else if (Activator.CreateInstance(queryType) is IWorldQueryable query)
+                queryResults = query.Reduce(queryResults, Components);
             else
-                throw new ArgumentException($"{queryType.FullName} could not be evaluated to a WorldQueryable, static method 'Reduce' not found");
+                throw new ArgumentException($"{queryType.FullName} is not a valid IWorldQueryable");
         }
 
         return (IReadOnlySet<Guid>)queryResults;
     }
 
-    private static ISet<Guid> Reduce(ISet<Guid> entities, ComponentRepository componentRepo, Type reducingType)
+    private static ISet<Guid> ComponentReduce(ISet<Guid> entities, ComponentRepository componentRepo, Type reducingType)
     {
         return entities
             .Where(entityId => componentRepo.Has(entityId, reducingType))
