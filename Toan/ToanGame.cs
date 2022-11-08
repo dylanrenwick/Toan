@@ -35,19 +35,6 @@ public abstract class ToanGame : Game
     => AddPlugin(new TPlugin());
     protected void AddPlugin(Plugin plugin) => plugin.Build(World);
 
-    protected Guid AddResource<TResource>()
-        where TResource : Resource, new()
-    => AddResource(new TResource());
-    protected Guid AddResource(Resource resource) => World.AddResource(resource);
-
-    protected void AddSystem<TSystem>()
-        where TSystem : IGameSystem, new()
-    => AddSystem(new TSystem());
-    protected void AddSystem(IGameSystem system) => World.AddSystem(system);
-
-    protected Entity CreateEntity() => World.CreateEntity();
-    protected Entity CreateEntity(Vector2 pos) => World.CreateEntity(pos);
-
     /// <summary>
     /// Called before the first update tick
     /// Triggers startup systems
@@ -63,7 +50,7 @@ public abstract class ToanGame : Game
     /// </summary>
     protected virtual void Build()
     {
-        AddResource(new ContentServer { Content = Content });
+        World.AddResource(new ContentServer { Content = Content });
     }
 
     protected override void Initialize()
