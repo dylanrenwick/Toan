@@ -11,18 +11,10 @@ namespace Toan.ECS;
 /// </summary>
 public struct Entity
 {
-    public Guid Id { get; init; }
-    public World World { get; init; }
+    public required Guid Id { get; init; }
+    public required World World { get; init; }
 
-    private ComponentRepository _components { get; init; }
-
-    public Entity(Guid id, World world, ComponentRepository components)
-    {
-        Id = id;
-        World = world;
-
-        _components = components;
-    }
+    public required ComponentRepository Components { private get; init; }
 
     /// <summary>
     /// Adds a new component of type <typeparamref name="T"/> to the entity
@@ -38,15 +30,15 @@ public struct Entity
     public Entity With<T>(T component)
         where T : struct
     {
-        World.Dirty();
-        _components.Add<T>(Id, component);
+        Dirty();
+        Components.Add<T>(Id, component);
         return this;
     } 
 
     public Entity WithBundle(IBundle bundle)
     {
-        World.Dirty();
-        bundle.AddBundle(Id, _components);
+        Dirty();
+        bundle.AddBundle(Id, Components);
         return this;
     }
 
@@ -57,19 +49,25 @@ public struct Entity
     public Entity Without<T>()
         where T : struct
     {
-        World.Dirty();
-        _components.Remove<T>(Id);
+        Dirty();
+        Components.Remove<T>(Id);
         return this;
     }
 
     public bool Has<TComponent>()
         where TComponent : struct
-    => _components.Has<TComponent>(Id);
+    => Components.Has<TComponent>(Id);
 
     public bool Has(Type type)
-    => _components.Has(Id, type);
+    => Components.Has(Id, type);
 
     public ref TComponent Get<TComponent>()
         where TComponent : struct
-    => ref _components.Get<TComponent>(Id);
+    => ref Components.Get<TComponent>(Id);
+
+    private void Dirty()
+    {
+        World.Dirty(Id);
+    }
 }
+

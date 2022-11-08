@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -25,11 +25,19 @@ public class World
 	private readonly HashSet<Action<World>> _startupSystems = new();
 
 	private GameTime? _lastGameTime;
+
+    private readonly Events _entityEvents = new();
+    public IEventsReader Events => _entityEvents;
 	private float Timestamp => (float)(_lastGameTime?.TotalGameTime.TotalSeconds ?? 0.0);
 
     private bool _isDirty = false;
 
     public void Dirty() => _isDirty = true;
+    public void Dirty(Guid entityId)
+    {
+        Dirty();
+        _entityEvents.ChangeEntity(entityId);
+    }
 
 	public void Awake()
 	{
@@ -76,18 +84,18 @@ public class World
     }
 
     /// <summary>
-    /// Adds a new Entity to the world and returns an <see cref="ECS.Entity">Entity</see> representing it
+    /// Adds a new entity to the world and returns an <see cref="ECS.Entity">Entity</see> representing it
     /// </summary>
     /// <returns>An <see cref="ECS.Entity">Entity</see> representing the newly added entity</returns>
     public Entity CreateEntity()
     {
-        Guid entity = AddNewEntity();
-        return new
-        (
-            entity,
-            this,
-            _componentRepo
-		);
+        Guid entityId = AddNewEntity();
+        return new()
+        {
+            Components = _componentRepo,
+            Id         = entityId,
+            World      = this,
+        };
     }
     /// <summary>
     /// Adds a new Entity to the world with a <see cref="Transform"/> component at position <paramref name="pos"/>, and returns an <see cref="ECS.Entity">Entity</see> representing it
@@ -101,15 +109,18 @@ public class World
     }
 
     /// <summary>
-    /// Adds a new entity to the world and returns it's Id
+    /// Adds a new entity to the world and returns its Id
     /// </summary>
     /// <returns>The Id of the newly added entity</returns>
     public Guid AddNewEntity()
     {
         Guid entityId = GetNewGuid();
+
         _entities.Add(entityId);
+        _entityEvents.AddEntity(entityId);
         _componentRepo.Add(entityId, new EntityData { CreatedAt = Timestamp });
-        _isDirty = true;
+
+        Dirty();
         return entityId;
     }
 
@@ -136,12 +147,12 @@ public class World
     public Entity Entity(Guid entityId)
     {
         if (!_entities.Contains(entityId)) throw new ArgumentException($"Entity {entityId} does not exist in scene!");
-        return new Entity
-        (
-            entityId,
-            this,
-            _componentRepo
-        );
+        return new()
+        {
+            Components = _componentRepo,
+            Id         = entityId,
+            World      = this,
+        };
     }
 
     public Resource Resource(Guid resourceId)
