@@ -32,32 +32,27 @@ public class SpatialMap : Resource
     /// <param name="width">Width of the bounding box</param>
     /// <param name="height">Height of the bounding box</param>
     /// <returns></returns>
-    public IReadOnlySet<Guid> GetPossibleCollisions(float posX, float posY, float width, float height)
+    public IReadOnlySet<Guid> GetPossibleCollisions(FloatRect boundingBox)
     {
-        float cellOffsetX = posX % CellSize;
-        float cellOffsetY = posY % CellSize;
+        float cellOffsetX = boundingBox.Left % CellSize;
+        float cellOffsetY = boundingBox.Top % CellSize;
 
-        int cellOriginX = (int)Math.Floor(posX / CellSize);
-        int cellOriginY = (int)Math.Floor(posY / CellSize);
+        int cellOriginX = (int)Math.Floor(boundingBox.Left / CellSize);
+        int cellOriginY = (int)Math.Floor(boundingBox.Top / CellSize);
 
-        int cellBoundsX = (int)Math.Ceiling((cellOffsetX + width) / CellSize);
-        int cellBoundsY = (int)Math.Ceiling((cellOffsetY + height) / CellSize);
+        int cellBoundsX = (int)Math.Ceiling((cellOffsetX + boundingBox.Width) / CellSize);
+        int cellBoundsY = (int)Math.Ceiling((cellOffsetY + boundingBox.Height) / CellSize);
 
-        return GetEntitiesInBounds(cellOriginX, cellOriginY, cellBoundsX, cellBoundsY);
+        return GetEntitiesInBounds(new(cellOriginX, cellOriginY, cellBoundsX, cellBoundsY));
     }
 
-    public IReadOnlySet<Guid> GetEntitiesInBounds(int posX, int posY, int width, int height)
+    public IReadOnlySet<Guid> GetEntitiesInBounds(Rectangle boundingBox)
     {
-        posX   = Math.Min(posX, posX + width);
-        posY   = Math.Min(posY, posY + height);
-        width  = Math.Abs(width);
-        height = Math.Abs(height);
-
         HashSet<Guid> results = new();
 
-        for (int y = posY; y < posY + height; y++)
+        for (int y = boundingBox.Y; y < boundingBox.Y + boundingBox.Height; y++)
         {
-            for (int x = posX; x < posX + width; x++)
+            for (int x = boundingBox.X; x < boundingBox.X + boundingBox.Width; x++)
             {
                 results.UnionWith(this[x, y]);
             }
