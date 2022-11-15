@@ -13,7 +13,26 @@ public class CollisionSystem : EntityUpdateSystem
 {
     public override WorldQuery<Collider, Transform> Archetype => new();
 
-    protected SpatialMap? spatialMap;
+    private SpatialMap? spatialMap;
+
+    private ref struct Collidable
+    {
+        public Entity Entity;
+
+        public ref Collider Collider;
+        public ref Transform Transform;
+
+        public FloatRect GetColliderBoundingBox()
+            => Collider.GetColliderBoundingBox(Entity, ref Collider, ref Transform);
+
+        public static Collidable FromEntity(Entity entity)
+        => new()
+        {
+            Entity = entity,
+            Collider = entity.Get<Collider>(),
+            Transform = entity.Get<Transform>(),
+        };
+    }
 
     public override void Update(World world, GameTime gameTime)
     {
@@ -27,10 +46,9 @@ public class CollisionSystem : EntityUpdateSystem
         if (spatialMap is null)
             return;
 
-        ref var collider  = ref entity.Get<Collider>();
-        ref var transform = ref entity.Get<Transform>();
+        var entityCollidable = Collidable.FromEntity(entity);
 
-        FloatRect boundingBox = Collider.GetColliderBoundingBox(entity, ref collider, ref transform);
+        FloatRect boundingBox = entityCollidable.GetColliderBoundingBox();
         IReadOnlySet<Guid> nearbyColliders = spatialMap.GetPossibleCollisions(boundingBox);
 
         Collisions collisions = new();
@@ -38,7 +56,13 @@ public class CollisionSystem : EntityUpdateSystem
         foreach (Guid otherId in nearbyColliders)
         {
             var other = entity.World.Entity(otherId);
-            // Check if entity collides with other            
+            var otherCollidable = Collidable.FromEntity(other);
+
+            Vector2? collision = CheckCollisions(entityCollidable, otherCollidable);
+            if (collision is Vector2 collisionNormal)
+            {
+                // Handle found collision
+            }
         }
 
         entity.Without<Collisions>();
@@ -47,6 +71,23 @@ public class CollisionSystem : EntityUpdateSystem
         {
             entity.With(collisions);
         }
+    }
+
+    private Vector2? CheckCollisions(Collidable first, Collidable second)
+    {
+        Vector2 collisionNormal = second.Transform.Position - first.Transform.Position;
+
+        FloatRect firstBoundingBox  = first.GetColliderBoundingBox();
+        FloatRect secondBoundingBox = second.GetColliderBoundingBox();
+
+        // If containing AABBs do not overlap, colliders cannot intersect
+        if (!firstBoundingBox.Overlaps(secondBoundingBox))
+            return null;
+        // If both colliders are AABBs, we just did the collision check
+        if (first.Collider.Shape == ColliderShape.Rect && second.Collider.Shape == ColliderShape.Rect)
+            return collisionNormal;
+
+
     }
 }
 
