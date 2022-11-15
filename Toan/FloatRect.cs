@@ -37,4 +37,10 @@ public struct FloatRect
 
     public FloatRect Offset(Vector2 offset)
         => new FloatRect(Position + offset, Size);
+
+    public bool Overlaps(FloatRect other)
+    {
+        return Right > other.Left && Left < other.Right
+            && Top > other.Bottom && Bottom < other.Top;
+    }
 }
