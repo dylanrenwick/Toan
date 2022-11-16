@@ -4,5 +4,5 @@ namespace Toan.Physics;
 
 public struct CircleCollider : IComponent
 {
-    public float Radius { get; set; }
+    public required float Radius { get; set; }
 }
