@@ -9,6 +9,17 @@ namespace Toan.Physics;
 
 public static class CollisionHelper
 {
+    public static bool CheckCircleCircleCollision(Entity entityA, Entity entityB)
+    => CheckCircleCircleCollision(
+        originA: GetColliderOrigin(entityA),
+        radiusA: GetColliderBoundingCircle(entityA),
+        originB: GetColliderOrigin(entityB),
+        radiusB: GetColliderBoundingCircle(entityB)
+    );
+
+    public static bool CheckCircleCircleCollision(Vector2 originA, float radiusA, Vector2 originB, float radiusB)
+        => (originB - originA).LengthSquared() < Math.Pow(radiusA + radiusB, 2);
+
     public static bool CheckRectRectCollision(Entity entityA, Entity entityB)
     => CheckRectRectCollision(
         rectA: GetColliderBoundingBox(entityA),
