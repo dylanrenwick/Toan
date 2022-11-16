@@ -9,6 +9,12 @@ namespace Toan.Physics;
 
 public static class CollisionHelper
 {
+    public static Vector2 GetColliderOrigin(Entity entity)
+        => GetColliderOrigin(ref entity.Get<Transform>(), ref entity.Get<Collider>());
+
+    public static Vector2 GetColliderOrigin(ref Transform transform, ref Collider collider)
+        => transform.Position + collider.Origin;
+
     /// <summary>
     /// Utility method for calculating smallest AABB containing collider
     /// </summary>
