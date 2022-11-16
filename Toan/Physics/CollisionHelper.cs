@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using Microsoft.Xna.Framework;
 
@@ -36,7 +36,7 @@ public static class CollisionHelper
     => collider.Shape switch
     {
         ColliderShape.Circle => GetCircleBoundingBox(ref entity.Get<CircleCollider>()).Offset(transform.Position),
-        ColliderShape.Rect   => throw new NotImplementedException(),
+        ColliderShape.Rect   => new FloatRect(GetColliderOrigin(ref transform, ref collider), entity.Get<RectCollider>().Size),
         _                    => new FloatRect(transform.Position, Vector2.Zero),
     };
 
