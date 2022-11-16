@@ -42,10 +42,13 @@ public static class CollisionHelper
     => collider.Shape switch
     {
         ColliderShape.Circle => GetCircleBoundingBox(ref entity.Get<CircleCollider>()).Offset(transform.Position),
-        ColliderShape.Rect   => new FloatRect(GetColliderOrigin(ref transform, ref collider), entity.Get<RectCollider>().Size),
+        ColliderShape.Rect   => GetRectBoundingBox(ref transform, ref collider, ref entity.Get<RectCollider>()),
         _                    => new FloatRect(transform.Position, Vector2.Zero),
     };
 
     private static FloatRect GetCircleBoundingBox(ref CircleCollider circle)
         => new(new(-circle.Radius), new(circle.Radius * 2f));
+
+    private static FloatRect GetRectBoundingBox(ref Transform transform, ref Collider collider, ref RectCollider rect)
+        => new(GetColliderOrigin(ref transform, ref collider) - (rect.Size / 2f), rect.Size);
 }
