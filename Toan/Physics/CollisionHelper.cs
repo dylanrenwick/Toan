@@ -9,6 +9,15 @@ namespace Toan.Physics;
 
 public static class CollisionHelper
 {
+    public static bool CheckRectRectCollision(Entity entityA, Entity entityB)
+    => CheckRectRectCollision(
+        rectA: GetColliderBoundingBox(entityA),
+        rectB: GetColliderBoundingBox(entityB)
+    );
+
+    public static bool CheckRectRectCollision(FloatRect rectA, FloatRect rectB)
+        => rectA.Overlaps(rectB);
+
     public static Vector2 GetColliderOrigin(Entity entity)
         => GetColliderOrigin(ref entity.Get<Transform>(), ref entity.Get<Collider>());
 
