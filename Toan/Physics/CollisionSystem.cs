@@ -123,9 +123,12 @@ public class CollisionSystem : EntityUpdateSystem
     private static CollisionResult CheckCircleNonCircleCollisions(Collidable circle, Collidable nonCircle)
     => nonCircle.Collider.Shape switch
     {
-        ColliderShape.Rect   => throw new NotImplementedException(),
-        ColliderShape.Circle => throw new UnreachableException(),
-        _                    => CollisionResult.None,
+        ColliderShape.Rect    => CollisionHelper.CheckCircleRectCollision(circle.Entity, nonCircle.Entity)
+            ? CollisionResult.Full
+            : CollisionResult.None,
+        ColliderShape.Circle
+        | ColliderShape.Point => throw new UnreachableException(),
+        _                     => CollisionResult.None,
     };
 
     private static CollisionResult CheckRectCollisions(Collidable first, Collidable second)
@@ -150,9 +153,10 @@ public class CollisionSystem : EntityUpdateSystem
     private static CollisionResult CheckRectNonRectCollisions(Collidable rect, Collidable nonRect)
     => nonRect.Collider.Shape switch
     {
-        ColliderShape.Circle => throw new NotImplementedException(),
-        ColliderShape.Rect   => throw new UnreachableException(),
-        _                    => CollisionResult.None,
+        ColliderShape.Circle
+        | ColliderShape.Point
+        | ColliderShape.Rect  => throw new UnreachableException(),
+        _                     => CollisionResult.None,
     };
 }
 
