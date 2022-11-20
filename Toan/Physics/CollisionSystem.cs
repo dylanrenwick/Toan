@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 
 using Toan.ECS;
@@ -23,7 +23,7 @@ public class CollisionSystem : EntityUpdateSystem
         public ref Transform Transform;
 
         public FloatRect GetColliderBoundingBox()
-            => Collider.GetColliderBoundingBox(Entity, ref Collider, ref Transform);
+            => CollisionHelper.GetColliderBoundingBox(Entity, ref Collider, ref Transform);
 
         public static Collidable FromEntity(Entity entity)
         => new()
@@ -77,17 +77,82 @@ public class CollisionSystem : EntityUpdateSystem
     {
         Vector2 collisionNormal = second.Transform.Position - first.Transform.Position;
 
-        FloatRect firstBoundingBox  = first.GetColliderBoundingBox();
-        FloatRect secondBoundingBox = second.GetColliderBoundingBox();
-
-        // If containing AABBs do not overlap, colliders cannot intersect
-        if (!firstBoundingBox.Overlaps(secondBoundingBox))
+        // Check circle collisions first
+        CollisionResult circleResult = CheckCircleCollisions(first, second);
+        // Exit early if circle collision fails
+        if (circleResult == CollisionResult.None)
             return null;
-        // If both colliders are AABBs, we just did the collision check
-        if (first.Collider.Shape == ColliderShape.Rect && second.Collider.Shape == ColliderShape.Rect)
+        else if (circleResult == CollisionResult.Full)
             return collisionNormal;
 
+        CollisionResult rectResult = CheckRectCollisions(first, second);
+        if (rectResult == CollisionResult.None)
+            return null;
+        else if (rectResult == CollisionResult.Full)
+            return collisionNormal;
 
+        return null;
     }
+
+    private enum CollisionResult
+    {
+        None,
+        Partial,
+        Full
+    }
+
+    private static CollisionResult CheckCircleCollisions(Collidable first, Collidable second)
+    {
+        // If circle collision fails
+        if (!CollisionHelper.CheckCircleCircleCollision(first.Entity, second.Entity))
+            return CollisionResult.None;
+        // If circle collision passes and both colliders are circle
+        else if (first.Collider.IsCircle && second.Collider.IsCircle)
+            return CollisionResult.Full;
+        // If circle collision passes and first is circle
+        else if (first.Collider.IsCircle)
+            return CheckCircleNonCircleCollisions(first, second);
+        // If circle collision passes and second is circle
+        else if (second.Collider.IsCircle)
+            return CheckCircleNonCircleCollisions(second, first);
+        // If circle collision passes but neither collider is circle
+        else
+            return CollisionResult.Partial;
+    }
+
+    private static CollisionResult CheckCircleNonCircleCollisions(Collidable circle, Collidable nonCircle)
+    => nonCircle.Collider.Shape switch
+    {
+        ColliderShape.Rect   => throw new NotImplementedException(),
+        ColliderShape.Circle => throw new UnreachableException(),
+        _                    => CollisionResult.None,
+    };
+
+    private static CollisionResult CheckRectCollisions(Collidable first, Collidable second)
+    {
+        // If rect collision fails
+        if (!CollisionHelper.CheckRectRectCollision(first.Entity, second.Entity))
+            return CollisionResult.None;
+        // If rect collision passes and both colliders are rect
+        else if (first.Collider.IsRect && second.Collider.IsRect)
+            return CollisionResult.Full;
+        // If rect collision passes and first is rect
+        else if (first.Collider.IsRect)
+            return CheckRectNonRectCollisions(first, second);
+        // If rect collision passes and second is rect
+        else if (second.Collider.IsRect)
+            return CheckRectNonRectCollisions(second, first);
+        // If rect collision passes but neither collider is rect
+        else
+            return CollisionResult.Partial;
+    }
+
+    private static CollisionResult CheckRectNonRectCollisions(Collidable rect, Collidable nonRect)
+    => nonRect.Collider.Shape switch
+    {
+        ColliderShape.Circle => throw new NotImplementedException(),
+        ColliderShape.Rect   => throw new UnreachableException(),
+        _                    => CollisionResult.None,
+    };
 }
 

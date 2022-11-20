@@ -13,4 +13,14 @@ public struct Collider : IComponent
     public required CollisionMask Mask { get; set; }
     
     public required ulong Layer { get; set; }
+
+    public bool IsCircle
+    => Shape switch
+    {
+        ColliderShape.Circle | ColliderShape.Point => true,
+        _ => false,
+    };
+
+    public bool IsRect
+        => Shape == ColliderShape.Rect;
 }
