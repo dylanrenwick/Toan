@@ -38,6 +38,10 @@ public struct FloatRect
         Size = Vector2.Zero;
     }
 
+    public bool Contains(Vector2 point)
+        => point.X > Left && point.X < Right
+            && point.Y > Bottom && point.Y < Top;
+
     public FloatRect Offset(Vector2 offset)
         => new FloatRect(Position + offset, Size);
 
