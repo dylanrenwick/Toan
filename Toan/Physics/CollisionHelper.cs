@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 using Microsoft.Xna.Framework;
 
@@ -15,6 +15,25 @@ public static class CollisionHelper
     public static bool CheckRectPointCollision(Entity rect, Vector2 point)
         => GetColliderBoundingBox(rect)
             .Contains(point);
+
+    public static bool CheckCircleRectCollision(Entity circle, Entity rect)
+    {
+        var circleOrigin = GetColliderOrigin(circle);
+        var rectOrigin   = GetColliderOrigin(rect);
+
+        var rectBox = GetColliderBoundingBox(rect);
+
+        var circleRadius = GetColliderBoundingCircle(circle);
+        var rectInnerRadius = rectBox.InnerBoundsRadius;
+        if (!CheckCircleCircleCollision(circleOrigin, circleRadius, rectOrigin, rectInnerRadius))
+            return false;
+
+        var diffLine = rectOrigin - circleOrigin;
+        diffLine.Normalize();
+
+        var contactPoint = diffLine * circleRadius;
+        return CheckRectPointCollision(rect, contactPoint);
+    }
 
     public static bool CheckCircleCircleCollision(Entity entityA, Entity entityB)
     => CheckCircleCircleCollision(
