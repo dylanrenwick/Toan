@@ -17,6 +17,9 @@ public struct FloatRect
     public float Width  => Right - Left;
     public float Height => Bottom - Top;
 
+    public float OuterBoundsRadius => (Size / 2f).Length();
+    public float InnerBoundsRadius => Math.Min(Size.X, Size.Y) / 2f;
+
     public FloatRect(Vector2 pos, Vector2 size)
     {
         Position = pos;
