@@ -61,7 +61,11 @@ public class CollisionSystem : EntityUpdateSystem
             Vector2? collision = CheckCollisions(entityCollidable, otherCollidable);
             if (collision is Vector2 collisionNormal)
             {
-                // Handle found collision
+                collisions.Add(new()
+                {
+                    CollisionNormal = collisionNormal,
+                    Other           = otherId,
+                });
             }
         }
 
