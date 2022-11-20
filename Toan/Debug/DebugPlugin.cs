@@ -20,10 +20,14 @@ public class DebugPlugin : Plugin
         world.AddResource(new DebugState());
         Guid logId = world.AddResource(new TextLog());
 
-        world.AddSystem<DebugToggleSystem>();
-		world.AddSystem<DebugRenderSystem>();
-        world.AddSystem<DebugLogSystem>();
-		if (AutoApply) world.AddSystem<DebugAutoApplySystem>();
+		world.Systems()
+			.Add<DebugToggleSystem>()
+			.Add<DebugRenderSystem>()
+			.Add<DebugLogSystem>();
+
+		if (AutoApply)
+			world.Systems()
+				.Add<DebugAutoApplySystem>();
 
 		world.CreateEntity(new(10.0f, 5.0f))
 			.With(new DebugLog

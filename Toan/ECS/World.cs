@@ -19,8 +19,8 @@ public class World
 	private readonly HashSet<Guid> _toBeDestroyed = new();
     private readonly Dictionary<Guid, Resource> _resources = new();
 
-    private readonly HashSet<IUpdatable> _updateSystems = new();
-    private readonly HashSet<IRenderable> _renderSystems = new();
+    private readonly SystemSet<IUpdateSystem> _updateSystems = new();
+    private readonly SystemSet<IRenderSystem> _renderSystems = new();
     private readonly HashSet<IEntitySystem> _entitySystems = new();
 	private readonly HashSet<Action<World>> _startupSystems = new();
 
@@ -78,9 +78,12 @@ public class World
     /// </summary>
     public void Draw(Renderer renderer, GameTime gameTime)
     {
-        foreach (var system in _renderSystems)
+        foreach (var systemGroup in _renderSystems)
         {
-            system.Render(this, renderer, gameTime);
+            foreach (var system in systemGroup)
+            {
+                system.Render(this, renderer, gameTime);
+            }
         }
     }
 
@@ -107,22 +110,6 @@ public class World
     {
         Transform transform = new() { Position = pos };
         return CreateEntity().With(transform);
-    }
-
-    /// <summary>
-    /// Adds a new entity to the world and returns its Id
-    /// </summary>
-    /// <returns>The Id of the newly added entity</returns>
-    public Guid AddNewEntity()
-    {
-        Guid entityId = GetNewGuid();
-
-        _entities.Add(entityId);
-        _entityEvents.AddEntity(entityId);
-        _componentRepo.Add(entityId, new EntityData { CreatedAt = Timestamp });
-
-        Dirty();
-        return entityId;
     }
 
     /// <summary>
@@ -156,28 +143,54 @@ public class World
         };
     }
 
+    public SystemBuilder Systems()
+    => new()
+    {
+        EntitySystems = _entitySystems,
+        RenderSystems = _renderSystems,
+        UpdateSystems = _updateSystems,
+        World         = this,
+    };
+
     public Resource Resource(Guid resourceId)
     {
         if (!_resources.ContainsKey(resourceId)) throw new ArgumentException($"Resource {resourceId} does not exist in scene");
         return _resources[resourceId];
     }
 
-    public T Resource<T>(Guid resourceId)
-        where T : Resource
+    public TResource Resource<TResource>(Guid resourceId)
+        where TResource : Resource
     {
         var resource = Resource(resourceId);
-        if (resource is T res) return res;
-        else throw new ArgumentException($"Resource {resourceId} is not of type {typeof(T).Name}");
+        if (resource is TResource res) return res;
+        else throw new ArgumentException($"Resource {resourceId} is not of type {typeof(TResource).Name}");
     }
-    public T Resource<T>()
-        where T : Resource
+    public TResource Resource<TResource>()
+        where TResource : Resource
     {
         foreach (var kvp in _resources)
         {
             var resource = kvp.Value;
-            if (resource is T res) return res;
+            if (resource is TResource res) return res;
         }
-        throw new ArgumentException($"No resource of type {typeof(T).Name} found");
+        throw new ArgumentException($"No resource of type {typeof(TResource).Name} found");
+    }
+
+    #region Add
+    /// <summary>
+    /// Adds a new entity to the world and returns its Id
+    /// </summary>
+    /// <returns>The Id of the newly added entity</returns>
+    public Guid AddNewEntity()
+    {
+        Guid entityId = GetNewGuid();
+
+        _entities.Add(entityId);
+        _entityEvents.AddEntity(entityId);
+        _componentRepo.Add(entityId, new EntityData { CreatedAt = Timestamp });
+
+        Dirty();
+        return entityId;
     }
 
     public Guid AddResource(Resource resource)
@@ -186,21 +199,6 @@ public class World
         return resource.Id;
     }
 
-    public void AddSystem<TSystem>()
-        where TSystem : IGameSystem, new()
-    {
-        AddSystem(new TSystem());
-    }
-    public void AddSystem(IGameSystem system)
-    {
-        if (system is IUpdatable updateSystem) _updateSystems.Add(updateSystem);
-        else if (system is IRenderable renderSystem) _renderSystems.Add(renderSystem);
-
-        if (system is IEntitySystem entitySystem) _entitySystems.Add(entitySystem);
-        else if (system is not IUpdatable or IRenderable)
-			throw new ArgumentException($"System type of {system.GetType().Name} is not renderable or updatable");
-
-    }
 	public void AddStartupSystem(Action<World> startupSystem)
 	{
 		_startupSystems.Add(startupSystem);
@@ -213,6 +211,7 @@ public class World
     {
         plugin.Build(this);
     }
+    #endregion
 
     public QueryExecutor GetQueryExecutor(IReadOnlySet<Type> types)
     => new()

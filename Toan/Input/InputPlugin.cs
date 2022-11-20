@@ -8,8 +8,9 @@ public class InputPlugin : Plugin
     {
         world.AddResource(new InputState());
 
-        world.AddSystem<InputSystem>();
-        world.AddSystem<PlayerInputSystem>();
+        world.Systems()
+            .Add<InputSystem>()
+            .Add<PlayerInputSystem>();
     }
 }
 

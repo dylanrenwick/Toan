@@ -6,7 +6,8 @@ public class CameraPlugin : Plugin
 {
     public override void Build(World world)
     {
-        world.AddSystem<MainCameraSystem>();
+        world.Systems()
+            .Add<MainCameraSystem>();
 
         world.CreateEntity(new(0, 0))
             .With(new Camera

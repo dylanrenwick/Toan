@@ -4,7 +4,7 @@ using Toan.Rendering;
 
 namespace Toan.ECS.Systems;
 
-public abstract class EntityRenderSystem : EntitySystem, IRenderable
+public abstract class EntityRenderSystem : EntitySystem, IRenderSystem
 {
     public virtual void Render(World world, Renderer renderer, GameTime gameTime)
     {

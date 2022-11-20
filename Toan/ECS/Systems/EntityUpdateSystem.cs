@@ -3,7 +3,7 @@
 using Toan.ECS.Resources;
 
 namespace Toan.ECS.Systems;
-public abstract class EntityUpdateSystem : EntitySystem, IUpdatable
+public abstract class EntityUpdateSystem : EntitySystem, IUpdateSystem
 {
 #if DEBUG
     protected TextLog? Debug { get; private set; }

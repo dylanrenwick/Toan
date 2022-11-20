@@ -10,6 +10,8 @@ public class PhysicsPlugin : Plugin
     {
         world.AddResource(new SpatialMap { CellSize = SpatialCellSize });
 
-        world.AddSystem<CollisionSystem>();
+        world.Systems()
+            .Add<SpatialMapSystem>()
+            .Add<CollisionSystem>();
     }
 }

@@ -34,11 +34,11 @@ public class CorePlugins : Plugin
         world.AddPlugin<InputPlugin>();
         world.AddPlugin<CameraPlugin>();
         world.AddPlugin<PhysicsPlugin>();
-        
-        world.AddSystem<MotorSystem>();
 
-        world.AddSystem<TextSystem>();
-        world.AddSystem<SpriteSystem>();
+        world.Systems()
+            .Add<MotorSystem>()
+            .Add<TextSystem>()
+            .Add<SpriteSystem>();
 
 #if DEBUG
         world.AddPlugin(new DebugPlugin { AutoApply = AutoApplyDebug });
