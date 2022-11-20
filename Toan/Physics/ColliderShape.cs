@@ -4,5 +4,6 @@ public enum ColliderShape
 {
     None,
     Circle,
-    Rect
+    Rect,
+    Point,
 }
