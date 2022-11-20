@@ -1,19 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+
 using Microsoft.Xna.Framework;
 
 using Toan.ECS;
 using Toan.ECS.Components;
 using Toan.ECS.Query;
-using Toan.ECS.Systems;
 
 namespace Toan.Physics;
-public class CollisionSystem : EntityUpdateSystem
+public class CollisionSystem : PhysicsSystem
 {
     public override WorldQuery<Collider, Transform> Archetype => new();
-
-    private SpatialMap? spatialMap;
 
     private ref struct Collidable
     {
@@ -34,22 +32,15 @@ public class CollisionSystem : EntityUpdateSystem
         };
     }
 
-    public override void Update(World world, GameTime gameTime)
-    {
-        spatialMap = world.Resource<SpatialMap>();
-
-        base.Update(world, gameTime);
-    }
-
     protected override void UpdateEntity(Entity entity, GameTime gameTime)
     {
-        if (spatialMap is null)
+        if (_spatialMap is null)
             return;
 
         var entityCollidable = Collidable.FromEntity(entity);
 
         FloatRect boundingBox = entityCollidable.GetColliderBoundingBox();
-        IReadOnlySet<Guid> nearbyColliders = spatialMap.GetPossibleCollisions(boundingBox);
+        IReadOnlySet<Guid> nearbyColliders = _spatialMap.GetPossibleCollisions(boundingBox);
 
         Collisions collisions = new();
 
