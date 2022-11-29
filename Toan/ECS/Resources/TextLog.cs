@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -7,12 +6,10 @@ namespace Toan.ECS.Resources;
 
 public class TextLog : Resource
 {
-    private Stack<LogEntry> _entries = new();
+    private readonly Stack<string> _entries = new();
 
     public void Log(string message)
-    {
-        _entries.Push(new() { Content = message });
-    }
+        => _entries.Push(message);
 
     public string GetEntries(int entryCount)
     {
@@ -20,19 +17,11 @@ public class TextLog : Resource
         var entries = entryCount > 0
             ? _entries.Take(entryCount)
             : _entries;
-        foreach (LogEntry entry in entries)
+        foreach (string entry in entries)
         {
-            stringBuilder.AppendLine(entry.ToString());
+            stringBuilder.AppendLine(entry);
         }
         return stringBuilder.ToString();
-    }
-
-    private record LogEntry
-    {
-        public required string Content { get; init; }
-        public DateTime Timestamp { get; } = DateTime.Now;
-
-        public override string ToString() => $"[{Timestamp.ToString("O")}] {Content}";
     }
 }
 
