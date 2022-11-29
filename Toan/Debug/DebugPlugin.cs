@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Toan.ECS;
 using Toan.ECS.Components;
 using Toan.ECS.Resources;
+using Toan.Logging;
+using Toan.Logging.Color;
 
 namespace Toan.Debug;
 
@@ -18,7 +20,19 @@ public class DebugPlugin : Plugin
         SpriteFont font = content.Load<SpriteFont>("Font");
 
         world.AddResource(new DebugState());
-        Guid logId = world.AddResource(new TextLog());
+
+		TextLog debugLog = new();
+        Guid logId = world.AddResource(debugLog);
+		world.Log.Destinations.Add(
+			new ColoredDestination
+			{
+				Color = new NoneColorConverter(),
+				Destination = new TextLogDestination()
+				{
+					TextLog = debugLog
+				}
+			}
+		);
 
 		world.Systems()
 			.Add<DebugToggleSystem>()
