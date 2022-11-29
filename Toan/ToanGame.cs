@@ -1,24 +1,26 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using Microsoft.Xna.Framework;
 
 using Toan.Rendering;
 using Toan.ECS;
 using Toan.ECS.Resources;
-using Toan.ECS.Systems;
+using Toan.Logging;
+using Toan.Logging.Color;
 
 namespace Toan;
 
 public abstract class ToanGame : Game
 {
-    private readonly GraphicsDeviceManager _graphics;
-
     private Renderer? _renderer;
     public Renderer Renderer => _renderer ?? throw new Exception("Tried to access Renderer before initialized!");
 
-    protected World World;
-
+    private readonly GraphicsDeviceManager _graphics;
     private bool _isFirstUpdate;
+
+    protected readonly World World;
+    protected readonly Logger Log;
 
     public ToanGame()
     {
@@ -27,7 +29,23 @@ public abstract class ToanGame : Game
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
 
-        World = new();
+        Log = new Logger
+        {
+            Destinations = new List<ILogDestination<LogMessage>>()
+            {
+                new ColoredDestination
+                {
+                    Color       = new AnsiColorConverter(),
+                    Destination = new ConsoleDestination()
+                },
+            },
+            Label = "TOAN"
+        };
+
+        World = new()
+        {
+            Log = Log.GetChildLogger("WRLD")
+        };
     }
 
     protected void AddPlugin<TPlugin>()
@@ -96,3 +114,4 @@ public abstract class ToanGame : Game
         base.Draw(gameTime);
     }
 }
+

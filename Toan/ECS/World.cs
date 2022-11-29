@@ -8,12 +8,15 @@ using Toan.ECS.Components;
 using Toan.ECS.Query;
 using Toan.ECS.Resources;
 using Toan.ECS.Systems;
+using Toan.Logging;
 using Toan.Rendering;
 
 namespace Toan.ECS;
 
 public class World
 {
+    public required Logger Log { get; init; }
+
     private readonly ComponentRepository _componentRepo = new();
     private readonly HashSet<Guid> _entities = new();
 	private readonly HashSet<Guid> _toBeDestroyed = new();
@@ -41,6 +44,8 @@ public class World
 
 	public void Awake()
 	{
+        Log.Debug("Awake");
+
 		foreach (var startupSystem in _startupSystems)
 		{
 			startupSystem.Invoke(this);
@@ -64,6 +69,7 @@ public class World
 
 		if (_toBeDestroyed.Any())
 		{
+            Log.Debug("Removing destroyed entities");
 			foreach (var toDestroy in _toBeDestroyed)
 			{
 				DestroyEntity(toDestroy);
@@ -78,6 +84,8 @@ public class World
     /// </summary>
     public void Draw(Renderer renderer, GameTime gameTime)
     {
+        if (_isDirty) UpdateComponents();
+
         foreach (var systemGroup in _renderSystems)
         {
             foreach (var system in systemGroup)
@@ -134,6 +142,7 @@ public class World
     /// <exception cref="ArgumentException">The entityId does not correspond to an entity in the world</exception>
     public Entity Entity(Guid entityId)
     {
+        Log.Debug($"Fetching entity {entityId}");
         if (!_entities.Contains(entityId)) throw new ArgumentException($"Entity {entityId} does not exist in scene!");
         return new()
         {
@@ -184,6 +193,7 @@ public class World
     public Guid AddNewEntity()
     {
         Guid entityId = GetNewGuid();
+        Log.Debug($"Adding entity {entityId}");
 
         _entities.Add(entityId);
         _entityEvents.AddEntity(entityId);
@@ -232,17 +242,20 @@ public class World
 
     private void UpdateComponents()
     {
+        Log.Debug("Updating system components");
         foreach (var system in _entitySystems)
         {
             var query = system.Archetype;
             system.UpdateComponents(this, query.GetEntities(this));
         }
-
+        
         _isDirty = false;
     }
 
 	private void DestroyEntity(Guid entityId)
 	{
+        Log.Debug($"Removing entity {entityId}");
+        _componentRepo.RemoveAll(entityId);
 		_entities.Remove(entityId);
 	}
 }
