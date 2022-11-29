@@ -45,6 +45,14 @@ public class SpatialMap : Resource
         return success;
     }
 
+    public void Remove(Guid entityId)
+    {
+        foreach (var kvp in _spatialTable)
+        {
+            kvp.Value.Remove(entityId);
+        }
+    }
+
     /// <summary>
     /// Returns a set of IDs of entities that are close enough to the provided bounding box that they may intersect with it.
     /// </summary>
