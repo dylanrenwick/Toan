@@ -14,7 +14,7 @@ public struct SystemGroup<T> : IReadOnlySet<T>
 
     public void Update(World world, GameTime gameTime)
     {
-        if (typeof(T).ImplementsInterface(typeof(IUpdateSystem)))
+        if (typeof(T) == typeof(IUpdateSystem) || typeof(T).ImplementsInterface(typeof(IUpdateSystem)))
 
         foreach (var system in Systems.Cast<IUpdateSystem>())
         {
@@ -24,7 +24,7 @@ public struct SystemGroup<T> : IReadOnlySet<T>
 
     public void Render(World world, Renderer renderer, GameTime gameTime)
     {
-        if (typeof(T).ImplementsInterface(typeof(IRenderSystem)))
+        if (typeof(T) == typeof(IRenderSystem) || typeof(T).ImplementsInterface(typeof(IRenderSystem)))
 
         foreach (var system in Systems.Cast<IRenderSystem>())
         {
