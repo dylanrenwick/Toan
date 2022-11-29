@@ -60,11 +60,12 @@ public class ComponentPool<TComponent> : IComponentPool, IEnumerable<TComponent>
         if (componentIndex == -1)
             return false;
 
-        if (componentIndex != _lastComponentIndex)
+        if (Count > 0 && componentIndex != _lastComponentIndex)
         {
             var lastLink = _entityLink[_lastComponentIndex];
             _components[componentIndex] = _components[_lastComponentIndex];
             _entityMappings[lastLink] = componentIndex;
+            _entityMappings[entityId] = -1;
         }
 
         _lastComponentIndex--;
