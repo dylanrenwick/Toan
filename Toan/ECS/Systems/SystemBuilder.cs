@@ -63,13 +63,13 @@ public struct SystemBuilder
         if (isUpdateable)
             _nextUpdateIndex = update(new()
             {
-                Order = _nextUpdateIndex ?? GetLastUpdateOrder(),
+                Order = (_nextUpdateIndex ?? GetLastUpdateOrder()) + 1,
                 Systems = systems.Cast<IUpdateSystem>().ToHashSet(),
             });
         if (isRenderable)
             _nextRenderIndex = render(new()
             {
-                Order = _nextRenderIndex ?? GetLastRenderOrder(),
+                Order = (_nextRenderIndex ?? GetLastRenderOrder()) + 1,
                 Systems= systems.Cast<IRenderSystem>().ToHashSet(),
             });
         if (isEntitySys)
@@ -89,9 +89,9 @@ public struct SystemBuilder
 
     private static (bool, bool, bool) GetSystemTypes(Type type)
     => (
-        type.ImplementsInterface(typeof(IUpdateSystem)),
-        type.ImplementsInterface(typeof(IRenderSystem)),
-        type.ImplementsInterface(typeof(IEntitySystem))
+        type == typeof(IUpdateSystem) || type.ImplementsInterface(typeof(IUpdateSystem)),
+        type == typeof(IRenderSystem) || type.ImplementsInterface(typeof(IRenderSystem)),
+        type == typeof(IEntitySystem) || type.ImplementsInterface(typeof(IEntitySystem))
     );
 }
 
