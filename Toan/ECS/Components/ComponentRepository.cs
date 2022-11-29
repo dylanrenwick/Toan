@@ -30,6 +30,16 @@ public class ComponentRepository
         _componentPools[typeof(T)].Add(entityId, component);
     }
 
+    public bool RemoveAll(Guid entityId)
+    {
+        bool success = false;
+        foreach (Type type in _componentPools.Keys)
+        {
+            success |= Remove(entityId, type);
+        }
+        return success;
+    }
+
     public bool Remove<T>(Guid entityId)
         where T : struct
     => Remove(entityId, typeof(T));
