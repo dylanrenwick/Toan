@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Toan.Logging;
+namespace Toan.Logging.Destinations;
 
 public class ConsoleDestination : ILogDestination<string>
 {

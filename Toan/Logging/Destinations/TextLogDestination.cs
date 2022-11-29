@@ -1,6 +1,6 @@
 ﻿using Toan.ECS.Resources;
 
-namespace Toan.Logging;
+namespace Toan.Logging.Destinations;
 
 public class TextLogDestination : ILogDestination<string>
 {

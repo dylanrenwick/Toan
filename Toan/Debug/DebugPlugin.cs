@@ -5,8 +5,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Toan.ECS;
 using Toan.ECS.Components;
 using Toan.ECS.Resources;
-using Toan.Logging;
 using Toan.Logging.Color;
+using Toan.Logging.Destinations;
 
 namespace Toan.Debug;
 

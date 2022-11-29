@@ -1,6 +1,6 @@
 ﻿using Toan.Logging.Color;
 
-namespace Toan.Logging;
+namespace Toan.Logging.Destinations;
 
 public class ColoredDestination : PassthroughDestination<LogMessage, string>
 {

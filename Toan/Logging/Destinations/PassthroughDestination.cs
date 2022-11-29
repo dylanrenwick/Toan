@@ -1,4 +1,4 @@
-﻿namespace Toan.Logging;
+﻿namespace Toan.Logging.Destinations;
 
 public abstract class PassthroughDestination<T1, T2> : ILogDestination<T1>
 {

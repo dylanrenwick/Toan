@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using Toan.ECS.Resources;
+using Toan.Logging.Destinations;
 
 namespace Toan.Logging;
 

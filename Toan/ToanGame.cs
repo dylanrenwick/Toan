@@ -3,11 +3,12 @@ using System.Collections.Generic;
 
 using Microsoft.Xna.Framework;
 
-using Toan.Rendering;
 using Toan.ECS;
 using Toan.ECS.Resources;
 using Toan.Logging;
 using Toan.Logging.Color;
+using Toan.Logging.Destinations;
+using Toan.Rendering;
 
 namespace Toan;
 

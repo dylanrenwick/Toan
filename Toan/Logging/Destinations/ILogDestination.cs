@@ -1,4 +1,4 @@
-﻿namespace Toan.Logging;
+﻿namespace Toan.Logging.Destinations;
 
 public interface ILogDestination<T>
 {

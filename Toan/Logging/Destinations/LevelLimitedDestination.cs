@@ -1,4 +1,4 @@
-﻿namespace Toan.Logging;
+﻿namespace Toan.Logging.Destinations;
 
 public class LevelLimitedDestination : PassthroughDestination<LogMessage, LogMessage>
 {
