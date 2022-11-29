@@ -13,12 +13,12 @@ public class CollisionSystem : PhysicsSystem
 {
     public override WorldQuery<Collider, Transform> Archetype => new();
 
-    private ref struct Collidable
+    private struct Collidable
     {
         public Entity Entity;
 
-        public ref Collider Collider;
-        public ref Transform Transform;
+        public ref Collider Collider => ref Entity.Get<Collider>();
+        public ref Transform Transform => ref Entity.Get<Transform>();
 
         public FloatRect GetColliderBoundingBox()
             => CollisionHelper.GetColliderBoundingBox(Entity, ref Collider, ref Transform);
@@ -27,8 +27,6 @@ public class CollisionSystem : PhysicsSystem
         => new()
         {
             Entity = entity,
-            Collider = entity.Get<Collider>(),
-            Transform = entity.Get<Transform>(),
         };
     }
 
