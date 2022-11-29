@@ -60,12 +60,12 @@ public class World
 		_lastGameTime = gameTime;
 
         if (_isDirty) UpdateComponents();
-        _entityEvents.Clear();
 
         foreach (var system in _updateSystems)
         {
             system.Update(this, gameTime);
         }
+        _entityEvents.Clear();
 
 		if (_toBeDestroyed.Any())
 		{
@@ -142,7 +142,6 @@ public class World
     /// <exception cref="ArgumentException">The entityId does not correspond to an entity in the world</exception>
     public Entity Entity(Guid entityId)
     {
-        Log.Debug($"Fetching entity {entityId}");
         if (!_entities.Contains(entityId)) throw new ArgumentException($"Entity {entityId} does not exist in scene!");
         return new()
         {
@@ -242,7 +241,6 @@ public class World
 
     private void UpdateComponents()
     {
-        Log.Debug("Updating system components");
         foreach (var system in _entitySystems)
         {
             var query = system.Archetype;
@@ -257,6 +255,7 @@ public class World
         Log.Debug($"Removing entity {entityId}");
         _componentRepo.RemoveAll(entityId);
 		_entities.Remove(entityId);
+        _entityEvents.RemoveEntity(entityId);
 	}
 }
 
