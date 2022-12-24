@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+
+using Microsoft.Xna.Framework;
 
 namespace Toan.Rendering;
 
@@ -9,16 +11,19 @@ public partial class Renderer
 		float distance = Vector2.Distance(drawCall.Position, drawCall.End);
 		float angle = (drawCall.End - drawCall.Position).AngleRad();
 
+		Vector2 cameraOffset = (MainCamera?.ViewOffset ?? Vector2.Zero) * ScreenSize;
+		Vector2 drawOrigin = drawCall.Position * RenderScale + cameraOffset;
+
 		Vector2 lineRect = new(distance, drawCall.StrokeWeight);
 
 		_spriteBatch.Draw(
 			texture         : Pixel,
-			position        : drawCall.Position,
+			position        : drawOrigin,
 			sourceRectangle : null,
 			color           : drawCall.Color,
 			rotation        : drawCall.Rotation + angle,
 			origin          : drawCall.Origin,
-			scale           : lineRect * drawCall.Scale,
+			scale           : lineRect * RenderScale * drawCall.Scale,
 			effects         : drawCall.SpriteEffects,
 			layerDepth      : drawCall.LayerDepth
 		);
@@ -33,21 +38,17 @@ public partial class Renderer
 
 	public void DrawPrimitive(DrawPrimitiveCall drawCall)
 	{
-		var points = drawCall.Points;
-		var cameraOffset = (MainCamera?.ViewOffset ?? Vector2.Zero) * ScreenSize;
-		var drawOrigin = drawCall.Position * RenderScale;
-
-		var drawOffset = drawOrigin + cameraOffset;
+		List<Vector2> points = drawCall.Points;
 
 		for (int i = 0; i < points.Count; i++)
 		{
-			var currentPoint = points[i] + drawOffset;
-			var nextPoint = points[(i < points.Count - 1) ? i + 1 : 0] + drawOffset;
+			Vector2 currentPoint = points[i];
+			Vector2 nextPoint = points[(i < points.Count - 1) ? i + 1 : 0];
 
 			DrawLine(new(drawCall)
 			{
-				End      = nextPoint,
-				Position = currentPoint,
+				End      = nextPoint + drawCall.Position,
+				Position = currentPoint + drawCall.Position,
 			});
 		}
 	}
