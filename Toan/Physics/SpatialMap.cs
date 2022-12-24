@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 using Microsoft.Xna.Framework;
@@ -49,8 +49,23 @@ public class SpatialMap : Resource
     {
         foreach (var kvp in _spatialTable)
         {
-            kvp.Value.Remove(entityId);
+            Remove(entityId, kvp.Key);
         }
+    }
+
+    private void Remove(Guid entityId, Point cell)
+    {
+        if (!_spatialTable.ContainsKey(cell))
+            return;
+
+        ISet<Guid> cellContents = _spatialTable[cell];
+        if (cellContents.Remove(entityId) && cellContents.Count == 0)
+            RemoveCell(cell);
+    }
+
+    private void RemoveCell(Point cell)
+    {
+        _spatialTable.Remove(cell);
     }
 
     /// <summary>
