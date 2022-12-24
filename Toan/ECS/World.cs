@@ -44,8 +44,6 @@ public class World
 
 	public void Awake()
 	{
-        Log.Debug("Awake");
-
 		foreach (var startupSystem in _startupSystems)
 		{
 			startupSystem.Invoke(this);
@@ -69,7 +67,6 @@ public class World
 
 		if (_toBeDestroyed.Any())
 		{
-            Log.Debug("Removing destroyed entities");
 			foreach (var toDestroy in _toBeDestroyed)
 			{
 				DestroyEntity(toDestroy);
@@ -192,7 +189,6 @@ public class World
     public Guid AddNewEntity()
     {
         Guid entityId = GetNewGuid();
-        Log.Debug($"Adding entity {entityId}");
 
         _entities.Add(entityId);
         _entityEvents.AddEntity(entityId);
@@ -252,7 +248,6 @@ public class World
 
 	private void DestroyEntity(Guid entityId)
 	{
-        Log.Debug($"Removing entity {entityId}");
         _componentRepo.RemoveAll(entityId);
 		_entities.Remove(entityId);
         _entityEvents.RemoveEntity(entityId);
