@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+
 using Toan.ECS.Bundles;
 using Toan.ECS.Components;
 
@@ -9,7 +8,7 @@ namespace Toan.ECS;
 /// <summary>
 /// A temporary, lightweight wrapper around a set of <see cref="GameComponent"/>s, a <see cref="World"/> reference, and a <see cref="Guid"/>
 /// </summary>
-public struct Entity
+public readonly struct Entity
 {
     public required Guid Id { get; init; }
     public required World World { get; init; }
