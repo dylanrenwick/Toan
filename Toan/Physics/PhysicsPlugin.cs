@@ -4,7 +4,7 @@ namespace Toan.Physics;
 
 public class PhysicsPlugin : Plugin
 {
-    public int SpatialCellSize { get; init; } = 8;
+    public int SpatialCellSize { get; init; } = 16;
 
     public override void Build(World world)
     {
