@@ -13,7 +13,13 @@ public class ComponentPool<TComponent> : IComponentPool, IEnumerable<TComponent>
     private Guid[] _entityLink = Array.Empty<Guid>();
     private Dictionary<Guid, int> _entityMappings = new();
 
-    public int Count => _lastComponentIndex + 1;
+    public int Count => LastComponentIndex + 1;
+
+    private int LastComponentIndex
+    {
+        get => _lastComponentIndex;
+        set => _lastComponentIndex = Math.Max(value, -1);
+    }
 
     public void Add(Guid entityId, in object component)
     {
@@ -24,7 +30,7 @@ public class ComponentPool<TComponent> : IComponentPool, IEnumerable<TComponent>
 
     public void Add(Guid entityId, in TComponent component)
     {
-        int nextIndex = _lastComponentIndex + 1;
+        int nextIndex = GetEntityIndex(entityId);
 
         EnsureLength(ref _components, nextIndex + 1);
         EnsureLength(ref _entityLink, nextIndex + 1);
@@ -33,7 +39,7 @@ public class ComponentPool<TComponent> : IComponentPool, IEnumerable<TComponent>
         _entityLink[nextIndex] = entityId;
         _entityMappings[entityId] = nextIndex;
 
-        _lastComponentIndex++;
+        LastComponentIndex = Math.Max(LastComponentIndex, nextIndex);
     }
 
     public bool HasEntity(Guid entityId)
@@ -58,19 +64,27 @@ public class ComponentPool<TComponent> : IComponentPool, IEnumerable<TComponent>
 
         int componentIndex = _entityMappings[entityId];
         if (componentIndex == -1)
-            return false;
-
-        if (Count > 0 && componentIndex != _lastComponentIndex)
         {
-            var lastLink = _entityLink[_lastComponentIndex];
-            _components[componentIndex] = _components[_lastComponentIndex];
-            _entityMappings[lastLink] = componentIndex;
-            _entityMappings[entityId] = -1;
+            _entityMappings.Remove(entityId);
+            return false;
         }
 
-        _lastComponentIndex--;
+        if (Count > 0 && componentIndex != LastComponentIndex)
+        {
+            var lastLink = _entityLink[LastComponentIndex];
+            _components[componentIndex] = _components[LastComponentIndex];
+            _entityMappings[lastLink] = componentIndex;
+            _entityMappings.Remove(entityId);
+        }
+
+        LastComponentIndex--;
         return true;
     }
+
+    private int GetEntityIndex(Guid entityId)
+    => HasEntity(entityId)
+        ? _entityMappings[entityId]
+        : LastComponentIndex + 1;
 
     public IEnumerator<TComponent> GetEnumerator() => ((IEnumerable<TComponent>)_components).GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => _components.GetEnumerator();
@@ -96,5 +110,4 @@ public class ComponentPool<TComponent> : IComponentPool, IEnumerable<TComponent>
             Array.Resize(ref arr, newLength);
         }
     }
-
 }
