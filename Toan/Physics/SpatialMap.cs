@@ -1,7 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using Microsoft.Xna.Framework;
+
 using Toan.ECS;
 using Toan.ECS.Resources;
 
@@ -23,6 +24,11 @@ public class SpatialMap : Resource
                 : new HashSet<Guid>();
         }
     }
+
+    public IEnumerable<Point> OccupiedCells
+    => _spatialTable
+        .Where(kvp => kvp.Value.Count > 0)
+        .Select(kvp => kvp.Key);
 
     public bool Add(Entity entity)
         => Add(entity, ref entity.Get<Collider>());

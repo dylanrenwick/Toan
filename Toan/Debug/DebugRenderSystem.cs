@@ -16,10 +16,12 @@ public class DebugRenderSystem : EntityRenderSystem
     public override WorldQuery<Debug, Transform> Archetype => new();
 
     public override void Render(World world, Renderer renderer, GameTime gameTime)
-    protected override void RenderEntity(Entity entity, Renderer renderer, GameTime gameTime)
 	{
         var debug = world.Resource<DebugState>();
         if (!debug.DebugActive) return;
+
+		var spatialMap = world.Resource<SpatialMap>();
+		DrawSpatialMap(renderer, spatialMap);
 
 		base.Render(world, renderer, gameTime);
 	}
@@ -54,6 +56,28 @@ public class DebugRenderSystem : EntityRenderSystem
 				case ColliderShape.Rect:
 					break;
 			}
+		}
+	}
+
+	private static void DrawSpatialMap(Renderer renderer, SpatialMap spatialMap)
+	{
+		Point cellSize = new(spatialMap.CellSize);
+
+		foreach (Point cell in spatialMap.OccupiedCells)
+		{
+			var cellContents = spatialMap[cell.X, cell.Y];
+			if (cellContents.Count == 0)
+				continue;
+
+			var cellPos = cell * cellSize;
+
+			renderer.DrawRect(new()
+			{
+				Color = Color.Cyan,
+				Position = cellPos.ToVector2(),
+				Rect = new(new(0), cellSize),
+				StrokeWeight = 1f / renderer.RenderScale,
+			});
 		}
 	}
 }
