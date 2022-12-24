@@ -33,12 +33,13 @@ public class CorePlugins : Plugin
     {
         world.AddPlugin<InputPlugin>();
         world.AddPlugin<CameraPlugin>();
-        world.AddPlugin<PhysicsPlugin>();
 
         world.Systems()
             .Add<MotorSystem>()
             .Add<TextSystem>()
             .Add<SpriteSystem>();
+
+        world.AddPlugin<PhysicsPlugin>();
 
 #if DEBUG
         world.AddPlugin(new DebugPlugin { AutoApply = AutoApplyDebug });
