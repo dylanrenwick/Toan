@@ -17,7 +17,7 @@ public struct Collider : IComponent
     public bool IsCircle
     => Shape switch
     {
-        ColliderShape.Circle | ColliderShape.Point => true,
+        ColliderShape.Circle or ColliderShape.Point => true,
         _ => false,
     };
 
