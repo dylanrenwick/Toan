@@ -56,6 +56,14 @@ public class DebugRenderSystem : EntityRenderSystem
 				case ColliderShape.Rect:
 					break;
 			}
+
+			FloatRect boundingBox = CollisionHelper.GetColliderBoundingBox(entity, ref collider, ref transform);
+			renderer.DrawRect(new()
+			{
+                Color = hit ? Color.Red : Color.Yellow,
+				Position = boundingBox.Position,
+				Rect = new(new(0), boundingBox.Size.ToPoint())
+			});
 		}
 	}
 
