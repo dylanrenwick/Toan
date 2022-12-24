@@ -13,4 +13,7 @@ public class Changed : IWorldQueryable
 {
     public ISet<Guid> Reduce(World world, ISet<Guid> entities, ComponentRepository componentRepo)
         => entities.Where(world.Events.WasChanged).ToHashSet();
+
+    public static bool Has(Entity entity)
+        => entity.World.Events.WasChanged(entity.Id);
 }

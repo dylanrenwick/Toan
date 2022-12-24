@@ -13,5 +13,8 @@ public class Added : IWorldQueryable
 {
     public ISet<Guid> Reduce(World world, ISet<Guid> entities, ComponentRepository componentRepo)
         => entities.Where(world.Events.WasAdded).ToHashSet();
+
+    public static bool Has(Entity entity)
+        => entity.World.Events.WasAdded(entity.Id);
 }
 
