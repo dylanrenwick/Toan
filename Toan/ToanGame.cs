@@ -106,7 +106,7 @@ public abstract class ToanGame : Game
     {
         if (_renderer == null) return;
 
-        _renderer.Clear(Color.CornflowerBlue);
+        _renderer.Clear(Color.Black);
         _renderer.Begin();
 
         World?.Draw(_renderer, gameTime);
