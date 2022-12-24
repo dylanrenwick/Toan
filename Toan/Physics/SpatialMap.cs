@@ -113,6 +113,10 @@ public class SpatialMap : Resource
     {
         float cellOffsetX = boundingBox.Left % CellSize;
         float cellOffsetY = boundingBox.Top % CellSize;
+        if (cellOffsetX < 0)
+            cellOffsetX += CellSize;
+        if (cellOffsetY < 0)
+            cellOffsetY += CellSize;
 
         return new(
             x      : (int)Math.Floor(boundingBox.Left / CellSize),
