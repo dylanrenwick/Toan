@@ -29,8 +29,8 @@ public class World
 
 	private GameTime? _lastGameTime;
 
-    private readonly Events _entityEvents = new();
-    public IEventsReader Events => _entityEvents;
+    public readonly Events Events = new();
+
 	private float Timestamp => (float)(_lastGameTime?.TotalGameTime.TotalSeconds ?? 0.0);
 
     private bool _isDirty = false;
@@ -39,7 +39,7 @@ public class World
     public void Dirty(Guid entityId)
     {
         Dirty();
-        _entityEvents.ChangeEntity(entityId);
+        Events.ChangeEntity(entityId);
     }
 
 	public void Awake()
@@ -63,7 +63,7 @@ public class World
         {
             system.Update(this, gameTime);
         }
-        _entityEvents.Clear();
+        Events.Clear();
 
 		if (_toBeDestroyed.Any())
 		{
@@ -191,7 +191,7 @@ public class World
         Guid entityId = GetNewGuid();
 
         _entities.Add(entityId);
-        _entityEvents.AddEntity(entityId);
+        Events.AddEntity(entityId);
         _componentRepo.Add(entityId, new EntityData { CreatedAt = Timestamp });
 
         Dirty();
@@ -250,7 +250,7 @@ public class World
 	{
         _componentRepo.RemoveAll(entityId);
 		_entities.Remove(entityId);
-        _entityEvents.RemoveEntity(entityId);
+        Events.RemoveEntity(entityId);
 	}
 }
 
