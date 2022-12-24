@@ -83,19 +83,15 @@ public class SpatialMap : Resource
         return _spatialTable[cell].Add(guid);
     }
 
-    private static IReadOnlySet<Point> GetCellsInBounds(Rectangle boundingBox)
+    private static IEnumerable<Point> GetCellsInBounds(Rectangle boundingBox)
     {
-        HashSet<Point> results = new();
-
         for (int y = boundingBox.Y; y < boundingBox.Y + boundingBox.Height; y++)
         {
             for (int x = boundingBox.X; x < boundingBox.X + boundingBox.Width; x++)
             {
-                results.Add(new(x, y));
+                yield return new(x, y);
             }
         }
-
-        return results;
     }
 
     private Rectangle CellBoundsFromRealBounds(FloatRect boundingBox)
