@@ -44,6 +44,9 @@ public class CollisionSystem : PhysicsSystem
 
         foreach (Guid otherId in nearbyColliders)
         {
+            if (otherId == entity.Id)
+                continue;
+
             var other = entity.World.Entity(otherId);
             var otherCollidable = Collidable.FromEntity(other);
 
@@ -66,7 +69,7 @@ public class CollisionSystem : PhysicsSystem
         }
     }
 
-    private Vector2? CheckCollisions(Collidable first, Collidable second)
+    private static Vector2? CheckCollisions(Collidable first, Collidable second)
     {
         Vector2 collisionNormal = second.Transform.Position - first.Transform.Position;
 
