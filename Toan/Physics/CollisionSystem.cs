@@ -61,12 +61,10 @@ public class CollisionSystem : PhysicsSystem
             }
         }
 
-        entity.Without<Collisions>();
-
         if (collisions.Count > 0)
-        {
             entity.With(collisions);
-        }
+        else
+            entity.Without<Collisions>();
     }
 
     private static Vector2? CheckCollisions(Collidable first, Collidable second)
