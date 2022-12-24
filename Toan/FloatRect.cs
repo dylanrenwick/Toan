@@ -50,4 +50,7 @@ public struct FloatRect
         return Right > other.Left && Left < other.Right
             && Top > other.Bottom && Bottom < other.Top;
     }
+
+    public Rectangle ToRectangle()
+        => new(Position.ToPoint(), Size.ToPoint());
 }
