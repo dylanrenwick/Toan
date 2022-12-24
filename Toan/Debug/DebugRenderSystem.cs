@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 
 using Microsoft.Xna.Framework;
 
@@ -15,11 +15,17 @@ public class DebugRenderSystem : EntityRenderSystem
 {
     public override WorldQuery<Debug, Transform> Archetype => new();
 
+    public override void Render(World world, Renderer renderer, GameTime gameTime)
     protected override void RenderEntity(Entity entity, Renderer renderer, GameTime gameTime)
-    {
-        var debug = entity.World.Resource<DebugState>();
+	{
+        var debug = world.Resource<DebugState>();
         if (!debug.DebugActive) return;
 
+		base.Render(world, renderer, gameTime);
+	}
+
+    protected override void RenderEntity(Entity entity, Renderer renderer, GameTime gameTime)
+    {
 		ref var transform = ref entity.Get<Transform>();
         if (entity.Has<Collider>())
         {
