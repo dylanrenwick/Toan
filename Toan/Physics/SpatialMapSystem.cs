@@ -10,7 +10,7 @@ namespace Toan.Physics;
 
 public class SpatialMapSystem : PhysicsSystem
 {
-    public override WorldQuery<Collider, Transform> Archetype => new();
+    public override WorldQuery<Collider, Changed<Transform>> Archetype => new();
 
     public override void Update(World world, GameTime gameTime)
     {
@@ -30,8 +30,7 @@ public class SpatialMapSystem : PhysicsSystem
         if (_spatialMap == null)
             return;
 
-        if (Moved.Has(entity))
-            _spatialMap.Remove(entity.Id);
+        _spatialMap.Remove(entity.Id);
         _spatialMap.Add(entity);
     }
 }

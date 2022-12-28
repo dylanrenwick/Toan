@@ -7,11 +7,9 @@ public interface IEventsReader
 {
     public IReadOnlySet<Guid> Added { get; }
     public IReadOnlySet<Guid> Changed { get; }
-    public IReadOnlySet<Guid> Moved { get; }
     public IReadOnlySet<Guid> Removed { get; }
 
     public bool WasAdded(Guid entityId);
     public bool WasChanged(Guid entityId);
-    public bool WasMoved(Guid entityId);
     public bool WasRemoved(Guid entityId);
 }

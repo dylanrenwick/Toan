@@ -8,12 +8,10 @@ public class Events : IEventsReader
 {
     private readonly HashSet<Guid> _added   = new();
     private readonly Dictionary<Guid, HashSet<Type>> _changed = new();
-    private readonly HashSet<Guid> _moved   = new();
     private readonly HashSet<Guid> _removed = new();
 
     public IReadOnlySet<Guid> Added   => _added;
     public IReadOnlySet<Guid> Changed => _changed.Keys.ToHashSet();
-    public IReadOnlySet<Guid> Moved   => _moved;
     public IReadOnlySet<Guid> Removed => _removed;
 
     public void AddEntity(Guid entityId)
@@ -26,8 +24,6 @@ public class Events : IEventsReader
         ISet<Type> changedTypes = GetChangedTypes(entityId);
         changedTypes.Add(typeof(T));
     }
-    public void MoveEntity(Guid entityId)
-        => _moved.Add(entityId);
     public void RemoveEntity(Guid entityId)
         => _removed.Add(entityId);
 
@@ -38,8 +34,6 @@ public class Events : IEventsReader
     public bool WasChanged<T>(Guid entityId)
         where T : struct
     => WasChanged(entityId) && _changed[entityId].Contains(typeof(T));
-    public bool WasMoved(Guid entityId)
-        => _moved.Contains(entityId);
     public bool WasRemoved(Guid entityId)
         => _removed.Contains(entityId);
 
@@ -47,7 +41,6 @@ public class Events : IEventsReader
     {
         _added.Clear();
         _changed.Clear();
-        _moved.Clear();
         _removed.Clear();
     }
 
