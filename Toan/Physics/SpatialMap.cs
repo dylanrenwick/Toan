@@ -54,6 +54,9 @@ public class SpatialMap : Resource
 
     public void Remove(Guid entityId)
     {
+        if (!_lookupTable.ContainsKey(entityId))
+            return;
+
         foreach (var cell in _lookupTable[entityId])
         {
             RemoveFromCell(entityId, cell);
