@@ -11,9 +11,16 @@ namespace Toan.ECS.Query;
 /// </summary>
 public class Changed : IWorldQueryable
 {
-    public ISet<Guid> Reduce(World world, ISet<Guid> entities, ComponentRepository componentRepo)
+    public virtual ISet<Guid> Reduce(World world, ISet<Guid> entities, ComponentRepository componentRepo)
         => entities.Where(world.Events.WasChanged).ToHashSet();
 
     public static bool Has(Entity entity)
         => entity.World.Events.WasChanged(entity.Id);
+}
+
+public class Changed<T> : Changed
+    where T : struct
+{
+    public override ISet<Guid> Reduce(World world, ISet<Guid> entities, ComponentRepository componentRepo)
+        => entities.Where(world.Events.WasChanged<T>).ToHashSet();
 }

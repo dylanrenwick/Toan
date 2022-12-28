@@ -68,5 +68,11 @@ public readonly struct Entity
     {
         World.Dirty(Id);
     }
+
+    private void Dirty<T>()
+        where T : struct
+    {
+        World.Dirty<T>(Id);
+    }
 }
 

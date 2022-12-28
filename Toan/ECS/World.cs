@@ -41,6 +41,11 @@ public class World
         Dirty();
         Events.ChangeEntity(entityId);
     }
+    public void Dirty<T>(Guid entityId)
+        where T : struct
+    {
+
+    }
 
 	public void Awake()
 	{
