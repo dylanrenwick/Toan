@@ -31,10 +31,10 @@ public class SpatialMap : Resource
         .Select(kvp => kvp.Key);
 
     public bool Add(Entity entity)
-        => Add(entity, ref entity.Get<Collider>());
+        => Add(entity, entity.Get<Collider>());
 
-    public bool Add(Entity entity, ref Collider collider)
-        => Add(entity.Id, CollisionHelper.GetColliderBoundingBox(entity, ref collider));
+    public bool Add(Entity entity, Collider collider)
+        => Add(entity.Id, CollisionHelper.GetColliderBoundingBox(entity, collider));
 
     public bool Add(Guid entityId, FloatRect boundingBox)
     {

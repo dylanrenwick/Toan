@@ -60,9 +60,9 @@ public readonly struct Entity
     public bool Has(Type type)
     => Components.Has(Id, type);
 
-    public ref TComponent Get<TComponent>()
+    public TComponent Get<TComponent>()
         where TComponent : struct
-    => ref Components.Get<TComponent>(Id);
+    => Components.Get<TComponent>(Id);
 
     private void Dirty()
     {

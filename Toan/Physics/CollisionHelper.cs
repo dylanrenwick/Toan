@@ -56,19 +56,19 @@ public static class CollisionHelper
         => rectA.Overlaps(rectB);
 
     public static Vector2 GetColliderOrigin(Entity entity)
-        => GetColliderOrigin(ref entity.Get<Transform>(), ref entity.Get<Collider>());
+        => GetColliderOrigin(entity.Get<Transform>(), entity.Get<Collider>());
 
-    public static Vector2 GetColliderOrigin(ref Transform transform, ref Collider collider)
+    public static Vector2 GetColliderOrigin(Transform transform, Collider collider)
         => transform.Position + collider.Origin;
 
     public static float GetColliderBoundingCircle(Entity entity)
-        => GetColliderBoundingCircle(entity, ref entity.Get<Collider>());
+        => GetColliderBoundingCircle(entity, entity.Get<Collider>());
 
-    public static float GetColliderBoundingCircle(Entity entity, ref Collider collider)
+    public static float GetColliderBoundingCircle(Entity entity, Collider collider)
     => collider.Shape switch
     {
         ColliderShape.Circle => entity.Get<CircleCollider>().Radius,
-        ColliderShape.Rect   => GetColliderBoundingBox(entity, ref collider).OuterBoundsRadius,
+        ColliderShape.Rect   => GetColliderBoundingBox(entity, collider).OuterBoundsRadius,
         _                    => 0f,
     };
 
@@ -78,15 +78,15 @@ public static class CollisionHelper
     /// <param name="entity">The entity whos collider to use</param>
     /// <returns></returns>
     public static FloatRect GetColliderBoundingBox(Entity entity)
-        => GetColliderBoundingBox(entity, ref entity.Get<Collider>());
+        => GetColliderBoundingBox(entity, entity.Get<Collider>());
     /// <summary>
     /// Utility method for calculating smallest AABB containing collider
     /// </summary>
     /// <param name="entity">The entity whos collider to use</param>
     /// <param name="collider">A reference to the <see cref="Collider"/> component</param>
     /// <returns></returns>
-    public static FloatRect GetColliderBoundingBox(Entity entity, ref Collider collider)
-        => GetColliderBoundingBox(entity, ref collider, ref entity.Get<Transform>());
+    public static FloatRect GetColliderBoundingBox(Entity entity, Collider collider)
+        => GetColliderBoundingBox(entity, collider, entity.Get<Transform>());
     /// <summary>
     /// Utility method for calculating smallest AABB containing collider
     /// </summary>
@@ -95,17 +95,17 @@ public static class CollisionHelper
     /// <param name="transform">A reference to the <see cref="Transform"/> component</param>
     /// <returns></returns>
     /// <exception cref="System.NotImplementedException"></exception>
-    public static FloatRect GetColliderBoundingBox(Entity entity, ref Collider collider, ref Transform transform)
+    public static FloatRect GetColliderBoundingBox(Entity entity, Collider collider, Transform transform)
     => collider.Shape switch
     {
-        ColliderShape.Circle => GetCircleBoundingBox(ref entity.Get<CircleCollider>()).Offset(transform.Position),
-        ColliderShape.Rect   => GetRectBoundingBox(ref transform, ref collider, ref entity.Get<RectCollider>()),
+        ColliderShape.Circle => GetCircleBoundingBox(entity.Get<CircleCollider>()).Offset(transform.Position),
+        ColliderShape.Rect   => GetRectBoundingBox(transform, collider, entity.Get<RectCollider>()),
         _                    => new FloatRect(transform.Position + collider.Origin, Vector2.Zero),
     };
 
-    private static FloatRect GetCircleBoundingBox(ref CircleCollider circle)
+    private static FloatRect GetCircleBoundingBox(CircleCollider circle)
         => new(new(-circle.Radius), new(circle.Radius * 2f));
 
-    private static FloatRect GetRectBoundingBox(ref Transform transform, ref Collider collider, ref RectCollider rect)
-        => new(GetColliderOrigin(ref transform, ref collider) - (rect.Size / 2f), rect.Size);
+    private static FloatRect GetRectBoundingBox(Transform transform, Collider collider, RectCollider rect)
+        => new(GetColliderOrigin(transform, collider) - (rect.Size / 2f), rect.Size);
 }

@@ -28,7 +28,7 @@ public class DebugRenderSystem : EntityRenderSystem
 
     protected override void RenderEntity(Entity entity, Renderer renderer, GameTime gameTime)
     {
-		ref var transform = ref entity.Get<Transform>();
+		var transform = entity.Get<Transform>();
         if (entity.Has<Collider>())
         {
 			bool hit = false;
@@ -36,13 +36,13 @@ public class DebugRenderSystem : EntityRenderSystem
 			{
 				hit = entity.Get<Collisions>().Any();
 			}
-			ref var collider = ref entity.Get<Collider>();
+			var collider = entity.Get<Collider>();
 			switch (collider.Shape)
 			{
 				case ColliderShape.None:
 					break;
 				case ColliderShape.Circle:
-					ref var circle = ref entity.Get<CircleCollider>();
+					var circle = entity.Get<CircleCollider>();
                     renderer.DrawPrimitive(new DrawCircleCall
                     {
                         Color = hit ? Color.Red : Color.Yellow,
@@ -57,7 +57,7 @@ public class DebugRenderSystem : EntityRenderSystem
 					break;
 			}
 
-			FloatRect boundingBox = CollisionHelper.GetColliderBoundingBox(entity, ref collider, ref transform);
+			FloatRect boundingBox = CollisionHelper.GetColliderBoundingBox(entity, collider, transform);
 			renderer.DrawRect(new()
 			{
                 Color = hit ? Color.Red : Color.Yellow,

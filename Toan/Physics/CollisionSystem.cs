@@ -17,11 +17,11 @@ public class CollisionSystem : PhysicsSystem
     {
         public Entity Entity;
 
-        public ref Collider Collider => ref Entity.Get<Collider>();
-        public ref Transform Transform => ref Entity.Get<Transform>();
+        public Collider Collider => Entity.Get<Collider>();
+        public Transform Transform => Entity.Get<Transform>();
 
         public FloatRect GetColliderBoundingBox()
-            => CollisionHelper.GetColliderBoundingBox(Entity, ref Collider, ref Transform);
+            => CollisionHelper.GetColliderBoundingBox(Entity, Collider, Transform);
 
         public static Collidable FromEntity(Entity entity)
         => new()

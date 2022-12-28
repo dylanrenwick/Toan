@@ -11,8 +11,8 @@ public class MotorSystem : EntityUpdateSystem
 
     protected override void UpdateEntity(Entity entity, GameTime time)
     {
-        ref var motor     = ref entity.Get<Motor>();
-        ref var transform = ref entity.Get<Transform>();
+        var motor     = entity.Get<Motor>();
+        var transform = entity.Get<Transform>();
         var deltaTime = (float)time.ElapsedGameTime.TotalSeconds;
 
         UpdateAcceleration(ref motor, deltaTime);

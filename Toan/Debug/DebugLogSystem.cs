@@ -25,8 +25,8 @@ public class DebugLogSystem : EntityUpdateSystem
             return;
         }
 
-        ref var debugLog = ref entity.Get<DebugLog>();
-        ref var text     = ref entity.Get<Text>();
+        var debugLog = entity.Get<DebugLog>();
+        var text     = entity.Get<Text>();
 
         if (!visible)
             AddVisible(entity);
