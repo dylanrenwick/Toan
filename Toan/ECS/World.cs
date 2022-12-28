@@ -44,7 +44,8 @@ public class World
     public void Dirty<T>(Guid entityId)
         where T : struct
     {
-
+        Dirty();
+        Events.ChangeEntity<T>(entityId);
     }
 
 	public void Awake()
