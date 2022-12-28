@@ -15,19 +15,20 @@ public class CollisionSystem : PhysicsSystem
 
     private struct Collidable
     {
-        public Entity Entity;
+        public Entity Entity { get; init; }
 
-        public Collider Collider => Entity.Get<Collider>();
-        public Transform Transform => Entity.Get<Transform>();
+        public Collider Collider { get; set; }
+        public Transform Transform { get; set; }
 
         public FloatRect GetColliderBoundingBox()
             => CollisionHelper.GetColliderBoundingBox(Entity, Collider, Transform);
 
-        public static Collidable FromEntity(Entity entity)
-        => new()
+        public Collidable(Entity entity)
         {
-            Entity = entity,
-        };
+            Entity = entity;
+            Collider = Entity.Get<Collider>();
+            Transform = Entity.Get<Transform>();
+        }
     }
 
     protected override void UpdateEntity(Entity entity, GameTime gameTime)
@@ -35,7 +36,7 @@ public class CollisionSystem : PhysicsSystem
         if (_spatialMap is null)
             return;
 
-        var entityCollidable = Collidable.FromEntity(entity);
+        Collidable entityCollidable = new(entity);
 
         FloatRect boundingBox = entityCollidable.GetColliderBoundingBox();
         IReadOnlySet<Guid> nearbyColliders = _spatialMap.GetPossibleCollisions(boundingBox);
@@ -47,8 +48,8 @@ public class CollisionSystem : PhysicsSystem
             if (otherId == entity.Id)
                 continue;
 
-            var other = entity.World.Entity(otherId);
-            var otherCollidable = Collidable.FromEntity(other);
+            Entity other = entity.World.Entity(otherId);
+            Collidable otherCollidable = new(other);
 
             Vector2? collision = CheckCollisions(entityCollidable, otherCollidable);
             if (collision is Vector2 collisionNormal)
