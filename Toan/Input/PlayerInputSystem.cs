@@ -25,6 +25,8 @@ public class PlayerInputSystem : EntityUpdateSystem
         if (input.KeyDown(Keys.S)) inputDir += new Vector2(0, 1);
 
         motor.Input = inputDir;
+
+        entity.With(motor);
     }
 }
 

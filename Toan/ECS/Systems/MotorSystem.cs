@@ -20,6 +20,9 @@ public class MotorSystem : EntityUpdateSystem
         UpdateVelocity(ref motor, deltaTime);
         UpdatePosition(ref transform, ref motor);
 
+        entity.With(motor);
+        entity.With(transform);
+
         if (motor.Velocity.LengthSquared() > 0)
             entity.World.Events.MoveEntity(entity.Id);
     }

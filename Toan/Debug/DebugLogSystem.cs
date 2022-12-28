@@ -35,6 +35,7 @@ public class DebugLogSystem : EntityUpdateSystem
         TextLog log = entity.World.Resource<TextLog>(logId);
 
         text.Content = log.GetEntries(debugLog.EntryCount);
+        entity.With(text);
     }
 
     protected void RemoveVisible(Entity entity)

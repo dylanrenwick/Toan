@@ -25,6 +25,7 @@ public class MainCameraSystem : EntityRenderSystem
 
         camera.WorldPosition = transform.Position;
         renderer.MainCamera = camera;
+        entity.With(camera);
     }
 
     protected override void RenderEntity(Entity entity, Renderer renderer, GameTime gameTime) { }
