@@ -21,7 +21,7 @@ public readonly struct Entity
     /// <returns>This <see cref="Entity"/> for chaining purposes</returns>
     public Entity With<T>()
         where T : struct
-    => With<T>(new T());
+    => With(new T());
     /// <summary>
     /// Adds a component to the entity
     /// </summary>
@@ -30,7 +30,7 @@ public readonly struct Entity
         where T : struct
     {
         Dirty();
-        Components.Add<T>(Id, component);
+        Components.Add(Id, component);
         return this;
     } 
 
