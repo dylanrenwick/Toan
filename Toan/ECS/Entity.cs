@@ -29,7 +29,7 @@ public readonly struct Entity
     public Entity With<T>(T component)
         where T : struct
     {
-        Dirty();
+        Dirty<T>();
         Components.Add(Id, component);
         return this;
     } 
