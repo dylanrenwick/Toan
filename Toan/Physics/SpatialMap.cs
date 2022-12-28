@@ -11,6 +11,7 @@ namespace Toan.Physics;
 public class SpatialMap : Resource
 {
     private readonly Dictionary<Point, HashSet<Guid>> _spatialTable = new();
+    private readonly Dictionary<Guid, HashSet<Point>> _lookupTable  = new();
 
     public required int CellSize { get; init; }
 
@@ -53,25 +54,41 @@ public class SpatialMap : Resource
 
     public void Remove(Guid entityId)
     {
-        foreach (var kvp in _spatialTable)
+        foreach (var cell in _lookupTable[entityId])
         {
-            Remove(entityId, kvp.Key);
+            RemoveFromCell(entityId, cell);
         }
     }
 
-    private void Remove(Guid entityId, Point cell)
+    private void RemoveFromCell(Guid entityId, Point cell)
     {
-        if (!_spatialTable.ContainsKey(cell))
-            return;
+        if (_lookupTable.ContainsKey(entityId))
+        {
+            RemoveLookup(entityId, cell);
+        }
 
-        ISet<Guid> cellContents = _spatialTable[cell];
-        if (cellContents.Remove(entityId) && cellContents.Count == 0)
-            RemoveCell(cell);
+        if (_spatialTable.ContainsKey(cell))
+        {
+            RemoveSpatial(entityId, cell);
+        }
     }
 
-    private void RemoveCell(Point cell)
+    private void RemoveSpatial(Guid entityId, Point cell)
     {
-        _spatialTable.Remove(cell);
+        ISet<Guid> cellContents = _spatialTable[cell];
+        if (cellContents.Remove(entityId) && cellContents.Count == 0)
+        {
+            _spatialTable.Remove(cell);
+        }
+    }
+
+    private void RemoveLookup(Guid entityId, Point cell)
+    {
+        ISet<Point> lookupContents = _lookupTable[entityId];
+        if (lookupContents.Remove(cell) && lookupContents.Count == 0)
+        {
+            _lookupTable.Remove(entityId);
+        }
     }
 
     /// <summary>
@@ -100,8 +117,17 @@ public class SpatialMap : Resource
     private bool AddToCell(Guid guid, Point cell)
     {
         if (!_spatialTable.ContainsKey(cell))
+        {
             _spatialTable.Add(cell, new HashSet<Guid>());
-        return _spatialTable[cell].Add(guid);
+        }
+
+        if (!_lookupTable.ContainsKey(guid))
+        {
+            _lookupTable.Add(guid, new HashSet<Point>());
+        }
+
+        return _spatialTable[cell].Add(guid)
+            && _lookupTable[guid].Add(cell);
     }
 
     private static IEnumerable<Point> GetCellsInBounds(Rectangle boundingBox)
