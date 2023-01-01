@@ -10,6 +10,7 @@ using Toan.ECS.Resources;
 using Toan.ECS.Systems;
 using Toan.Logging;
 using Toan.Rendering;
+using Toan.UI;
 
 namespace Toan.ECS;
 
@@ -121,6 +122,16 @@ public class World
     {
         Transform transform = new() { Position = pos };
         return CreateEntity().With(transform);
+    }
+
+    public UIEntity CreateUI()
+        => CreateUI(null);
+    public UIEntity CreateUI(Guid? parentId)
+    {
+        Entity entity = CreateEntity();
+        entity.With(new UINode { ParentNode = parentId });
+
+        return new UIEntity(this, entity);
     }
 
     /// <summary>
