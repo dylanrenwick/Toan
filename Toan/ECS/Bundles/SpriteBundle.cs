@@ -1,6 +1,4 @@
-﻿using System;
-
-using Toan.ECS.Components;
+﻿using Toan.ECS.Components;
 
 namespace Toan.ECS.Bundles;
 
@@ -10,10 +8,10 @@ public struct SpriteBundle : IBundle
 
     public Sprite Sprite { get; init; }
 
-    public void AddBundle(Guid entityId, ComponentRepository componentRepo)
+    public void AddBundle(Entity entity)
     {
-        IBundle.AddIfNew(entityId, componentRepo, Sprite);
+        entity.WithIfNew(Sprite);
         if (Visible)
-            IBundle.AddIfNew<Visible>(entityId, componentRepo, default);
+            entity.With<Visible>();
     }
 }

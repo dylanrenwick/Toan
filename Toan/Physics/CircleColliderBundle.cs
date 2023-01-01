@@ -2,10 +2,12 @@
 
 using Microsoft.Xna.Framework;
 
+using Toan.ECS;
 using Toan.ECS.Bundles;
 using Toan.ECS.Components;
 
 namespace Toan.Physics;
+
 public struct CircleColliderBundle : IBundle
 {
     public required float Radius { get; init; }
@@ -16,15 +18,18 @@ public struct CircleColliderBundle : IBundle
 
     public CollisionMask Mask { get; init; }
 
-    public void AddBundle(Guid entityId, ComponentRepository componentRepo)
+    public void AddBundle(Entity entity)
     {
-        IBundle.AddIfNew<Collider>(entityId, componentRepo, new()
+        entity.WithIfNew(new Collider()
         {
             Layer  = Layer,
             Mask   = Mask,
             Origin = Origin,
             Shape  = ColliderShape.Circle,
+        })
+        .WithIfNew(new CircleCollider()
+        {
+            Radius = Radius
         });
-        IBundle.AddIfNew<CircleCollider>(entityId, componentRepo, new() { Radius = Radius });
     }
 }
