@@ -128,10 +128,14 @@ public class World
         => CreateUI(null);
     public UIEntity CreateUI(Guid? parentId)
     {
-        Entity entity = CreateEntity();
-        entity.With(new UINode { ParentNode = parentId });
+        Guid entityId = AddNewEntity();
 
-        return new UIEntity(this, entity);
+        return new UIEntity()
+        {
+            Components = _componentRepo,
+            Id         = entityId,
+            World      = this,
+        }.WithBundle(new UIBundle { ParentNodeId = parentId });
     }
 
     /// <summary>

@@ -1,14 +1,22 @@
 ﻿using System;
 
+using Toan.ECS;
 using Toan.ECS.Bundles;
-using Toan.ECS.Components;
 
 namespace Toan.UI;
 
-public struct UIBundle : IBundle
+public readonly struct UIBundle : IBundle
 {
-    public void AddBundle(Guid entityId, ComponentRepository componentRepo)
+    public Guid? ParentNodeId { get; init; } = null;
+
+    public UIBundle() { }
+
+    public void AddBundle(Entity entity)
     {
-        
+        entity
+            .With(new UINode
+            {
+                ParentNode = ParentNodeId,
+            });
     }
 }
