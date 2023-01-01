@@ -1,55 +1,41 @@
 ﻿using System;
 
 using Toan.ECS;
+using Toan.ECS.Bundles;
 
 namespace Toan.UI;
 
-public struct UIEntity : IEntityBuilder<UIEntity>
+public class UIEntity : Entity, IEntityBuilder<UIEntity>
 {
-    private readonly World _world;
-    private readonly Entity _entity;
-
-    public Guid Id => _entity.Id;
-
-    public UIEntity(World world, Entity entity)
-    {
-        _world = world;
-        _entity = entity;
-    }
-
-    public UIEntity With<T>()
+    public new UIEntity With<T>()
         where T : struct
-    {
-        _entity.With<T>();
-        return this;
-    }
-
-    public UIEntity With<T>(T component)
+    => (UIEntity)base.With<T>();
+    public new UIEntity With<T>(T component)
         where T : struct
-    {
-        _entity.With(component);
-        return this;
-    }
+    => (UIEntity)base.With(component);
 
-    public UIEntity Without<T>()
+    public new UIEntity WithIfNew<T>()
         where T : struct
-    {
-        _entity.Without<T>();
-        return this;
-    }    
+    => (UIEntity)base.WithIfNew<T>();
+    public new UIEntity WithIfNew<T>(T component)
+        where T : struct
+    => (UIEntity)base.WithIfNew(component);
 
-    public bool Has<T>()
+    public new UIEntity WithBundle(IBundle bundle)
+        => (UIEntity)base.WithBundle(bundle);
+
+    public new UIEntity Without<T>()
         where T : struct
-    => _entity.Has<T>();
+    => (UIEntity)base.Without<T>();
 
     public UIEntity CreateChild()
     {
-        return _world.CreateUI(_entity.Id);
+        return World.CreateUI(Id);
     }
 
     public UIEntity WithChild(Action<UIEntity> buildChild)
     {
-        UIEntity childBuilder = _world.CreateUI(_entity.Id);
+        UIEntity childBuilder = World.CreateUI(Id);
         buildChild(childBuilder);
 
         return this;

@@ -8,7 +8,7 @@ namespace Toan.ECS;
 /// <summary>
 /// A temporary, lightweight wrapper around a set of <see cref="GameComponent"/>s, a <see cref="World"/> reference, and a <see cref="Guid"/>
 /// </summary>
-public readonly struct Entity : IEntityBuilder<Entity>
+public class Entity : IEntityBuilder<Entity>
 {
     public required Guid Id { get; init; }
     public required World World { get; init; }

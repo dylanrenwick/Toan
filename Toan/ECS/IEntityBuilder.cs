@@ -1,9 +1,11 @@
 ﻿using System;
 
+using Toan.ECS.Bundles;
+
 namespace Toan.ECS;
 
 public interface IEntityBuilder<TSelf>
-    where TSelf : struct, IEntityBuilder<TSelf>
+    where TSelf : IEntityBuilder<TSelf>
 {
     public Guid Id { get; }
 
@@ -16,6 +18,8 @@ public interface IEntityBuilder<TSelf>
         where T : struct;
     public TSelf WithIfNew<T>(T component)
         where T : struct;
+
+    public TSelf WithBundle(IBundle bundle);
 
     public TSelf Without<T>()
         where T : struct;
