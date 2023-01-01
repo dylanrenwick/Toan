@@ -8,7 +8,7 @@ namespace Toan.ECS;
 /// <summary>
 /// A temporary, lightweight wrapper around a set of <see cref="GameComponent"/>s, a <see cref="World"/> reference, and a <see cref="Guid"/>
 /// </summary>
-public readonly struct Entity
+public readonly struct Entity : IEntityBuilder<Entity>
 {
     public required Guid Id { get; init; }
     public required World World { get; init; }
@@ -34,10 +34,25 @@ public readonly struct Entity
         return this;
     } 
 
+    public Entity WithIfNew<T>()
+        where T : struct
+    {
+        if (!Has<T>())
+            With<T>();
+        return this;
+    }
+    public Entity WithIfNew<T>(T component)
+        where T : struct
+    {
+        if (!Has<T>())
+            With(component);
+        return this;
+    }
+
     public Entity WithBundle(IBundle bundle)
     {
         Dirty();
-        bundle.AddBundle(Id, Components);
+        bundle.AddBundle(this);
         return this;
     }
 
