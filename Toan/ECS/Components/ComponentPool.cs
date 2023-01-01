@@ -32,8 +32,8 @@ public class ComponentPool<TComponent> : IComponentPool, IEnumerable<TComponent>
     {
         int nextIndex = GetEntityIndex(entityId);
 
-        EnsureLength(ref _components, nextIndex + 1);
-        EnsureLength(ref _entityLink, nextIndex + 1);
+        Util.EnsureLength(ref _components, nextIndex + 1);
+        Util.EnsureLength(ref _entityLink, nextIndex + 1);
 
         _components[nextIndex] = component;
         _entityLink[nextIndex] = entityId;
@@ -88,26 +88,4 @@ public class ComponentPool<TComponent> : IComponentPool, IEnumerable<TComponent>
 
     public IEnumerator<TComponent> GetEnumerator() => ((IEnumerable<TComponent>)_components).GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => _components.GetEnumerator();
-
-    private static void EnsureLength<T>(ref T[] arr, int minLength, int maxLength = int.MaxValue)
-    {
-        if (minLength >= arr.Length)
-        {
-            int newLength = arr.Length;
-            if (newLength == 0)
-                newLength++;
-
-            do
-            {
-                newLength *= 2;
-                if (newLength < 0)
-                {
-                    newLength = minLength + 1;
-                }
-            }
-            while (newLength < minLength);
-            newLength = Math.Min(newLength, maxLength);
-            Array.Resize(ref arr, newLength);
-        }
-    }
 }
