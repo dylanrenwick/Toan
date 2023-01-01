@@ -3,12 +3,13 @@
 using Toan.ECS.Resources;
 
 namespace Toan.ECS.Systems;
-public abstract class EntityUpdateSystem : EntitySystem, IUpdateSystem
+public abstract class EntityUpdateSystem : EntitySystem
 {
 #if DEBUG
     protected TextLog? Debug { get; private set; }
 #endif
 
+    [UpdateSystem]
     public virtual void Update(World world, GameTime gameTime)
     {
 #if DEBUG

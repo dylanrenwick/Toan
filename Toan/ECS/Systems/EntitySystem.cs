@@ -4,7 +4,7 @@ using Toan.ECS.Query;
 
 namespace Toan.ECS.Systems;
 
-public abstract class EntitySystem : IEntitySystem
+public abstract class EntitySystem : IGameSystem
 {
     public abstract IWorldQuery Archetype { get; }
 
@@ -12,6 +12,7 @@ public abstract class EntitySystem : IEntitySystem
 
 	protected bool _isDirty = false;
 
+    [EntitySystem("Archetype")]
     public virtual void UpdateComponents(World _, IReadOnlySet<Guid> entities)
     {
 		_isDirty = true;

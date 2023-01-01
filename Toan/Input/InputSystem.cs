@@ -6,8 +6,9 @@ using Toan.ECS.Systems;
 
 namespace Toan.Input;
 
-public class InputSystem : IUpdateSystem
+public class InputSystem
 {
+    [UpdateSystem]
     public void Update(World scene, GameTime time)
     {
         var inputResource = scene.Resource<InputState>();

@@ -7,8 +7,9 @@ using Toan.Input;
 
 namespace Toan.Debug;
 
-public class DebugToggleSystem : IUpdateSystem
+public class DebugToggleSystem
 {
+    [UpdateSystem]
     public void Update(World world, GameTime time)
     {
         var debug = world.Resource<DebugState>();

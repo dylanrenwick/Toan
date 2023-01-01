@@ -88,13 +88,51 @@ public static class Extensions
 			.Select(kvp => (kvp.Key, kvp.Value))
             .ToHashSet();
 	}
+    #endregion
+
+    #region reflection extensions
 
     internal static bool ImplementsInterface(this Type self, Type toCheck)
     {
         if (!toCheck.IsInterface)
             return false;
 
-        return self.GetInterface(toCheck.Name) != null;
+        return (self == toCheck)
+            || self.GetInterface(toCheck.Name) != null;
+    }
+
+    internal static MethodInfo? GetFirstMethodWithAttribute<T>(this Type self)
+        where T : Attribute
+    {
+        foreach (var method in self.GetMethods())
+        {
+            foreach (var attr in method.CustomAttributes)
+            {
+                if (attr.AttributeType == typeof(T))
+                    return method;
+            }
+        }
+        return null;
+    }
+
+    internal static Type[] GetParamTypes(this MethodInfo self)
+    => self.GetParameters()
+        .Select(p => p.ParameterType)
+        .ToArray();
+
+    internal static bool ParamsMatchTypes(this MethodInfo self, params Type[] types)
+    {
+        ParameterInfo[] methodParams = self.GetParameters();
+        if (methodParams.Length != types.Length)
+            return false;
+
+        for (int i = 0; i < types.Length; i++)
+        {
+            if (methodParams[i].ParameterType != types[i])
+                return false;
+        }
+
+        return true;
     }
     #endregion
 }

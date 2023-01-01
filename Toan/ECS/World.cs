@@ -23,9 +23,7 @@ public class World
 	private readonly HashSet<Guid> _toBeDestroyed = new();
     private readonly Dictionary<Guid, Resource> _resources = new();
 
-    private readonly SystemSet<IUpdateSystem> _updateSystems = new();
-    private readonly SystemSet<IRenderSystem> _renderSystems = new();
-    private readonly HashSet<IEntitySystem> _entitySystems = new();
+    private readonly SystemRepository _systems = new();
 	private readonly HashSet<Action<World>> _startupSystems = new();
 
 	private GameTime? _lastGameTime;
@@ -66,10 +64,8 @@ public class World
 
         if (_isDirty) UpdateComponents();
 
-        foreach (var system in _updateSystems)
-        {
-            system.Update(this, gameTime);
-        }
+        _systems.Update(this, gameTime);
+
         Events.Clear();
 
 		if (_toBeDestroyed.Any())
@@ -90,13 +86,7 @@ public class World
     {
         if (_isDirty) UpdateComponents();
 
-        foreach (var systemGroup in _renderSystems)
-        {
-            foreach (var system in systemGroup)
-            {
-                system.Render(this, renderer, gameTime);
-            }
-        }
+        _systems.Render(this, renderer, gameTime);
     }
 
     /// <summary>
@@ -172,10 +162,8 @@ public class World
     public SystemBuilder Systems()
     => new()
     {
-        EntitySystems = _entitySystems,
-        RenderSystems = _renderSystems,
-        UpdateSystems = _updateSystems,
-        World         = this,
+        Systems = _systems,
+        World   = this,
     };
 
     public Resource Resource(Guid resourceId)
@@ -258,11 +246,7 @@ public class World
 
     private void UpdateComponents()
     {
-        foreach (var system in _entitySystems)
-        {
-            var query = system.Archetype;
-            system.UpdateComponents(this, query.GetEntities(this));
-        }
+        _systems.UpdateComponents(this);
         
         _isDirty = false;
     }
