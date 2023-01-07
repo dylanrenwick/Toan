@@ -15,6 +15,7 @@ public class DebugRenderSystem : EntityRenderSystem
 {
     public override WorldQuery<Debug, Transform> Archetype => new();
 
+	[RenderSystem]
     public override void Render(World world, Renderer renderer, GameTime gameTime)
 	{
         var debug = world.Resource<DebugState>();
