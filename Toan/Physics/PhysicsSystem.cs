@@ -9,6 +9,7 @@ public abstract class PhysicsSystem : EntityUpdateSystem
 {
     protected SpatialMap? _spatialMap;
 
+    [UpdateSystem]
     public override void Update(World world, GameTime gameTime)
     {
         _spatialMap = world.Resource<SpatialMap>();

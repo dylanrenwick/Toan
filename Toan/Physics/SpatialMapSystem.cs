@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Toan.ECS;
 using Toan.ECS.Components;
 using Toan.ECS.Query;
+using Toan.ECS.Systems;
 
 namespace Toan.Physics;
 
@@ -12,6 +13,7 @@ public class SpatialMapSystem : PhysicsSystem
 {
     public override WorldQuery<Collider, Changed<Transform>> Archetype => new();
 
+    [UpdateSystem]
     public override void Update(World world, GameTime gameTime)
     {
         base.Update(world, gameTime);
