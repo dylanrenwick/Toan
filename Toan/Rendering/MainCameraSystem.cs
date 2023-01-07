@@ -10,11 +10,12 @@ using Toan.ECS.Systems;
 
 namespace Toan.Rendering;
 
-public class MainCameraSystem : EntityRenderSystem
+public class MainCameraSystem : EntitySystem
 {
     public override WorldQuery<Camera, MainCamera, Transform> Archetype => new();
 
-    public override void Render(World scene, Renderer renderer, GameTime gameTime)
+    [RenderSystem]
+    public void Render(World scene, Renderer renderer, GameTime gameTime)
     {
         if (_entities.Count == 0) return;
         if (_entities.Count > 1) throw new Exception("Cannot have more than one MainCamera in the world!");
@@ -27,7 +28,5 @@ public class MainCameraSystem : EntityRenderSystem
         renderer.MainCamera = camera;
         entity.With(camera);
     }
-
-    protected override void RenderEntity(Entity entity, Renderer renderer, GameTime gameTime) { }
 }
 
