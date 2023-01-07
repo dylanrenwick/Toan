@@ -4,7 +4,7 @@ using Toan.ECS.Query;
 
 namespace Toan.ECS.Systems;
 
-public abstract class EntitySystem : IGameSystem
+public abstract class EntitySystem
 {
     public abstract IWorldQuery Archetype { get; }
 
