@@ -91,7 +91,14 @@ public struct SystemBuilder
         if (queryMember == null)
             return null;
 
-        return systemType.GetProperty(queryMember.Name);
+        var properties = systemType
+            .GetProperties()
+            .Where(
+                prop => prop.Name == queryMember.Name
+                     && prop.DeclaringType == systemType
+            );
+
+        return properties.FirstOrDefault();
     }
 
     private MemberInfo? GetArchetypeMember(Type systemType, MethodInfo entityMethod)
