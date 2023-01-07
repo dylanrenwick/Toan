@@ -55,7 +55,7 @@ public class SystemRepository
             foreach (var system in systems)
             {
                 if (system.EntitySystem == null || system.EntityQuery == null)
-                    return;
+                    continue;
                 var query = (IWorldQuery)system.EntityQuery.GetValue(system.System)!;
                 var entities = query.GetEntities(world);
                 system.EntitySystem?.Invoke(system.System, new object[] { world, entities });
