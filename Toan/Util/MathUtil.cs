@@ -7,7 +7,7 @@ namespace Toan;
 /// <summary>
 /// Provides several useful math functions and constants
 /// <para />
-/// Includes some constants from <see cref=Math"/> typecast to <see cref="float"/>
+/// Includes some constants from <see cref="Math"/> typecast to <see cref="float"/>
 /// </summary>
 public static class MathUtil
 {
