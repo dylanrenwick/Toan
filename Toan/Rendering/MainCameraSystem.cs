@@ -24,6 +24,8 @@ public class MainCameraSystem : EntitySystem
         Camera camera = entity.Get<Camera>();
         Transform transform = entity.Get<Transform>();
 
+        MainCamera.MainCameraEntity = camera;
+
         camera.WorldPosition = transform.Position;
         renderer.MainCamera = camera;
         entity.With(camera);
