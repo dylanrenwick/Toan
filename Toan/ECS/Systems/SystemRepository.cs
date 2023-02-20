@@ -49,7 +49,7 @@ public class SystemRepository
         ExecuteInPriorityOrder(_updateSystems, systems => {
             foreach (var system in systems)
             {
-                system.System.Invoke(system.System, updateParams);
+                system.Method.Invoke(system.System, updateParams);
             }
         });
     }
@@ -61,7 +61,7 @@ public class SystemRepository
         ExecuteInPriorityOrder(_renderSystems, systems => {
             foreach (var system in systems)
             {
-                system.System.Invoke(system.System, renderParams);
+                system.Method.Invoke(system.System, renderParams);
             }
         });
     }

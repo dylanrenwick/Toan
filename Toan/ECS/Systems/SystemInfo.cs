@@ -16,12 +16,12 @@ public readonly struct SystemInfo
     public PropertyInfo? EntityQuery { get; init; }
 
     public PrioritizedSystemInfo? UpdateInfo
-        => BuildSystemInfo<UpdateSystemAttribute>(SystemType, UpdateSystem);
+        => BuildSystemInfo<UpdateSystemAttribute>(UpdateSystem);
 
     public PrioritizedSystemInfo? RenderInfo
-        => BuildSystemInfo<RenderSystemAttribute>(SystemType, RenderSystem);
+        => BuildSystemInfo<RenderSystemAttribute>(RenderSystem);
 
-    private static PrioritizedSystemInfo? BuildSystemInfo<TAttribute>(Type systemType, MethodInfo? method)
+    private PrioritizedSystemInfo? BuildSystemInfo<TAttribute>(MethodInfo? method)
         where TAttribute : PrioritizedSystemAttribute
     {
         if (method == null)
@@ -31,18 +31,20 @@ public readonly struct SystemInfo
 
         return new()
         {
+            Method = method,
             Priority = attribute == null
                 ? SystemExecutionPriority.Standard
                 : attribute.Priority,
-            SystemType = systemType,
-            System = method,
+            System = System,
+            SystemType = SystemType,
         };
     }
 }
 
 public readonly struct PrioritizedSystemInfo
 {
+    public required object System { get; init; }
     public Type SystemType { get; init; }
-    public MethodInfo System { get; init; }
+    public MethodInfo Method { get; init; }
     public SystemExecutionPriority Priority { get; init; }
 }
