@@ -27,9 +27,12 @@ public readonly struct SystemBuilder
         where TSystem : class
     {
         Type systemType = system.GetType();
-        MethodInfo? updateSystem = systemType.GetFirstMethodWithAttribute<UpdateSystemAttribute>();
-        MethodInfo? renderSystem = systemType.GetFirstMethodWithAttribute<RenderSystemAttribute>();
-        MethodInfo? entitySystem = systemType.GetFirstMethodWithAttribute<EntitySystemAttribute>();
+        MethodInfo? updateSystem = GetAndValidateSystem<UpdateSystemAttribute>(systemType, IsValidUpdateSystem);
+        MethodInfo? renderSystem = GetAndValidateSystem<RenderSystemAttribute>(systemType, IsValidRenderSystem);
+        MethodInfo? entitySystem = GetAndValidateSystem<EntitySystemAttribute>(systemType,
+            method => IsValidEntitySystem(method)
+                   && IsValidArchetype(GetArchetypeProperty(systemType, method))
+        );
 
         // If it has none of them, it's not a real system
         if (updateSystem == null
@@ -37,19 +40,9 @@ public readonly struct SystemBuilder
          && entitySystem == null)
 			throw new ArgumentException($"System type of {systemType.Name} is not renderable, updatable, or an entity system");
 
-        // Reflection has no real type-safety
-        if (updateSystem != null && !IsValidUpdateSystem(updateSystem))
-            throw new ToanSystemException($"Method ${updateSystem.Name} is not valid Update system.", systemType, updateSystem);
-        if (renderSystem != null && !IsValidRenderSystem(renderSystem))
-            throw new ToanSystemException($"Method ${renderSystem.Name} is not valid Render system.", systemType, renderSystem);
-        PropertyInfo? entityQuery = GetArchetypeProperty(systemType, entitySystem);
+        PropertyInfo? entityQuery = null;
         if (entitySystem != null)
-        {
-            if (!IsValidEntitySystem(entitySystem))
-                throw new ToanSystemException($"Method ${entitySystem.Name} is not valid Entity system.", systemType, entitySystem);
-            else if (IsValidArchetype(entityQuery))
-                throw new ToanSystemException($"Entity system ${entitySystem.Name} does not have a valid archetype.", systemType, entitySystem);
-        }
+            entityQuery = GetArchetypeProperty(systemType, entitySystem);
 
         Systems.Add(new()
         {
