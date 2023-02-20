@@ -38,10 +38,18 @@ public struct SystemBuilder
 			throw new ArgumentException($"System type of {systemType.Name} is not renderable, updatable, or an entity system");
 
         // Reflection has no real type-safety
-        if (updateSystem != null) ValidateUpdateSystem(updateSystem);
-        if (renderSystem != null) ValidateRenderSystem(renderSystem);
+        if (updateSystem != null && !IsValidUpdateSystem(updateSystem))
+            throw new ToanSystemException($"Method ${updateSystem.Name} is not valid Update system.", systemType, updateSystem);
+        if (renderSystem != null && !IsValidRenderSystem(renderSystem))
+            throw new ToanSystemException($"Method ${renderSystem.Name} is not valid Render system.", systemType, renderSystem);
         PropertyInfo? entityQuery = GetArchetypeProperty(systemType, entitySystem);
-        if (entitySystem != null) ValidateEntitySystem(entitySystem, entityQuery);
+        if (entitySystem != null)
+        {
+            if (!IsValidEntitySystem(entitySystem))
+                throw new ToanSystemException($"Method ${entitySystem.Name} is not valid Entity system.", systemType, entitySystem);
+            else if (IsValidArchetype(entityQuery))
+                throw new ToanSystemException($"Entity system ${entitySystem.Name} does not have a valid archetype.", systemType, entitySystem);
+        }
 
         Systems.Add(new()
         {
@@ -53,32 +61,26 @@ public struct SystemBuilder
         });
     }
 
-    private void ValidateUpdateSystem(MethodInfo updateMethod)
+    private bool IsValidUpdateSystem(MethodInfo updateMethod)
     {
-        ValidateSystem(updateMethod, new Type[] { typeof(World), typeof(GameTime) });
+        return updateMethod.ParamsMatchTypes(new Type[] { typeof(World), typeof(GameTime) });
     }
 
-    private void ValidateRenderSystem(MethodInfo renderMethod)
+    private bool IsValidRenderSystem(MethodInfo renderMethod)
     {
-        ValidateSystem(renderMethod, new Type[] { typeof(World), typeof(Renderer), typeof(GameTime) });
+        return renderMethod.ParamsMatchTypes(new Type[] { typeof(World), typeof(Renderer), typeof(GameTime) });
     }
 
-    private void ValidateEntitySystem(MethodInfo entityMethod, PropertyInfo? archetypeProperty)
+    private bool IsValidEntitySystem(MethodInfo entityMethod)
     {
-        ValidateSystem(entityMethod, new Type[] { typeof(World), typeof(IReadOnlySet<Guid>) });
-
-        ValidateArchetypeProperty(entityMethod, archetypeProperty);
+        return entityMethod.ParamsMatchTypes(new Type[] { typeof(World), typeof(IReadOnlySet<Guid>) });
     }
 
-    private void ValidateArchetypeProperty(MethodInfo entityMethod, PropertyInfo? archetypeProperty)
+    private bool IsValidArchetype(PropertyInfo? archetypeProperty)
     {
-        if (archetypeProperty == null)
-            throw new Exception($"Archetype query {entityMethod.GetCustomAttribute<EntitySystemAttribute>()!.MemberName} on type {entityMethod.DeclaringType!.FullName} does not exist!");
-
-        Type queryMemberType = archetypeProperty.PropertyType;
-
-        if (queryMemberType == null || !queryMemberType.ImplementsInterface(typeof(IWorldQuery)))
-            throw new Exception($"Archetype query {archetypeProperty.Name} on type {archetypeProperty.DeclaringType!.FullName} must be of type {nameof(IWorldQuery)}!");
+        return archetypeProperty != null
+            && archetypeProperty.PropertyType != null
+            && archetypeProperty.PropertyType.ImplementsInterface(typeof(IWorldQuery));
     }
 
     private PropertyInfo? GetArchetypeProperty(Type systemType, MethodInfo? entityMethod)
@@ -108,12 +110,6 @@ public struct SystemBuilder
             .MemberName;
 
         return systemType.GetMember(queryMemberName).FirstOrDefault();
-    }
-
-    private void ValidateSystem(MethodInfo method, Type[] expectedParamTypes)
-    {
-        if (!method.ParamsMatchTypes(expectedParamTypes))
-            throw new Exception($"Method {method.Name} on type {method.DeclaringType?.FullName} is not valid! Parameters must match the signature of ({string.Join(", ", expectedParamTypes.Select(t => t.Name))})");
     }
 }
 
