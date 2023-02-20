@@ -25,14 +25,14 @@ public class DebugLogSystem : EntityUpdateSystem
         var debugState = entity.World.Resource<DebugState>();
         if (!debugState.DebugActive)
         {
-            if (visible) RemoveVisible(entity);
+            if (visible) entity.Without<Visible>();
             return;
         }
 
         var text = entity.Get<Text>();
 
         if (!visible)
-            AddVisible(entity);
+            entity.With<Visible>();
 
         // TODO: Automate this toggle
         if (SHOW_LOG)
@@ -61,16 +61,6 @@ public class DebugLogSystem : EntityUpdateSystem
         sb.AppendLine($"World Pos: {camera.ScreenToWorld(input.MousePosition.ToVector2())}");
 
         return sb.ToString();
-    }
-
-    protected void RemoveVisible(Entity entity)
-    {
-        entity.Without<Visible>();
-    }
-
-    protected void AddVisible(Entity entity)
-    {
-        entity.With(new Visible());
     }
 }
 
