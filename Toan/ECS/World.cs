@@ -32,9 +32,9 @@ public class World
 
 	private float Timestamp => (float)(_lastGameTime?.TotalGameTime.TotalSeconds ?? 0.0);
 
-    private bool _isDirty = false;
+    public bool IsDirty { get; private set; } = false;
 
-    public void Dirty() => _isDirty = true;
+    public void Dirty() => IsDirty = true;
     public void Dirty(Guid entityId)
     {
         Dirty();
@@ -62,8 +62,6 @@ public class World
     {
 		_lastGameTime = gameTime;
 
-        if (_isDirty) UpdateComponents();
-
         _systems.Update(this, gameTime);
 
         Events.Clear();
@@ -84,8 +82,6 @@ public class World
     /// </summary>
     public void Draw(Renderer renderer, GameTime gameTime)
     {
-        if (_isDirty) UpdateComponents();
-
         _systems.Render(this, renderer, gameTime);
     }
 
@@ -248,7 +244,7 @@ public class World
     {
         _systems.UpdateComponents(this);
         
-        _isDirty = false;
+        IsDirty = false;
     }
 
 	private void DestroyEntity(Guid entityId)

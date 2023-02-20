@@ -47,11 +47,16 @@ public class SystemRepository
         var updateParams = new object[] { world, gameTime };
 
         ExecuteInPriorityOrder(_updateSystems, systems => {
+            if (world.IsDirty)
+                UpdateComponents(world);
             foreach (var system in systems)
             {
                 system.Method.Invoke(system.System, updateParams);
             }
         });
+
+        if (world.IsDirty)
+            UpdateComponents(world);
     }
 
     public void Render(World world, Renderer renderer, GameTime gameTime)
