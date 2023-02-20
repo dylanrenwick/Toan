@@ -61,6 +61,16 @@ public readonly struct SystemBuilder
         });
     }
 
+    private MethodInfo? GetAndValidateSystem<TSystemAttribute>(Type systemType, Func<MethodInfo, bool> validationPredicate)
+        where TSystemAttribute : Attribute
+    {
+        MethodInfo? system = systemType.GetFirstMethodWithAttribute<TSystemAttribute>();
+        if (system != null && validationPredicate.Invoke(system))
+            return system;
+
+        return null;    
+    }
+
     private bool IsValidUpdateSystem(MethodInfo updateMethod)
     {
         return updateMethod.ParamsMatchTypes(new Type[] { typeof(World), typeof(GameTime) });
