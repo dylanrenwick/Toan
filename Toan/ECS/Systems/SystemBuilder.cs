@@ -8,7 +8,7 @@ using Toan.Rendering;
 
 namespace Toan.ECS.Systems;
 
-public struct SystemBuilder
+public readonly struct SystemBuilder
 {
     public required World World { get; init; }
     public required SystemRepository Systems { private get; init; }
