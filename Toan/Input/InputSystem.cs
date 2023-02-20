@@ -13,8 +13,9 @@ public class InputSystem
     {
         var inputResource = scene.Resource<InputState>();
         var keyboardState = Keyboard.GetState();
+        var mouseState = Mouse.GetState();
 
-        inputResource.Update(keyboardState);
+        inputResource.Update(keyboardState, mouseState);
     }
 }
 
