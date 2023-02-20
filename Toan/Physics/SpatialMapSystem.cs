@@ -13,7 +13,7 @@ public class SpatialMapSystem : PhysicsSystem
 {
     public override WorldQuery<Collider, Changed<Transform>> Archetype => new();
 
-    [UpdateSystem]
+    [UpdateSystem(SystemExecutionPriority.Late)]
     public override void Update(World world, GameTime gameTime)
     {
         base.Update(world, gameTime);
