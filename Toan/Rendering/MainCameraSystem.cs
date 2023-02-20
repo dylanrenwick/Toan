@@ -27,6 +27,8 @@ public class MainCameraSystem : EntitySystem
         MainCamera.MainCameraEntity = camera;
 
         camera.WorldPosition = transform.Position;
+        camera.WorldScale = renderer.RenderScale;
+        camera.ScreenSize = renderer.ScreenSize;
         renderer.MainCamera = camera;
         entity.With(camera);
     }

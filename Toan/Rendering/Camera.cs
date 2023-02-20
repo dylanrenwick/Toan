@@ -12,6 +12,10 @@ public struct Camera : IComponent
 
     public Vector2 ViewOffset => AnchorOffset + WorldPosition;
 
+    public float WorldScale { get; set; }
+
+    public Vector2 ScreenSize { get; set; }
+
     public Vector2 AnchorOffset => Anchor switch
     {
         CameraAnchor.TopLeft => Vector2.Zero,
@@ -27,6 +31,9 @@ public struct Camera : IComponent
     };
 
     public Camera() { }
+
+    public Vector2 ScreenToWorld(Vector2 screenSpace)
+        => (screenSpace / ScreenSize) * (ScreenSize / WorldScale) - ViewOffset;
 }
 public enum CameraAnchor
 {
