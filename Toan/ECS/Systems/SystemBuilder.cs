@@ -61,7 +61,7 @@ public readonly struct SystemBuilder
         });
     }
 
-    private MethodInfo? GetAndValidateSystem<TSystemAttribute>(Type systemType, Func<MethodInfo, bool> validationPredicate)
+    private static MethodInfo? GetAndValidateSystem<TSystemAttribute>(Type systemType, Func<MethodInfo, bool> validationPredicate)
         where TSystemAttribute : Attribute
     {
         MethodInfo? system = systemType.GetFirstMethodWithAttribute<TSystemAttribute>();
@@ -71,29 +71,29 @@ public readonly struct SystemBuilder
         return null;    
     }
 
-    private bool IsValidUpdateSystem(MethodInfo updateMethod)
+    private static bool IsValidUpdateSystem(MethodInfo updateMethod)
     {
         return updateMethod.ParamsMatchTypes(new Type[] { typeof(World), typeof(GameTime) });
     }
 
-    private bool IsValidRenderSystem(MethodInfo renderMethod)
+    private static bool IsValidRenderSystem(MethodInfo renderMethod)
     {
         return renderMethod.ParamsMatchTypes(new Type[] { typeof(World), typeof(Renderer), typeof(GameTime) });
     }
 
-    private bool IsValidEntitySystem(MethodInfo entityMethod)
+    private static bool IsValidEntitySystem(MethodInfo entityMethod)
     {
         return entityMethod.ParamsMatchTypes(new Type[] { typeof(World), typeof(IReadOnlySet<Guid>) });
     }
 
-    private bool IsValidArchetype(PropertyInfo? archetypeProperty)
+    private static bool IsValidArchetype(PropertyInfo? archetypeProperty)
     {
         return archetypeProperty != null
             && archetypeProperty.PropertyType != null
             && archetypeProperty.PropertyType.ImplementsInterface(typeof(IWorldQuery));
     }
 
-    private PropertyInfo? GetArchetypeProperty(Type systemType, MethodInfo? entityMethod)
+    private static PropertyInfo? GetArchetypeProperty(Type systemType, MethodInfo? entityMethod)
     {
         if (entityMethod == null)
             return null;
@@ -113,7 +113,7 @@ public readonly struct SystemBuilder
         return properties.FirstOrDefault();
     }
 
-    private MemberInfo? GetArchetypeMember(Type systemType, MethodInfo entityMethod)
+    private static MemberInfo? GetArchetypeMember(Type systemType, MethodInfo entityMethod)
     {
         var queryMemberName = entityMethod
             .GetCustomAttribute<EntitySystemAttribute>()!
