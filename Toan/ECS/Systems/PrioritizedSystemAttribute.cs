@@ -2,10 +2,10 @@
 
 namespace Toan.ECS.Systems;
 
-public class PrioritizedSystemAttribute : Attribute
+public abstract class PrioritizedSystemAttribute : Attribute
 {
     public PrioritizedSystemAttribute(
-        SystemExecutionPriority priority = SystemExecutionPriority.Standard
+        SystemExecutionPriority priority
     ) {
         Priority = priority;
     }
