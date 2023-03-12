@@ -88,7 +88,7 @@ public class ComponentPoolTest
 
     [Theory]
     [MemberData(nameof(GetRandomStubData), parameters: 1000)]
-    public void Add_Remove_ReturnsTrue(int stubData)
+    public void Add_Get_ReturnsCorrectComponent(int stubData)
     {
         Guid guid = Guid.NewGuid();
         var component = new StubComponent
@@ -98,7 +98,26 @@ public class ComponentPoolTest
 
         _componentPool.Add(guid, component);
 
-        Assert.True(_componentPool.Remove(guid));
+        var foundComponent = _componentPool.Get(guid);
+
+        Assert.Equal(
+            component.StubData,
+            foundComponent.StubData
+        );
+    }
+
+    [Theory]
+    [MemberData(nameof(GetRandomSizedPools), parameters: new object[] { 512, 1000 })]
+    public void Add_Count_ReturnsCorrectCount(params int[] data)
+    {
+        int expectedCount = data.Length;
+        var components = data.Select(stub => new StubComponent { StubData = stub });
+        foreach (var component in components)
+        {
+            _componentPool.Add(Guid.NewGuid(), component);
+        }
+
+        Assert.Equal(_componentPool.Count, expectedCount);
     }
 
     public static IEnumerable<object[]> GetRandomStubData(int count)
