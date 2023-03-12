@@ -49,6 +49,12 @@ public class ComponentPoolTest
         Assert.False(_componentPool.HasEntity(Guid.NewGuid()));
     }
 
+    [Fact]
+    public void Count_WithEmptyPool_ReturnsZero()
+    {
+        Assert.Empty(_componentPool);
+    }
+
     [Theory]
     [MemberData(nameof(GetRandomStubData), parameters: 1000)]
     public void Add_Get_ReturnsCorrectComponent(byte stubData)
