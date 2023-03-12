@@ -37,4 +37,10 @@ public class ComponentPoolTest
     {
         Assert.False(_componentPool.Remove(Guid.NewGuid()));
     }
+
+    [Fact]
+    public void HasEntity_WithNewGuid_ReturnsFalse()
+    {
+        Assert.False(_componentPool.HasEntity(Guid.NewGuid()));
+    }
 }
