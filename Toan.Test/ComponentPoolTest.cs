@@ -4,7 +4,7 @@ namespace Toan.Test;
 
 public class ComponentPoolTest
 {
-    private struct StubComponent { }
+    private readonly static Random _random = new();
 
     private struct StubComponent
     {
