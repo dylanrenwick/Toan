@@ -110,4 +110,20 @@ public class ComponentPoolTest
         }
         return data;
     }
+
+    public static IEnumerable<object[]> GetRandomSizedPools(int maxSize, int count)
+    {
+        List<object[]> data = new();
+        for (int i = 0; i < count; i++)
+        {
+            int poolSize = _random.Next(maxSize - 1) + 1;
+            object[] pool = new object[poolSize];
+            for (int j = 0; j < poolSize; j++)
+            {
+                pool[j] = _random.Next();
+            }
+            data.Add(pool);
+        }
+        return data;
+    }
 }
