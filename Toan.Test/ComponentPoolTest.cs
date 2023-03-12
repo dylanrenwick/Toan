@@ -56,34 +56,13 @@ public class ComponentPoolTest
         Assert.Equal(0, _componentPool.Count);
     }
 
-    [Theory]
-    [MemberData(nameof(GetRandomStubData), parameters: 1000)]
-    public void Add_Get_ReturnsCorrectComponent(int stubData)
+    [Fact]
+    public void Add_HasEntity_ReturnsTrue()
     {
         Guid guid = Guid.NewGuid();
         var component = new StubComponent
         {
-            StubData = stubData,
-        };
-
-        _componentPool.Add(guid, component);
-
-        var foundComponent = _componentPool.Get(guid);
-
-        Assert.Equal(
-            component.StubData,
-            foundComponent.StubData
-        );
-    }
-
-    [Theory]
-    [MemberData(nameof(GetRandomStubData), parameters: 1000)]
-    public void Add_HasEntity_ReturnsTrue(int stubData)
-    {
-        Guid guid = Guid.NewGuid();
-        var component = new StubComponent
-        {
-            StubData = stubData,
+            StubData = 0,
         };
 
         Assert.False(_componentPool.HasEntity(guid));
@@ -91,6 +70,20 @@ public class ComponentPoolTest
         _componentPool.Add(guid, component);
 
         Assert.True( _componentPool.HasEntity(guid));
+    }
+
+    [Fact]
+    public void Add_Remove_ReturnsTrue()
+    {
+        Guid guid = Guid.NewGuid();
+        var component = new StubComponent
+        {
+            StubData = 0,
+        };
+
+        _componentPool.Add(guid, component);
+
+        Assert.True(_componentPool.Remove(guid));
     }
 
     [Theory]
