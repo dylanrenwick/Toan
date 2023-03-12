@@ -6,6 +6,11 @@ public class ComponentPoolTest
 {
     private struct StubComponent { }
 
+    private struct StubComponent
+    {
+        public byte StubData { get; set; }
+    }
+
     private readonly ComponentPool<StubComponent> _componentPool;
 
     public ComponentPoolTest()
