@@ -1,15 +1,11 @@
 using Toan.ECS.Components;
+using Toan.Test.Stub;
 
 namespace Toan.Test;
 
 public class ComponentPoolTest
 {
     private readonly static Random _random = new();
-
-    private struct StubComponent
-    {
-        public int StubData { get; set; }
-    }
 
     private readonly ComponentPool<StubComponent> _componentPool;
 
