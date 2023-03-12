@@ -103,7 +103,7 @@ public class ComponentPoolTest
 
     public static IEnumerable<object[]> GetRandomStubData(int count)
     {
-        List<object[]> data = new List<object[]>();
+        List<object[]> data = new();
         for (int i = 0; i < count; i++)
         {
             data.Add(new object[] { _random.Next() });
