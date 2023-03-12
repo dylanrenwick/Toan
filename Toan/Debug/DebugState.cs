@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Frozen;
 
 using Toan.ECS.Resources;
 
@@ -12,9 +13,10 @@ public class DebugState : Resource
     public bool HasTextDisplay
         => _textDisplayStates.Contains(DisplayState);
 
-    private static readonly HashSet<DebugDisplayState> _textDisplayStates = new()
+    private static readonly FrozenSet<DebugDisplayState> _textDisplayStates
+        = FrozenSet.ToFrozenSet(new HashSet<DebugDisplayState>()
     {
         DebugDisplayState.Log,
         DebugDisplayState.Stats,
-    };
+    });
 }
