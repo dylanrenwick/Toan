@@ -1,11 +1,13 @@
-﻿namespace Toan.Test.Stub;
+﻿using Toan.ECS.Components;
 
-public struct StubComponent
+namespace Toan.Test.Stub;
+
+public struct StubComponent : IComponent
 {
     public int StubData { get; set; }
 }
 
-public struct StubComponent2
+public struct StubComponent2 : IComponent
 {
     public int StubData { get; set; }
 }
