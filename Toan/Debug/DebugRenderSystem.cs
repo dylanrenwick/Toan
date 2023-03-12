@@ -19,7 +19,7 @@ public class DebugRenderSystem : EntityRenderSystem
     public override void Render(World world, Renderer renderer, GameTime gameTime)
 	{
         var debug = world.Resource<DebugState>();
-        if (!debug.DebugActive) return;
+        if (!debug.ShouldDisplay) return;
 
 		var spatialMap = world.Resource<SpatialMap>();
 		DrawSpatialMap(renderer, spatialMap);

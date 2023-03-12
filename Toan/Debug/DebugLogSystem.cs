@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Text;
 using Microsoft.Xna.Framework;
 
@@ -14,8 +15,6 @@ namespace Toan.Debug;
 
 public class DebugLogSystem : EntityUpdateSystem
 {
-    private const bool SHOW_LOG = false;
-
     public override WorldQuery<DebugLog, Text> Archetype => new();
 
     protected override void UpdateEntity(Entity entity, GameTime gameTime)
@@ -23,7 +22,7 @@ public class DebugLogSystem : EntityUpdateSystem
         bool visible = entity.Has<Visible>();
 
         var debugState = entity.World.Resource<DebugState>();
-        if (!debugState.DebugActive)
+        if (!debugState.HasTextDisplay)
         {
             if (visible) entity.Without<Visible>();
             return;
@@ -34,21 +33,23 @@ public class DebugLogSystem : EntityUpdateSystem
         if (!visible)
             entity.With<Visible>();
 
-        // TODO: Automate this toggle
-        if (SHOW_LOG)
+        text.Content = debugState.DisplayState switch
         {
-            var debugLog = entity.Get<DebugLog>();
-            Guid logId = debugLog.LogResourceID;
-            TextLog log = entity.World.Resource<TextLog>(logId);
-
-            text.Content = log.GetEntries(debugLog.EntryCount);
-        }
-        else
-        {
-            text.Content = GetDiagnosticStats(entity.World);
-        }
+            DebugDisplayState.Stats => GetDiagnosticStats(entity.World),
+            DebugDisplayState.Log   => GetLogContents(entity),
+            _                       => throw new UnreachableException()
+        };
 
         entity.With(text);
+    }
+
+    protected string GetLogContents(Entity entity)
+    {
+        var debugLog = entity.Get<DebugLog>();
+        Guid logId = debugLog.LogResourceID;
+        TextLog log = entity.World.Resource<TextLog>(logId);
+
+        return log.GetEntries(debugLog.EntryCount);
     }
 
     protected string GetDiagnosticStats(World world)

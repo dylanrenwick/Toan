@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 using Toan.ECS;
@@ -17,7 +19,9 @@ public class DebugToggleSystem
 
         if (input.KeyPressed(Keys.OemTilde))
         {
-            debug.DebugActive = !debug.DebugActive;
+            var displayStateCount = Enum.GetValues(typeof(DebugDisplayState)).Length;
+            var next = (int)debug.DisplayState + 1;
+            debug.DisplayState = (DebugDisplayState)(next % displayStateCount);
         }
     }
 }
