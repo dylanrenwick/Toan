@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Toan.ECS;
 using Toan.ECS.Components;
 using Toan.ECS.Query;
+using Toan.ECS.Resources;
 
 namespace Toan.Physics;
 public class CollisionSystem : PhysicsSystem
@@ -36,6 +37,8 @@ public class CollisionSystem : PhysicsSystem
         if (_spatialMap is null)
             return;
 
+        TextLog log = entity.World.Resource<TextLog>();
+
         Collidable entityCollidable = new(entity);
 
         FloatRect boundingBox = entityCollidable.GetColliderBoundingBox();
@@ -63,9 +66,15 @@ public class CollisionSystem : PhysicsSystem
         }
 
         if (collisions.Count > 0)
+        {
             entity.With(collisions);
+            log.Log($"Adding collisions to {entity.Id}");
+        }
         else
+        {
             entity.Without<Collisions>();
+            log.Log($"Removing collisions from {entity.Id}");
+        }
     }
 
     private static Vector2? CheckCollisions(Collidable first, Collidable second)
