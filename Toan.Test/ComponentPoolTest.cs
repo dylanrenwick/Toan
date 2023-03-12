@@ -23,5 +23,13 @@ namespace Toan.Test
                 )
             );
         }
+
+        [Fact]
+        public void Get_WithNewGuid_Throws()
+        {
+            Assert.Throws<ArgumentException>(
+                () => _componentPool.Get(Guid.NewGuid())
+            );
+        }
     }
 }
