@@ -8,7 +8,7 @@ public class ComponentPoolTest
 
     private struct StubComponent
     {
-        public byte StubData { get; set; }
+        public int StubData { get; set; }
     }
 
     private readonly ComponentPool<StubComponent> _componentPool;
@@ -57,10 +57,10 @@ public class ComponentPoolTest
 
     [Theory]
     [MemberData(nameof(GetRandomStubData), parameters: 1000)]
-    public void Add_Get_ReturnsCorrectComponent(byte stubData)
+    public void Add_Get_ReturnsCorrectComponent(int stubData)
     {
         Guid guid = Guid.NewGuid();
-        var component = new StubComponent()
+        var component = new StubComponent
         {
             StubData = stubData,
         };
@@ -80,7 +80,7 @@ public class ComponentPoolTest
         List<object[]> data = new List<object[]>();
         for (int i = 0; i < count; i++)
         {
-            data.Add(new object[] { (byte)_random.Next() });
+            data.Add(new object[] { _random.Next() });
         }
         return data;
     }
