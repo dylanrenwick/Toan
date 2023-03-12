@@ -8,137 +8,119 @@ public class ComponentPoolTest
     private readonly static Random _random = new();
 
     private readonly ComponentPool<StubComponent> _componentPool;
+    private readonly Guid _entityId;
+    private readonly StubComponent _component;
 
     public ComponentPoolTest()
     {
         _componentPool = new();
+        _entityId = Guid.NewGuid();
+        _component = new StubComponent()
+        {
+            StubData = _random.Next()
+        };
     }
 
     [Fact]
-    public void Add_WithIncorrectType_Throws()
+    public void Add_AddsComponentToPool()
+    {
+        _componentPool.Add(_entityId, _component);
+
+        Assert.True( _componentPool.HasEntity(_entityId));
+    }
+
+    [Fact]
+    public void Add_EntityHasComponent_OverwritesComponent()
+    {
+        var component2 = new StubComponent()
+        {
+            StubData = _random.Next()
+        };
+
+        _componentPool.Add(_entityId, _component);
+        _componentPool.Add(_entityId, component2);
+
+        var foundComponent = _componentPool.Get(_entityId);
+
+        Assert.Equal(1, _componentPool.Count);
+        Assert.Equal(
+            component2.StubData,
+            foundComponent.StubData
+        );
+    }
+
+    [Fact]
+    public void Add_TypeNotStruct_Throws()
     {
         Assert.Throws<ArgumentException>(
             () => _componentPool.Add(
-                Guid.NewGuid(),
-                new object()
+                _entityId,
+                new StubComponent2()
             )
         );
     }
 
     [Fact]
-    public void Get_WithNewGuid_Throws()
+    public void Get_EntityNotExists_Throws()
     {
         Assert.Throws<ArgumentException>(
-            () => _componentPool.Get(Guid.NewGuid())
+            () => _componentPool.Get(_entityId)
         );
     }
 
     [Fact]
-    public void Remove_WithNewGuid_ReturnsFalse()
+    public void Remove_EntityNotExists_ReturnsFalse()
     {
-        Assert.False(_componentPool.Remove(Guid.NewGuid()));
+        Assert.False(_componentPool.Remove(_entityId));
     }
 
     [Fact]
-    public void HasEntity_WithNewGuid_ReturnsFalse()
+    public void Remove_ComponentExists_ReturnsTrue()
     {
-        Assert.False(_componentPool.HasEntity(Guid.NewGuid()));
+        _componentPool.Add(_entityId, _component);
+
+        Assert.True(_componentPool.Remove(_entityId));
     }
 
     [Fact]
-    public void Count_WithEmptyPool_ReturnsZero()
+    public void HasEntity_EntityNotExists_ReturnsFalse()
+    {
+        Assert.False(_componentPool.HasEntity(_entityId));
+    }
+
+    [Fact]
+    public void Count_EmptyPool_ReturnsZero()
     {
         Assert.Empty(_componentPool);
         Assert.Equal(0, _componentPool.Count);
     }
 
     [Fact]
-    public void Add_HasEntity_ReturnsTrue()
+    public void Get_ComponentExists_ReturnsComponent()
     {
-        Guid guid = Guid.NewGuid();
-        var component = new StubComponent
-        {
-            StubData = 0,
-        };
+        _componentPool.Add(_entityId, _component);
 
-        Assert.False(_componentPool.HasEntity(guid));
-
-        _componentPool.Add(guid, component);
-
-        Assert.True( _componentPool.HasEntity(guid));
-    }
-
-    [Fact]
-    public void Add_Remove_ReturnsTrue()
-    {
-        Guid guid = Guid.NewGuid();
-        var component = new StubComponent
-        {
-            StubData = 0,
-        };
-
-        _componentPool.Add(guid, component);
-
-        Assert.True(_componentPool.Remove(guid));
-    }
-
-    [Theory]
-    [MemberData(nameof(GetRandomStubData), parameters: 1000)]
-    public void Add_Get_ReturnsCorrectComponent(int stubData)
-    {
-        Guid guid = Guid.NewGuid();
-        var component = new StubComponent
-        {
-            StubData = stubData,
-        };
-
-        _componentPool.Add(guid, component);
-
-        var foundComponent = _componentPool.Get(guid);
+        var foundComponent = _componentPool.Get(_entityId);
 
         Assert.Equal(
-            component.StubData,
+            _component.StubData,
             foundComponent.StubData
         );
     }
 
-    [Theory]
-    [MemberData(nameof(GetRandomSizedPools), parameters: new object[] { 512, 1000 })]
-    public void Add_Count_ReturnsCorrectCount(params int[] data)
+    [Fact]
+    public void Count_ReturnsCorrectCount()
     {
-        int expectedCount = data.Length;
-        var components = data.Select(stub => new StubComponent { StubData = stub });
-        foreach (var component in components)
+        int expectedCount = _random.Next(511) + 1;
+        for (int i = 0; i < expectedCount; i++)
         {
+            var component = new StubComponent()
+            {
+                StubData = _random.Next(),
+            };
             _componentPool.Add(Guid.NewGuid(), component);
         }
 
-        Assert.Equal(_componentPool.Count, expectedCount);
-    }
-
-    public static IEnumerable<object[]> GetRandomStubData(int count)
-    {
-        List<object[]> data = new();
-        for (int i = 0; i < count; i++)
-        {
-            data.Add(new object[] { _random.Next() });
-        }
-        return data;
-    }
-
-    public static IEnumerable<object[]> GetRandomSizedPools(int maxSize, int count)
-    {
-        List<object[]> data = new();
-        for (int i = 0; i < count; i++)
-        {
-            int poolSize = _random.Next(maxSize - 1) + 1;
-            object[] pool = new object[poolSize];
-            for (int j = 0; j < poolSize; j++)
-            {
-                pool[j] = _random.Next();
-            }
-            data.Add(pool);
-        }
-        return data;
+        Assert.Equal(expectedCount, _componentPool.Count);
     }
 }
