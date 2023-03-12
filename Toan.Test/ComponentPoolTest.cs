@@ -92,6 +92,21 @@ public class ComponentPoolTest
         Assert.True( _componentPool.HasEntity(guid));
     }
 
+    [Theory]
+    [MemberData(nameof(GetRandomStubData), parameters: 1000)]
+    public void Add_Remove_ReturnsTrue(int stubData)
+    {
+        Guid guid = Guid.NewGuid();
+        var component = new StubComponent
+        {
+            StubData = stubData,
+        };
+
+        _componentPool.Add(guid, component);
+
+        Assert.True(_componentPool.Remove(guid));
+    }
+
     public static IEnumerable<object[]> GetRandomStubData(int count)
     {
         List<object[]> data = new List<object[]>();
