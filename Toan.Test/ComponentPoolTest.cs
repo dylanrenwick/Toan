@@ -1,35 +1,34 @@
 using Toan.ECS.Components;
 
-namespace Toan.Test
+namespace Toan.Test;
+
+public class ComponentPoolTest
 {
-    public class ComponentPoolTest
+    private struct StubComponent { }
+
+    private readonly ComponentPool<StubComponent> _componentPool;
+
+    public ComponentPoolTest()
     {
-        private struct StubComponent { }
+        _componentPool = new();
+    }
 
-        private readonly ComponentPool<StubComponent> _componentPool;
+    [Fact]
+    public void Add_WithIncorrectType_Throws()
+    {
+        Assert.Throws<ArgumentException>(
+            () => _componentPool.Add(
+                Guid.NewGuid(),
+                new object()
+            )
+        );
+    }
 
-        public ComponentPoolTest()
-        {
-            _componentPool = new();
-        }
-
-        [Fact]
-        public void Add_WithIncorrectType_Throws()
-        {
-            Assert.Throws<ArgumentException>(
-                () => _componentPool.Add(
-                    Guid.NewGuid(),
-                    new object()
-                )
-            );
-        }
-
-        [Fact]
-        public void Get_WithNewGuid_Throws()
-        {
-            Assert.Throws<ArgumentException>(
-                () => _componentPool.Get(Guid.NewGuid())
-            );
-        }
+    [Fact]
+    public void Get_WithNewGuid_Throws()
+    {
+        Assert.Throws<ArgumentException>(
+            () => _componentPool.Get(Guid.NewGuid())
+        );
     }
 }
