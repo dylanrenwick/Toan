@@ -31,4 +31,10 @@ public class ComponentPoolTest
             () => _componentPool.Get(Guid.NewGuid())
         );
     }
+
+    [Fact]
+    public void Remove_WithNewGuid_ReturnsFalse()
+    {
+        Assert.False(_componentPool.Remove(Guid.NewGuid()));
+    }
 }
