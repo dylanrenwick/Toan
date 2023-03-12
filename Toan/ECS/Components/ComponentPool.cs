@@ -69,7 +69,7 @@ public class ComponentPool<TComponent> : IComponentPool, IEnumerable<TComponent>
             return false;
         }
 
-        if (Count > 0 && componentIndex != LastComponentIndex)
+        if (Count > 0)
         {
             var lastLink = _entityLink[LastComponentIndex];
             _components[componentIndex] = _components[LastComponentIndex];
