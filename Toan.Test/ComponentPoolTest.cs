@@ -48,4 +48,14 @@ public class ComponentPoolTest
     {
         Assert.False(_componentPool.HasEntity(Guid.NewGuid()));
     }
+
+    public static IEnumerable<object[]> GetRandomStubData(int count)
+    {
+        List<object[]> data = new List<object[]>();
+        for (int i = 0; i < count; i++)
+        {
+            data.Add(new object[] { (byte)_random.Next() });
+        }
+        return data;
+    }
 }
