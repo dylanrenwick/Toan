@@ -53,6 +53,7 @@ public class ComponentPoolTest
     public void Count_WithEmptyPool_ReturnsZero()
     {
         Assert.Empty(_componentPool);
+        Assert.Equal(0, _componentPool.Count);
     }
 
     [Theory]
