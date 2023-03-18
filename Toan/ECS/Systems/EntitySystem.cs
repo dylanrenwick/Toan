@@ -10,12 +10,9 @@ public abstract class EntitySystem
 
     protected HashSet<Guid> _entities = new();
 
-	protected bool _isDirty = false;
-
     [EntitySystem("Archetype")]
     public virtual void UpdateComponents(World _, IReadOnlySet<Guid> entities)
     {
-		_isDirty = true;
         _entities.Clear();
         _entities.UnionWith(entities);
     }

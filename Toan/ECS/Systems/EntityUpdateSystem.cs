@@ -24,7 +24,6 @@ public abstract class EntityUpdateSystem : EntitySystem
                 gameTime
             );
         }
-		_isDirty = false;
     }
 
     protected abstract void UpdateEntity(Entity entity, GameTime gameTime);

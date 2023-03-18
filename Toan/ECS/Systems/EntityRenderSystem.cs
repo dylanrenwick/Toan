@@ -18,7 +18,6 @@ public abstract class EntityRenderSystem : EntitySystem
                 gameTime
             );
         }
-		_isDirty = false;
     }
 
     protected abstract void RenderEntity(Entity entity, Renderer renderer, GameTime gameTime);
