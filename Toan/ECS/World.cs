@@ -250,13 +250,6 @@ public class World
         return guid;
     }
 
-    private void UpdateComponents()
-    {
-        _systems.UpdateComponents(this);
-        
-        IsDirty = false;
-    }
-
 	private void DestroyEntity(Guid entityId)
 	{
         _componentRepo.RemoveAll(entityId);
