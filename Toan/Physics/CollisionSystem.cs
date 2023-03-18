@@ -23,16 +23,14 @@ public class CollisionSystem : PhysicsSystem
         public FloatRect GetColliderBoundingBox()
             => CollisionHelper.GetColliderBoundingBox(Entity, Collider, Transform);
 
+        public bool CanCollide(Collidable other)
+            => Collider.Mask.Has(other.Collider.Layer);
+
         public Collidable(Entity entity)
         {
             Entity = entity;
             Collider = Entity.Get<Collider>();
             Transform = Entity.Get<Transform>();
-        }
-
-        public bool CanCollide(Collidable other)
-        {
-            return Collider.Mask.Has(other.Collider.Layer);
         }
     }
 
