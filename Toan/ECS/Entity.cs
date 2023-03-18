@@ -8,25 +8,13 @@ namespace Toan.ECS;
 /// <summary>
 /// A temporary, lightweight wrapper around a set of <see cref="GameComponent"/>s, a <see cref="World"/> reference, and a <see cref="Guid"/>
 /// </summary>
-public class Entity : IEntityBuilder<Entity>
+public class Entity : BaseEntity
 {
-    public required Guid Id { get; init; }
-    public required World World { get; init; }
+    public override bool IsReal { get => true; }
 
     public required ComponentRepository Components { private get; init; }
 
-    /// <summary>
-    /// Adds a new component of type <typeparamref name="T"/> to the entity
-    /// </summary>
-    /// <returns>This <see cref="Entity"/> for chaining purposes</returns>
-    public Entity With<T>()
-        where T : struct
-    => With(new T());
-    /// <summary>
-    /// Adds a component to the entity
-    /// </summary>
-    /// <returns>This <see cref="Entity"/> for chaining purposes</returns>
-    public Entity With<T>(T component)
+    public override IEntity With<T>(T component)
         where T : struct
     {
         Dirty<T>();
@@ -34,33 +22,7 @@ public class Entity : IEntityBuilder<Entity>
         return this;
     } 
 
-    public Entity WithIfNew<T>()
-        where T : struct
-    {
-        if (!Has<T>())
-            With<T>();
-        return this;
-    }
-    public Entity WithIfNew<T>(T component)
-        where T : struct
-    {
-        if (!Has<T>())
-            With(component);
-        return this;
-    }
-
-    public Entity WithBundle(IBundle bundle)
-    {
-        Dirty();
-        bundle.AddBundle(this);
-        return this;
-    }
-
-    /// <summary>
-    /// Removes a component of type <typeparamref name="T"/> from the entity
-    /// </summary>
-    /// <returns>This <see cref="Entity"/> for chaining purposes</returns>
-    public Entity Without<T>()
+    public override IEntity Without<T>()
         where T : struct
     {
         if (Components.Remove<T>(Id))
@@ -68,16 +30,21 @@ public class Entity : IEntityBuilder<Entity>
         return this;
     }
 
-    public bool Has<TComponent>()
+    public override bool Has<TComponent>()
         where TComponent : struct
     => Components.Has<TComponent>(Id);
 
-    public bool Has(Type type)
-    => Components.Has(Id, type);
+    public override int Count()
+        => Components.Count(Id);
 
-    public TComponent Get<TComponent>()
+    public override TComponent Get<TComponent>()
         where TComponent : struct
     => Components.Get<TComponent>(Id);
+    public override object[] GetAll()
+        => Components.GetAll(Id);
+
+    public override Guid Make()
+        => Id;
 
     private void Dirty()
     {
