@@ -86,7 +86,7 @@ public partial class Renderer
         );
 
         var cameraOffset = MainCamera?.ViewOffset ?? Vector2.Zero;
-        newRect.Offset(cameraOffset * ScreenSize);
+        newRect.Offset(cameraOffset);
         return newRect;
     }
 

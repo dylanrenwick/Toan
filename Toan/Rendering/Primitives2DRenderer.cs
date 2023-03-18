@@ -11,7 +11,7 @@ public partial class Renderer
 		float distance = Vector2.Distance(drawCall.Position, drawCall.End);
 		float angle = (drawCall.End - drawCall.Position).AngleRad();
 
-		Vector2 cameraOffset = (MainCamera?.ViewOffset ?? Vector2.Zero) * ScreenSize;
+		Vector2 cameraOffset = MainCamera?.ViewOffset ?? Vector2.Zero;
 		Vector2 drawOrigin = drawCall.Position * RenderScale + cameraOffset;
 
 		Vector2 lineRect = new(distance, drawCall.StrokeWeight);

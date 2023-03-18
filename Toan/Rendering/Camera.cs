@@ -28,12 +28,12 @@ public struct Camera : IComponent
         CameraAnchor.Right => new(1f, 0.5f),
         CameraAnchor.BottomRight => new(1f, 1f),
         _ => Vector2.Zero,
-    };
+    } * ScreenSize;
 
     public Camera() { }
 
     public Vector2 ScreenToWorld(Vector2 screenSpace)
-        => (screenSpace / ScreenSize) * (ScreenSize / WorldScale) - ViewOffset;
+        => (screenSpace / ScreenSize) * (ScreenSize / WorldScale) - (AnchorOffset / WorldScale);
 }
 public enum CameraAnchor
 {
