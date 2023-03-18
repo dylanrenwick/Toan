@@ -27,7 +27,11 @@ internal class VirtualEntity : BaseEntity
         => _components.Count;
     public override IEntity With<T>(T component)
     {
-        _components.Add(typeof(T), component);
+        Type keyType = typeof(T);
+        if (_components.ContainsKey(keyType))
+            _components[keyType] = component;
+        else
+            _components.Add(keyType, component);
         return this;
     }
     public override IEntity Without<T>()
