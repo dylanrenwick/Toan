@@ -84,7 +84,7 @@ public class SpatialMap : Resource
 
     private void RemoveSpatial(Guid entityId, Point cell)
     {
-        ISet<Guid> cellContents = _spatialTable[cell];
+        HashSet<Guid> cellContents = _spatialTable[cell];
         if (cellContents.Remove(entityId) && cellContents.Count == 0)
         {
             _spatialTable.Remove(cell);
@@ -93,7 +93,7 @@ public class SpatialMap : Resource
 
     private void RemoveLookup(Guid entityId, Point cell)
     {
-        ISet<Point> lookupContents = _lookupTable[entityId];
+        HashSet<Point> lookupContents = _lookupTable[entityId];
         if (lookupContents.Remove(cell) && lookupContents.Count == 0)
         {
             _lookupTable.Remove(entityId);
