@@ -166,10 +166,4 @@ public class SpatialMap : Resource
             height : (int)Math.Ceiling((cellOffsetY + boundingBox.Height) / CellSize)
         );
     }
-
-    private Point WorldToCellPos(Vector2 worldPos)
-        => new(
-            x: (int)(worldPos.X / CellSize),
-            y: (int)(worldPos.Y / CellSize)
-        );
 }
