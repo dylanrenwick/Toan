@@ -155,6 +155,16 @@ public class World
         };
     }
 
+    /// <summary>
+    /// Checks whether an entity with the given Id exists in the world
+    /// </summary>
+    /// <param name="entityId">The Id of the entity to look for</param>
+    /// <returns>True if an entity with the given Id exists, false otherwise</returns>
+    public bool HasEntity(Guid entityId)
+    {
+        return _entities.Contains(entityId);
+    }
+
     public SystemBuilder Systems()
     => new()
     {
