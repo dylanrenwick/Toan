@@ -6,6 +6,7 @@ using Toan.ECS;
 using Toan.ECS.Components;
 using Toan.ECS.Query;
 using Toan.ECS.Systems;
+using Toan.Input;
 using Toan.Physics;
 using Toan.Rendering;
 
@@ -23,6 +24,17 @@ public class DebugRenderSystem : EntityRenderSystem
 
 		var spatialMap = world.Resource<SpatialMap>();
 		DrawSpatialMap(renderer, spatialMap);
+
+        InputState input = world.Resource<InputState>();
+        Camera camera = MainCamera.MainCameraEntity;
+        Vector2 mouseWorldPos = camera.ScreenToWorld(input.MousePosition.ToVector2());
+		renderer.DrawPrimitive(new DrawCircleCall
+		{
+			Color = Color.LightBlue,
+			Radius = 4f,
+			Position = mouseWorldPos,
+			Sides = 32f,
+		});
 
 		base.Render(world, renderer, gameTime);
 	}
