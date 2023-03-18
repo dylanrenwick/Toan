@@ -18,6 +18,7 @@ public abstract class EntityUpdateSystem : EntitySystem
 
         foreach (var entityId in _entities)
         {
+            if (!world.HasEntity(entityId)) continue;
             UpdateEntity(
                 world.Entity(entityId),
                 gameTime

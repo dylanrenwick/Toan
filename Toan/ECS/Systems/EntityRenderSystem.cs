@@ -11,6 +11,7 @@ public abstract class EntityRenderSystem : EntitySystem
     {
         foreach (var entityId in _entities)
         {
+            if (!world.HasEntity(entityId)) continue;
             RenderEntity(
                 world.Entity(entityId),
                 renderer,
