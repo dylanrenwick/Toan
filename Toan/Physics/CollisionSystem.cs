@@ -45,7 +45,8 @@ public class CollisionSystem : PhysicsSystem
 
         foreach (Guid otherId in nearbyColliders)
         {
-            if (otherId == entity.Id)
+            if (otherId == entity.Id
+              ||!entity.World.HasEntity(otherId))
                 continue;
 
             Entity other = entity.World.Entity(otherId);
