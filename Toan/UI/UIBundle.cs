@@ -11,7 +11,7 @@ public readonly struct UIBundle : IBundle
 
     public UIBundle() { }
 
-    public void AddBundle(Entity entity)
+    public void AddBundle(IEntity entity)
     {
         entity
             .With(new UINode

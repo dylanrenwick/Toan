@@ -2,5 +2,5 @@
 
 public interface IBundle
 {
-    public void AddBundle(Entity entity);
+    public void AddBundle(IEntity entity);
 }
