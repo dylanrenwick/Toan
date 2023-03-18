@@ -49,7 +49,8 @@ public class DebugPlugin : Plugin
 				LogResourceID = logId,
 				EntryCount = 32,
 			})
-			.With(new Text { Font = font });
+			.With(new Text { Font = font })
+			.Make();
 	}
 }
 
