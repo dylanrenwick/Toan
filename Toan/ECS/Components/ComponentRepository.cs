@@ -137,6 +137,17 @@ public class ComponentRepository
         where T : struct
     => Has(entityId, typeof(T));
 
+    public int Count(Guid entityId)
+    {
+        int count = 0;
+        foreach (Type type in _componentPools.Keys)
+        {
+            if (Has(entityId, type))
+                count++;
+        }
+        return count;
+    }
+
     /// <summary>
     /// Retrieves a component from the repository by component type and entity ID.
     /// </summary>
