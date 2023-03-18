@@ -15,11 +15,17 @@ public class SpatialMap : Resource
 
     public required int CellSize { get; init; }
 
-    public IReadOnlySet<Guid> this[float x, float y]
+    /// <summary>
+    /// Fetches a <see cref="IReadOnlySet{}"/> of entity IDs found at the given cell coordinate
+    /// </summary>
+    /// <param name="x">X position in cell coordinates</param>
+    /// <param name="y">Y position in cell coordinates</param>
+    /// <returns></returns>
+    public IReadOnlySet<Guid> this[int x, int y]
     {
         get
         {
-            var cellPos = WorldToCellPos(new(x, y));
+            Point cellPos = new(x, y);
             return _spatialTable.TryGetValue(cellPos, out var cell)
                 ? cell
                 : new HashSet<Guid>();
