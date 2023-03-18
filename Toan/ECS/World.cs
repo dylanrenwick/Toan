@@ -81,9 +81,7 @@ public class World
     /// Main Render loop
     /// </summary>
     public void Draw(Renderer renderer, GameTime gameTime)
-    {
-        _systems.Render(this, renderer, gameTime);
-    }
+        => _systems.Render(this, renderer, gameTime);
 
     /// <summary>
     /// Adds a new entity to the world and returns an <see cref="ECS.Entity">Entity</see> representing it
@@ -161,9 +159,7 @@ public class World
     /// <param name="entityId">The Id of the entity to look for</param>
     /// <returns>True if an entity with the given Id exists, false otherwise</returns>
     public bool HasEntity(Guid entityId)
-    {
-        return _entities.Contains(entityId);
-    }
+        => _entities.Contains(entityId);
 
     public SystemBuilder Systems()
     => new()
@@ -219,18 +215,14 @@ public class World
         return resource.Id;
     }
 
-	public void AddStartupSystem(Action<World> startupSystem)
-	{
-		_startupSystems.Add(startupSystem);
-	}
+    public void AddStartupSystem(Action<World> startupSystem)
+        => _startupSystems.Add(startupSystem);
 
     public void AddPlugin<TPlugin>()
         where TPlugin : Plugin, new()
     => AddPlugin(new TPlugin());
     public void AddPlugin(Plugin plugin)
-    {
-        plugin.Build(this);
-    }
+        => plugin.Build(this);
     #endregion
 
     public QueryExecutor GetQueryExecutor(IReadOnlySet<Type> types)
