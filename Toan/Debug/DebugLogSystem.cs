@@ -43,7 +43,7 @@ public class DebugLogSystem : EntityUpdateSystem
         entity.With(text);
     }
 
-    protected string GetLogContents(Entity entity)
+    protected static string GetLogContents(Entity entity)
     {
         var debugLog = entity.Get<DebugLog>();
         Guid logId = debugLog.LogResourceID;
@@ -52,7 +52,7 @@ public class DebugLogSystem : EntityUpdateSystem
         return log.GetEntries(debugLog.EntryCount);
     }
 
-    protected string GetDiagnosticStats(World world)
+    protected static string GetDiagnosticStats(World world)
     {
         InputState input = world.Resource<InputState>();
         Camera camera = MainCamera.MainCameraEntity;
