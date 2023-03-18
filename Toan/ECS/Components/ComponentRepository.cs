@@ -17,6 +17,13 @@ public class ComponentRepository
     {
         _componentPools.Add(typeof(T), new ComponentPool<T>());
     }
+    private void AddPool(Type type)
+    {
+        Type poolType = typeof(ComponentPool<>).MakeGenericType(type);
+        var newPool = (IComponentPool)(Activator.CreateInstance(poolType)
+            ?? throw new Exception($"Failed to create pool of type {poolType}"));
+        _componentPools.Add(type, newPool);
+    }
 
     /// <summary>
     /// Checks whether the repository already contains a pool for the given component type.
@@ -51,6 +58,22 @@ public class ComponentRepository
             AddPool<T>();
 
         _componentPools[typeof(T)].Add(entityId, component);
+    }
+
+    public void Add(Guid entityId, Type t, object component)
+    {
+        if (!HasPool(t))
+            AddPool(t);
+
+        _componentPools[t].Add(entityId, component);
+    }
+
+    public void AddAll(Guid entityId, object[] components)
+    {
+        foreach (var component in components)
+        {
+            Add(entityId, component.GetType(), component);
+        }
     }
 
     /// <summary>
@@ -129,5 +152,28 @@ public class ComponentRepository
 
         var pool = (ComponentPool<T>)_componentPools[typeof(T)];
         return pool.Get(entityId);
+    }
+
+    public object Get(Guid entityId, Type t)
+    {
+        if (!HasPool(t))
+            throw new ArgumentException($"No component pool exists for component type {t.FullName}");
+
+        Type poolType = typeof(ComponentPool<>).MakeGenericType(t);
+        var getMethod = poolType.GetMethod("Get")
+            ?? throw new Exception($"Failed to get method 'Get' on type {poolType}");
+        return getMethod.Invoke(_componentPools[t], new object[] { entityId })
+            ?? throw new Exception($"Failed to call {getMethod.Name} on pool of type {poolType.FullName}");
+    }
+
+    public object[] GetAll(Guid entityId)
+    {
+        var components = new List<object>();
+        foreach (Type type in _componentPools.Keys)
+        {
+            if (Has(entityId, type))
+                components.Add(Get(entityId, type));
+        }
+        return components.ToArray();
     }
 }
