@@ -58,10 +58,11 @@ internal class VirtualEntity : BaseEntity
         _isMade = true;
         return base.Make();
     }
-
+#if DEBUG
     ~VirtualEntity()
     {
         if (!_isMade)
             World.Log.Warn($"Entity {Id} was not made before being destroyed");
     }
+#endif
 }
