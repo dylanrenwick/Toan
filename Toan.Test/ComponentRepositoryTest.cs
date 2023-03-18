@@ -166,4 +166,29 @@ public class ComponentRepositoryTest
 
         Assert.Equal(components, results);
     }
+
+    [Fact]
+    public void Count_EmptyComponent_ReturnsZero()
+    {
+        int result = _repository.Count(_entityId);
+
+        Assert.Equal(0, result);
+    }
+
+    [Fact]
+    public void Count_ComponentsExist_ReturnsComponentCount()
+    {
+        var components = new object[]
+        {
+            _component,
+            new StubComponent2 { StubData = 43 },
+        };
+
+        _repository.AddAll(_entityId, components);
+
+        int result = _repository.Count(_entityId);
+
+        Assert.Equal(components.Length, result);
+    }
 }
+
