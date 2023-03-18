@@ -29,6 +29,11 @@ public class CollisionSystem : PhysicsSystem
             Collider = Entity.Get<Collider>();
             Transform = Entity.Get<Transform>();
         }
+
+        public bool CanCollide(Collidable other)
+        {
+            return Collider.Mask.Has(other.Collider.Layer);
+        }
     }
 
     protected override void UpdateEntity(Entity entity, GameTime gameTime)
@@ -51,6 +56,8 @@ public class CollisionSystem : PhysicsSystem
 
             Entity other = entity.World.Entity(otherId);
             Collidable otherCollidable = new(other);
+            if (!entityCollidable.CanCollide(otherCollidable))
+                continue;
 
             Vector2? collision = CheckCollisions(entityCollidable, otherCollidable);
             if (collision is Vector2 collisionNormal)
