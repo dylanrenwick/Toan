@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Microsoft.Xna.Framework;
 using Toan.ECS.Query;
@@ -27,6 +28,11 @@ public class SystemRepository
     };
 
     private readonly HashSet<SystemInfo> _entitySystems = new();
+
+    public int Count
+        => _updateSystems.Values.Sum(set => set.Count)
+         + _renderSystems.Values.Sum(set => set.Count)
+         + _entitySystems.Count;
 
     public void Add(SystemInfo system)
     {
