@@ -13,7 +13,7 @@ public abstract class BaseEntity : IEntity
 
     public abstract T Get<T>()
         where T : struct;
-    public abstract object[] GetAll();
+    public abstract ValueType[] GetAll();
     public abstract bool Has<T>()
         where T : struct;
     public abstract int Count();

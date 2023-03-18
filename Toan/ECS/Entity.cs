@@ -40,7 +40,7 @@ public class Entity : BaseEntity
     public override TComponent Get<TComponent>()
         where TComponent : struct
     => Components.Get<TComponent>(Id);
-    public override object[] GetAll()
+    public override ValueType[] GetAll()
         => Components.GetAll(Id);
 
     public override Guid Make()

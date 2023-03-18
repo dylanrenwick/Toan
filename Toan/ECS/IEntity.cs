@@ -47,6 +47,6 @@ public interface IEntity
     public T Get<T>()
         where T : struct;
 
-    public object[] GetAll();
+    public ValueType[] GetAll();
     public Guid Make();
 }

@@ -6,11 +6,11 @@ namespace Toan.ECS;
 
 internal class VirtualEntity : BaseEntity
 {
-    private Dictionary<Type, object> _components = new();
+    private Dictionary<Type, ValueType> _components = new();
 
     public override T Get<T>()
         => (T)_components[typeof(T)];
-    public override object[] GetAll()
+    public override ValueType[] GetAll()
         => _components.Values.ToArray();
     public override bool Has<T>()
         => _components.ContainsKey(typeof(T));

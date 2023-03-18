@@ -165,7 +165,7 @@ public class ComponentRepository
         return pool.Get(entityId);
     }
 
-    public object Get(Guid entityId, Type t)
+    public ValueType Get(Guid entityId, Type t)
     {
         if (!HasPool(t))
             throw new ArgumentException($"No component pool exists for component type {t.FullName}");
@@ -173,13 +173,13 @@ public class ComponentRepository
         Type poolType = typeof(ComponentPool<>).MakeGenericType(t);
         var getMethod = poolType.GetMethod("Get")
             ?? throw new Exception($"Failed to get method 'Get' on type {poolType}");
-        return getMethod.Invoke(_componentPools[t], new object[] { entityId })
-            ?? throw new Exception($"Failed to call {getMethod.Name} on pool of type {poolType.FullName}");
+        return (ValueType)(getMethod.Invoke(_componentPools[t], new object[] { entityId })
+            ?? throw new Exception($"Failed to call {getMethod.Name} on pool of type {poolType.FullName}"));
     }
 
-    public object[] GetAll(Guid entityId)
+    public ValueType[] GetAll(Guid entityId)
     {
-        var components = new List<object>();
+        var components = new List<ValueType>();
         foreach (Type type in _componentPools.Keys)
         {
             if (Has(entityId, type))
