@@ -66,7 +66,7 @@ public class World
 
         Events.Clear();
 
-		if (_toBeDestroyed.Count == 0)
+		if (_toBeDestroyed.Count > 0)
 		{
 			foreach (var toDestroy in _toBeDestroyed)
 			{

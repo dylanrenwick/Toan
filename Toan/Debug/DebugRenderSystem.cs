@@ -47,7 +47,7 @@ public class DebugRenderSystem : EntityRenderSystem
 			bool hit = false;
 			if (entity.Has<Collisions>())
 			{
-				hit = entity.Get<Collisions>().Count == 0;
+				hit = entity.Get<Collisions>().Count > 0;
 			}
 			var collider = entity.Get<Collider>();
 			switch (collider.Shape)
