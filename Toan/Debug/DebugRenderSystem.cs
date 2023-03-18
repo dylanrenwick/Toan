@@ -48,7 +48,7 @@ public class DebugRenderSystem : EntityRenderSystem
                     {
                         Color = hit ? Color.Red : Color.Yellow,
                         Radius = circle.Radius,
-                        Position = transform.Position,
+                        Position = transform.Position + collider.Origin,
                         Rotation = MathUtil.DegToRad(transform.Rotation),
                         Scale = transform.Scale,
                         Sides = 32f,
