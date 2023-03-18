@@ -66,12 +66,12 @@ public readonly struct SystemBuilder
 
     private static bool IsValidUpdateSystem(MethodInfo updateMethod)
     {
-        return updateMethod.ParamsMatchTypes(new Type[] { typeof(World), typeof(GameTime) });
+        return updateMethod.ParamsMatchTypes(new Type[] { typeof(World) });
     }
 
     private static bool IsValidRenderSystem(MethodInfo renderMethod)
     {
-        return renderMethod.ParamsMatchTypes(new Type[] { typeof(World), typeof(Renderer), typeof(GameTime) });
+        return renderMethod.ParamsMatchTypes(new Type[] { typeof(World), typeof(Renderer) });
     }
 
     private static bool IsValidEntitySystem(MethodInfo entityMethod)

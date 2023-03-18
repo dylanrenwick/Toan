@@ -31,8 +31,7 @@ public class SystemRepositoryTest
 
         _systemRepository.Add(systemInfo);
         _systemRepository.Update(
-            world: new() { Log = StubLogger.Instance },
-            gameTime: new()
+            world: new() { Log = StubLogger.Instance }
         );
 
         Assert.True(_system.UpdateCalled);

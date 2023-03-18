@@ -9,11 +9,11 @@ public class MotorSystem : EntityUpdateSystem
 {
     public override WorldQuery<Motor, Transform> Archetype => new();
 
-    protected override void UpdateEntity(Entity entity, GameTime time)
+    protected override void UpdateEntity(Entity entity)
     {
         var motor     = entity.Get<Motor>();
         var transform = entity.Get<Transform>();
-        var deltaTime = (float)time.ElapsedGameTime.TotalSeconds;
+        var deltaTime = (float)entity.World.Time.ElapsedGameTime.TotalSeconds;
 
         UpdateAcceleration(ref motor, deltaTime);
         

@@ -34,7 +34,7 @@ public class CollisionSystem : PhysicsSystem
         }
     }
 
-    protected override void UpdateEntity(Entity entity, GameTime gameTime)
+    protected override void UpdateEntity(Entity entity)
     {
         if (_spatialMap is null)
             return;

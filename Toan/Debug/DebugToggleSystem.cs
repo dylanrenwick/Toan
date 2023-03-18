@@ -1,6 +1,5 @@
 ﻿using System;
 
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 using Toan.ECS;
@@ -12,7 +11,7 @@ namespace Toan.Debug;
 public class DebugToggleSystem
 {
     [UpdateSystem]
-    public void Update(World world, GameTime time)
+    public void Update(World world)
     {
         var debug = world.Resource<DebugState>();
         var input = world.Resource<InputState>();

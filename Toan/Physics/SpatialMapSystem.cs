@@ -1,7 +1,5 @@
 ﻿using System;
 
-using Microsoft.Xna.Framework;
-
 using Toan.ECS;
 using Toan.ECS.Components;
 using Toan.ECS.Query;
@@ -14,9 +12,9 @@ public class SpatialMapSystem : PhysicsSystem
     public override WorldQuery<Collider, Changed<Transform>> Archetype => new();
 
     [UpdateSystem(SystemExecutionPriority.Late)]
-    public override void Update(World world, GameTime gameTime)
+    public override void Update(World world)
     {
-        base.Update(world, gameTime);
+        base.Update(world);
 
         if (_spatialMap != null)
         {
@@ -27,7 +25,7 @@ public class SpatialMapSystem : PhysicsSystem
         }
     }
 
-    protected override void UpdateEntity(Entity entity, GameTime gameTime)
+    protected override void UpdateEntity(Entity entity)
     {
         if (_spatialMap == null)
             return;

@@ -1,5 +1,3 @@
-using System.Linq;
-
 using Microsoft.Xna.Framework;
 
 using Toan.ECS;
@@ -17,7 +15,7 @@ public class DebugRenderSystem : EntityRenderSystem
     public override WorldQuery<Debug, Transform> Archetype => new();
 
 	[RenderSystem]
-    public override void Render(World world, Renderer renderer, GameTime gameTime)
+    public override void Render(World world, Renderer renderer)
 	{
         var debug = world.Resource<DebugState>();
         if (!debug.ShouldDisplay) return;
@@ -30,16 +28,16 @@ public class DebugRenderSystem : EntityRenderSystem
         Vector2 mouseWorldPos = camera.ScreenToWorld(input.MousePosition.ToVector2());
 		renderer.DrawPrimitive(new DrawCircleCall
 		{
-			Color = Color.LightBlue,
+			Color = Color.Black,
 			Radius = 4f,
 			Position = mouseWorldPos,
 			Sides = 32f,
 		});
 
-		base.Render(world, renderer, gameTime);
+		base.Render(world, renderer);
 	}
 
-    protected override void RenderEntity(Entity entity, Renderer renderer, GameTime gameTime)
+    protected override void RenderEntity(Entity entity, Renderer renderer)
     {
 		var transform = entity.Get<Transform>();
         if (entity.Has<Collider>())

@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework.Input;
 
 using Toan.ECS;
 using Toan.ECS.Systems;
@@ -9,7 +8,7 @@ namespace Toan.Input;
 public class InputSystem
 {
     [UpdateSystem]
-    public void Update(World scene, GameTime time)
+    public void Update(World scene)
     {
         var inputResource = scene.Resource<InputState>();
         var keyboardState = Keyboard.GetState();

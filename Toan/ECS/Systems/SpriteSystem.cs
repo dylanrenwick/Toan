@@ -10,7 +10,7 @@ public class SpriteSystem : EntityRenderSystem
 {
     public override WorldQuery<Sprite, Transform, Visible> Archetype => new();
 
-    protected override void RenderEntity(Entity entity, Renderer renderer, GameTime gameTime)
+    protected override void RenderEntity(Entity entity, Renderer renderer)
     {
         var sprite    = entity.Get<Sprite>();
         var transform = entity.Get<Transform>();

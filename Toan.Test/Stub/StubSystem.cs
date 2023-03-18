@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Toan.ECS;
+﻿using Toan.ECS;
 using Toan.ECS.Query;
 using Toan.ECS.Systems;
 using Toan.Rendering;
@@ -15,13 +14,13 @@ public class StubSystem
     public WorldQuery<StubComponent> Archetype { get; private set; } = new();
 
     [UpdateSystem]
-    public void Update(World _world, GameTime _gameTime)
+    public void Update(World _world)
     {
         UpdateCalled = true;
     }
 
     [RenderSystem]
-    public void Render(World _world, Renderer _renderer, GameTime _gameTime)
+    public void Render(World _world, Renderer _renderer)
     {
         RenderCalled = true;
     }

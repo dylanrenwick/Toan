@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-
-using Toan.ECS.Components;
+﻿using Toan.ECS.Components;
 using Toan.ECS.Query;
 using Toan.Rendering;
 
@@ -10,7 +8,7 @@ public class TextSystem : EntityRenderSystem
 {
     public override WorldQuery<Text, Transform, Visible> Archetype => new(); 
 
-    protected override void RenderEntity(Entity entity, Renderer renderer, GameTime gameTime)
+    protected override void RenderEntity(Entity entity, Renderer renderer)
     {
         var text      = entity.Get<Text>();
         var transform = entity.Get<Transform>();

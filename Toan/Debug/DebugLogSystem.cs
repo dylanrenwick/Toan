@@ -17,7 +17,7 @@ public class DebugLogSystem : EntityUpdateSystem
 {
     public override WorldQuery<DebugLog, Text> Archetype => new();
 
-    protected override void UpdateEntity(Entity entity, GameTime gameTime)
+    protected override void UpdateEntity(Entity entity)
     {
         bool visible = entity.Has<Visible>();
 
@@ -43,7 +43,7 @@ public class DebugLogSystem : EntityUpdateSystem
         entity.With(text);
     }
 
-    protected static string GetLogContents(Entity entity)
+    protected static string GetLogContents(IEntity entity)
     {
         var debugLog = entity.Get<DebugLog>();
         Guid logId = debugLog.LogResourceID;

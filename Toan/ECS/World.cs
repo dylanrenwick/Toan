@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -26,13 +26,13 @@ public class World
     private readonly SystemRepository _systems = new();
 	private readonly HashSet<Action<World>> _startupSystems = new();
 
-	private GameTime? _lastGameTime;
-
     public readonly Events Events = new();
 
-	private float Timestamp => (float)(_lastGameTime?.TotalGameTime.TotalSeconds ?? 0.0);
+	private float Timestamp => (float)Time.TotalGameTime.TotalSeconds;
 
     public bool IsDirty { get; private set; } = false;
+
+    public GameTime Time { get; private set; } = new();
 
     public void Dirty() => IsDirty = true;
     public void Dirty(Guid entityId)
@@ -60,9 +60,9 @@ public class World
     /// </summary>
     public void Update(GameTime gameTime)
     {
-		_lastGameTime = gameTime;
+        Time = gameTime;
 
-        _systems.Update(this, gameTime);
+        _systems.Update(this);
 
         Events.Clear();
 
@@ -81,7 +81,10 @@ public class World
     /// Main Render loop
     /// </summary>
     public void Draw(Renderer renderer, GameTime gameTime)
-        => _systems.Render(this, renderer, gameTime);
+    {
+        Time = gameTime;
+        _systems.Render(this, renderer);
+    }
 
     /// <summary>
     /// Adds a new entity to the world and returns an <see cref="ECS.Entity">Entity</see> representing it

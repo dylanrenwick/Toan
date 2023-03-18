@@ -12,7 +12,7 @@ public class PlayerInputSystem : EntityUpdateSystem
 {
     public override IWorldQuery Archetype => new WorldQuery<Motor, PlayerInput>();
 
-    protected override void UpdateEntity(Entity entity, GameTime time)
+    protected override void UpdateEntity(Entity entity)
     {
         var motor = entity.Get<Motor>();
 

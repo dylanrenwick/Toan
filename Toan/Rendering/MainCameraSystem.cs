@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
 
-using Microsoft.Xna.Framework;
-
 using Toan.ECS;
 using Toan.ECS.Components;
 using Toan.ECS.Query;
@@ -15,7 +13,7 @@ public class MainCameraSystem : EntitySystem
     public override WorldQuery<Camera, MainCamera, Transform> Archetype => new();
 
     [RenderSystem]
-    public void Render(World scene, Renderer renderer, GameTime gameTime)
+    public void Render(World scene, Renderer renderer)
     {
         if (_entities.Count == 0) return;
         if (_entities.Count > 1) throw new Exception("Cannot have more than one MainCamera in the world!");

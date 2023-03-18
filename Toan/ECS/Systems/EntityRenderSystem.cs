@@ -7,19 +7,18 @@ namespace Toan.ECS.Systems;
 public abstract class EntityRenderSystem : EntitySystem
 {
     [RenderSystem]
-    public virtual void Render(World world, Renderer renderer, GameTime gameTime)
+    public virtual void Render(World world, Renderer renderer)
     {
         foreach (var entityId in _entities)
         {
             if (!world.HasEntity(entityId)) continue;
             RenderEntity(
                 world.Entity(entityId),
-                renderer,
-                gameTime
+                renderer
             );
         }
     }
 
-    protected abstract void RenderEntity(Entity entity, Renderer renderer, GameTime gameTime);
+    protected abstract void RenderEntity(Entity entity, Renderer renderer);
 }
 

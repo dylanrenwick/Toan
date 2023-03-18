@@ -48,9 +48,9 @@ public class SystemRepository
             _entitySystems.Add(system);
     }
 
-    public void Update(World world, GameTime gameTime)
+    public void Update(World world)
     {
-        var updateParams = new object[] { world, gameTime };
+        var updateParams = new object[] { world };
 
         ExecuteInPriorityOrder(_updateSystems, systems => {
             if (world.IsDirty)
@@ -65,9 +65,9 @@ public class SystemRepository
             UpdateComponents(world);
     }
 
-    public void Render(World world, Renderer renderer, GameTime gameTime)
+    public void Render(World world, Renderer renderer)
     {
-        var renderParams = new object[] { world, renderer, gameTime };
+        var renderParams = new object[] { world, renderer};
 
         ExecuteInPriorityOrder(_renderSystems, systems => {
             foreach (var system in systems)

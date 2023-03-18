@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-
-using Toan.ECS.Resources;
+﻿using Toan.ECS.Resources;
 
 namespace Toan.ECS.Systems;
 public abstract class EntityUpdateSystem : EntitySystem
@@ -10,7 +8,7 @@ public abstract class EntityUpdateSystem : EntitySystem
 #endif
 
     [UpdateSystem]
-    public virtual void Update(World world, GameTime gameTime)
+    public virtual void Update(World world)
     {
 #if DEBUG
         Debug = world.Resource<TextLog>();
@@ -20,12 +18,11 @@ public abstract class EntityUpdateSystem : EntitySystem
         {
             if (!world.HasEntity(entityId)) continue;
             UpdateEntity(
-                world.Entity(entityId),
-                gameTime
+                world.Entity(entityId)
             );
         }
     }
 
-    protected abstract void UpdateEntity(Entity entity, GameTime gameTime);
+    protected abstract void UpdateEntity(Entity entity);
 }
 
