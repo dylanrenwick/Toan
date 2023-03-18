@@ -161,6 +161,17 @@ public class World
     public bool HasEntity(Guid entityId)
         => _entities.Contains(entityId);
 
+    public Entity DuplicateEntity(Guid entityId)
+    {
+        var entity = Entity(entityId);
+        var newEntity = CreateEntity();
+
+        var components = _componentRepo.GetAll(entity.Id);
+        _componentRepo.AddAll(newEntity.Id, components);
+
+        return newEntity;
+    }
+
     public SystemBuilder Systems()
     => new()
     {
