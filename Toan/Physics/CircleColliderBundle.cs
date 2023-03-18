@@ -1,14 +1,11 @@
-﻿using System;
-
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
 using Toan.ECS;
 using Toan.ECS.Bundles;
-using Toan.ECS.Components;
 
 namespace Toan.Physics;
 
-public struct CircleColliderBundle : IBundle
+public readonly struct CircleColliderBundle : IBundle
 {
     public required float Radius { get; init; }
 
