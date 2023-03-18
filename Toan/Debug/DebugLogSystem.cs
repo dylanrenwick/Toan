@@ -56,10 +56,11 @@ public class DebugLogSystem : EntityUpdateSystem
     {
         InputState input = world.Resource<InputState>();
         Camera camera = MainCamera.MainCameraEntity;
+        Vector2 mouseWorldPos = camera.ScreenToWorld(input.MousePosition.ToVector2());
 
         StringBuilder sb = new();
         sb.AppendLine($"Mouse Pos: {input.MousePosition}");
-        sb.AppendLine($"World Pos: {camera.ScreenToWorld(input.MousePosition.ToVector2())}");
+        sb.AppendLine($"World Pos: {mouseWorldPos}");
 
         return sb.ToString();
     }
