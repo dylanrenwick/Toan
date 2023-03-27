@@ -43,7 +43,7 @@ public class DebugLogSystem : EntityUpdateSystem
         entity.With(text);
     }
 
-    protected static string GetLogContents(IEntity entity)
+    protected static string GetLogContents(Entity entity)
     {
         var debugLog = entity.Get<DebugLog>();
         Guid logId = debugLog.LogResourceID;
