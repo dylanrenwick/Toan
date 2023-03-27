@@ -111,20 +111,6 @@ public class World
         return CreateEntity().With(transform);
     }
 
-    public UIEntity CreateUI()
-        => CreateUI(null);
-    public UIEntity CreateUI(Guid? parentId)
-    {
-        Guid entityId = AddNewEntity();
-
-        return new UIEntity()
-        {
-            Components = _componentRepo,
-            Id         = entityId,
-            World      = this,
-        }.WithBundle(new UIBundle { ParentNodeId = parentId });
-    }
-
     /// <summary>
     /// Attempts to destroy an item with the Id <paramref name="destroyId"/>.
     /// First checks if the Id is associated with a Resource
