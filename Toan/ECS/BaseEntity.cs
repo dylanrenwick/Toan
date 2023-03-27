@@ -6,7 +6,7 @@ namespace Toan.ECS;
 
 public abstract class BaseEntity : IEntity
 {
-    public required virtual Guid Id { get; init; }
+    public required Guid Id { get; init; }
     public required World World { get; init; }
 
     public virtual bool IsReal { get => false; }
