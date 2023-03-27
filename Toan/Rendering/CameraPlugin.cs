@@ -13,8 +13,7 @@ public class CameraPlugin : Plugin
             .With(new Camera
             {
                 Anchor = CameraAnchor.Center,
-            }).With(new MainCamera())
-            .Make();
+            }).With(new MainCamera());
     }
 }
 
