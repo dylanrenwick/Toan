@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -90,11 +90,12 @@ public class World
     /// Adds a new entity to the world and returns an <see cref="ECS.Entity">Entity</see> representing it
     /// </summary>
     /// <returns>An <see cref="ECS.Entity">Entity</see> representing the newly added entity</returns>
-    public IEntity CreateEntity()
+    public Entity CreateEntity()
     {
         Guid entityId = AddNewEntity();
-        return new VirtualEntity()
+        return new()
         {
+            Components = _componentRepo,
             Id         = entityId,
             World      = this,
         };
@@ -104,27 +105,10 @@ public class World
     /// </summary>
     /// <param name="pos">The position in world-space to initialize the <see cref="Transform"/> component to</param>
     /// <returns>An <see cref="ECS.Entity">Entity</see> representing the newly added entity</returns>
-    public IEntity CreateEntity(Vector2 pos)
+    public Entity CreateEntity(Vector2 pos)
     {
         Transform transform = new() { Position = pos };
         return CreateEntity().With(transform);
-    }
-
-    public void MakeEntity(IEntity entity)
-    {
-        if (entity.IsReal)
-            return;
-
-        Entity worldEntity;
-        if (!HasEntity(entity.Id))
-            AddNewEntity(entity.Id);
-
-        worldEntity = Entity(entity.Id);
-        if (worldEntity.Count() > 1)
-            throw new InvalidOperationException($"Tried to make entity but placeholder entity {entity.Id} has components");
-
-        object[] components = entity.GetAll();
-        _componentRepo.AddAll(entity.Id, components);
     }
 
     public UIEntity CreateUI()
@@ -164,7 +148,7 @@ public class World
     public Entity Entity(Guid entityId)
     {
         if (!_entities.Contains(entityId)) throw new ArgumentException($"Entity {entityId} does not exist in scene!");
-        return new Entity()
+        return new()
         {
             Components = _componentRepo,
             Id         = entityId,
@@ -180,7 +164,7 @@ public class World
     public bool HasEntity(Guid entityId)
         => _entities.Contains(entityId);
 
-    public IEntity DuplicateEntity(Guid entityId)
+    public Entity DuplicateEntity(Guid entityId)
     {
         var entity = Entity(entityId);
         var newEntity = CreateEntity();
@@ -227,12 +211,11 @@ public class World
     /// Adds a new entity to the world and returns its Id
     /// </summary>
     /// <returns>The Id of the newly added entity</returns>
-    public Guid AddNewEntity(Guid? id = null)
+    public Guid AddNewEntity()
     {
-        Guid entityId = id ?? GetNewGuid();
+        Guid entityId = GetNewGuid();
 
-        if (!_entities.Add(entityId))
-            throw new InvalidOperationException($"Tried to add entity with id {entityId}, but id is in use");
+        _entities.Add(entityId);
         Events.AddEntity(entityId);
         _componentRepo.Add(entityId, new EntityData { CreatedAt = Timestamp });
 

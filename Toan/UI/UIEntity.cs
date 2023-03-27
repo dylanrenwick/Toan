@@ -5,7 +5,7 @@ using Toan.ECS.Bundles;
 
 namespace Toan.UI;
 
-public class UIEntity : Entity, IEntity
+public class UIEntity : Entity, IEntityBuilder<UIEntity>
 {
     public new UIEntity With<T>()
         where T : struct
