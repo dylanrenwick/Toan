@@ -15,7 +15,7 @@ public readonly struct CircleColliderBundle : IBundle
 
     public CollisionMask Mask { get; init; }
 
-    public void AddBundle(IEntity entity)
+    public void AddBundle(Entity entity)
     {
         entity.WithIfNew(new Collider()
         {

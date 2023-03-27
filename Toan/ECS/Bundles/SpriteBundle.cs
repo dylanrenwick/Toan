@@ -8,7 +8,7 @@ public struct SpriteBundle : IBundle
 
     public Sprite Sprite { get; init; }
 
-    public void AddBundle(IEntity entity)
+    public void AddBundle(Entity entity)
     {
         entity.WithIfNew(Sprite);
         if (Visible)
