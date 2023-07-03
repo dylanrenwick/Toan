@@ -16,26 +16,29 @@ public class Events : IEventsReader
 
     public void AddEntity(Guid entityId)
         => _added.Add(entityId);
+    public void RemoveEntity(Guid entityId)
+        => _removed.Add(entityId);
+
     public void ChangeEntity(Guid entityId)
         => GetChangedTypes(entityId);
     public void ChangeEntity<T>(Guid entityId)
         where T : struct
-    {
-        ISet<Type> changedTypes = GetChangedTypes(entityId);
-        changedTypes.Add(typeof(T));
-    }
-    public void RemoveEntity(Guid entityId)
-        => _removed.Add(entityId);
+    => ChangeEntity(entityId, typeof(T));
+    public void ChangeEntity(Guid entityId, Type componentType)
+        => GetChangedTypes(entityId).Add(componentType);
 
     public bool WasAdded(Guid entityId)
         => _added.Contains(entityId);
+    public bool WasRemoved(Guid entityId)
+        => _removed.Contains(entityId);
+
     public bool WasChanged(Guid entityId)
         => _changed.ContainsKey(entityId);
     public bool WasChanged<T>(Guid entityId)
         where T : struct
-    => WasChanged(entityId) && _changed[entityId].Contains(typeof(T));
-    public bool WasRemoved(Guid entityId)
-        => _removed.Contains(entityId);
+    => WasChanged(entityId, typeof(T));
+    public bool WasChanged(Guid entityId, Type componentType)
+        => WasChanged(entityId) && _changed[entityId].Contains(componentType);
 
     public void Clear()
     {
@@ -44,7 +47,7 @@ public class Events : IEventsReader
         _removed.Clear();
     }
 
-    private ISet<Type> GetChangedTypes(Guid entityId)
+    private HashSet<Type> GetChangedTypes(Guid entityId)
     {
         if (!_changed.ContainsKey(entityId))
             _changed.Add(entityId, new HashSet<Type>());

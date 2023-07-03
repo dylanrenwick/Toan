@@ -34,6 +34,14 @@ public class Entity
         return this;
     } 
 
+    public Entity With(IComponent component)
+    {
+        Type componentType = component.GetType();
+        Dirty(componentType);
+        Components.Add(Id, componentType, component);
+        return this;
+    }
+
     public Entity WithIfNew<T>()
         where T : struct
     {
@@ -83,11 +91,14 @@ public class Entity
     {
         World.Dirty(Id);
     }
-
     private void Dirty<T>()
         where T : struct
     {
         World.Dirty<T>(Id);
+    }
+    private void Dirty(Type componentType)
+    {
+        World.Dirty(Id, componentType);
     }
 }
 

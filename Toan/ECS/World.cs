@@ -46,6 +46,11 @@ public class World
         Dirty();
         Events.ChangeEntity<T>(entityId);
     }
+    public void Dirty(Guid entityId, Type componentType)
+    {
+        Dirty();
+        Events.ChangeEntity(entityId, componentType);
+    }
 
 	public void Awake()
 	{
