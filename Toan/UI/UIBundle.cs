@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using Toan.ECS;
 using Toan.ECS.Bundles;
+using Toan.ECS.Components;
 
 namespace Toan.UI;
 
@@ -18,5 +20,16 @@ public readonly struct UIBundle : IBundle
             {
                 ParentNode = ParentNodeId,
             });
+    }
+
+    public HashSet<IComponent> FlattenBundle()
+    {
+        return new()
+        {
+            new UINode
+            {
+                ParentNode = ParentNodeId,
+            },
+        };
     }
 }

@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 using Toan.ECS;
 using Toan.ECS.Bundles;
+using Toan.ECS.Components;
 
 namespace Toan.Physics;
 
@@ -28,5 +30,23 @@ public readonly struct CircleColliderBundle : IBundle
         {
             Radius = Radius
         });
+    }
+
+    public HashSet<IComponent> FlattenBundle()
+    {
+        return new()
+        {
+            new Collider()
+            {
+                Layer  = Layer,
+                Mask   = Mask,
+                Origin = Origin,
+                Shape  = ColliderShape.Circle,
+            },
+            new CircleCollider()
+            {
+                Radius = Radius
+            },
+        };
     }
 }
