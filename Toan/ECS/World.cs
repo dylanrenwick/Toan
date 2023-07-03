@@ -111,10 +111,10 @@ public class World
     /// <param name="pos">The position in world-space to initialize the <see cref="Transform"/> component to</param>
     /// <returns>An <see cref="ECS.Entity">Entity</see> representing the newly added entity</returns>
     public Entity CreateEntity(Vector2 pos)
-    {
-        Transform transform = new() { Position = pos };
-        return CreateEntity().With(transform);
-    }
+        => CreateEntity(new Transform { Position = pos });
+
+    public Entity CreateEntity(Transform transform)
+        => CreateEntity().With(transform);
 
     /// <summary>
     /// Attempts to destroy an item with the Id <paramref name="destroyId"/>.
