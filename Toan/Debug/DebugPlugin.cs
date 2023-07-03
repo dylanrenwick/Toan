@@ -1,5 +1,5 @@
 ﻿using System;
-
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 using Toan.ECS;
@@ -43,7 +43,7 @@ public class DebugPlugin : Plugin
 			world.Systems()
 				.Add<DebugAutoApplySystem>();
 
-		world.CreateEntity(new(10.0f, 5.0f))
+		world.CreateEntity(new Vector2(10.0f, 5.0f))
 			.With(new DebugLog
 			{
 				LogResourceID = logId,
