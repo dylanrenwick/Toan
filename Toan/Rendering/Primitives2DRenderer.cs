@@ -56,12 +56,7 @@ public partial class Renderer
 	private void FillRectangle(DrawRectCall drawCall)
 	=> _spriteBatch.Draw(
 		texture              : Pixel,
-		destinationRectangle : ScaleAndOffsetRect(new(
-			x: drawCall.Rect.X + MathUtil.RoundToInt(drawCall.Position.X),
-			y: drawCall.Rect.Y + MathUtil.RoundToInt(drawCall.Position.Y),
-			width: drawCall.Rect.Width,
-			height: drawCall.Rect.Height
-		)),
+		destinationRectangle : ScaleAndOffsetRect(drawCall.DestRect),
 		sourceRectangle      : null,
 		color                : drawCall.Color,
 		rotation             : drawCall.Rotation,

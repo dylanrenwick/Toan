@@ -26,6 +26,8 @@ public record DrawRectCall : DrawPrimitiveCall
 			Points.Add(value.Location.ToVector2() + new Vector2(0, value.Size.Y));
 		}
 	}
+	public Rectangle DestRect
+		=> Rect.Shift(Position);
 
 	public DrawRectCall() : base() { }
 	public DrawRectCall(DrawRectCall other) : base(other)
