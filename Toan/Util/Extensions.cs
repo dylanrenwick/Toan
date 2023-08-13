@@ -44,6 +44,19 @@ public static class Extensions
         y: Math.Clamp(self.Y, minY, maxY)
     );
 
+    public static Rectangle Shift(this Rectangle self, Point offset)
+        => new(self.Location + offset, self.Size);
+    public static Rectangle Shift(this Rectangle self, Vector2 offset)
+    => new(
+        location : MathUtil.RoundToPoint(self.Location.ToVector2() + offset),
+        size     : self.Size
+    );
+
+    public static Point Scale(this Point self, float scale)
+        => MathUtil.RoundToPoint(self.ToVector2() * scale);
+    public static Point Scale(this Point self, Vector2 scale)
+        => MathUtil.RoundToPoint(self.ToVector2() * scale);
+
     #region internal extensions
     /*
      * These extensions are used throughout the Toan codebase for convenience
@@ -57,10 +70,8 @@ public static class Extensions
     /// <param name="type">The type to filter the input sequence to</param>
     /// <returns>An <see cref="IEnumerable{T}"/> that contains elements from the input sequence that are instances of <typeparamref name="T"/></returns>
 	internal static IEnumerable<T> WhereType<T>(this IEnumerable<T> self, Type type)
-		where T : class
-	{
-		return self.Where(type.IsInstanceOfType);
-	}
+        where T : class
+    => self.Where(type.IsInstanceOfType);
     /// <summary>
     /// Filters and typecasts a sequence based on type
     /// </summary>
@@ -72,22 +83,16 @@ public static class Extensions
     internal static IEnumerable<TResult> WhereType<TSource, TResult>(this IEnumerable<TSource> self)
         where TSource : class
         where TResult : class, TSource
-    {
-        return self
-            .Where(i => i is TResult)
-            .Select(i => i as TResult ?? throw new UnreachableException());
-    }
+    => self
+        .Where(i => i is TResult)
+        .Select(i => i as TResult ?? throw new UnreachableException());
 
     /// <summary>
     /// Transforms a dictionary into a readonly sequence of (<typeparamref name="TKey"/>, <typeparamref name="TValue"/>) tuples
     /// </summary>
     /// <returns>An <see cref="IReadOnlySet{T}"/> of (<typeparamref name="TKey"/>, <typeparamref name="TValue"/>) tuples</returns>
 	internal static IReadOnlySet<(TKey, TValue)> Tuplize<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> self)
-	{
-		return self
-			.Select(kvp => (kvp.Key, kvp.Value))
-            .ToHashSet();
-	}
+        => self.Select(kvp => (kvp.Key, kvp.Value)).ToHashSet();
     #endregion
 
     #region reflection extensions
