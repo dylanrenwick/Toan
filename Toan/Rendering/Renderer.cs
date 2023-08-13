@@ -51,7 +51,7 @@ public partial class Renderer
 
     #region Draw Overloads
 
-    public void Draw(DrawTextureCall drawCall)
+    public void DrawTexture(DrawTextureCall drawCall)
     => _spriteBatch.Draw(
         texture              : drawCall.Texture,
         destinationRectangle : ScaleAndOffsetRect(drawCall.DestRect),

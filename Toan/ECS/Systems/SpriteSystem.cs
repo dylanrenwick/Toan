@@ -18,7 +18,7 @@ public class SpriteSystem : EntityRenderSystem
 		Vector2 spriteSize   = new(sprite.Texture.Width, sprite.Texture.Height);
         Vector2 spriteOrigin = sprite.Origin * spriteSize;
 
-        renderer.Draw(new()
+        renderer.DrawTexture(new()
         {
             Color    = sprite.Color,
             Position = transform.Position,
