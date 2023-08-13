@@ -90,15 +90,21 @@ public static class MathUtil
         => (int)Math.Floor(val);
     public static int FloorToInt(double val)
         => (int)Math.Floor(val);
+    public static Point FloorToPoint(Vector2 vec)
+        => new(FloorToInt(vec.X), FloorToInt(vec.Y));
 
     public static int CeilingToInt(float val)
         => (int)Math.Ceiling(val);
     public static int CeilingToInt(double val)
         => (int)Math.Ceiling(val);
+    public static Point CeilingToPoint(Vector2 vec)
+        => new(CeilingToInt(vec.X), CeilingToInt(vec.Y));
 
     public static int RoundToInt(float val)
         => (int)Math.Round(val);
     public static int RoundToInt(double val)
         => (int)Math.Round(val);
+    public static Point RoundToPoint(Vector2 vec)
+        => new(RoundToInt(vec.X), RoundToInt(vec.Y));
 }
 
