@@ -81,8 +81,8 @@ public partial class Renderer
     private Rectangle ScaleAndOffsetRect(Rectangle rect)
     {
         Rectangle newRect = new(
-            (rect.Location.ToVector2() * RenderScale).ToPoint(),
-            (rect.Size.ToVector2() * RenderScale).ToPoint()
+            location : rect.Location.Scale(RenderScale),
+            size     : rect.Size.Scale(RenderScale)
         );
 
         var cameraOffset = MainCamera?.ViewOffset ?? Vector2.Zero;
