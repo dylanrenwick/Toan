@@ -15,11 +15,10 @@ public readonly struct UIBundle : IBundle
 
     public void AddBundle(Entity entity)
     {
-        entity
-            .With(new UINode
-            {
-                ParentNode = ParentNodeId,
-            });
+        entity.With(new UINode
+        {
+            ParentNode = ParentNodeId,
+        });
     }
 
     public HashSet<IComponent> FlattenBundle()
