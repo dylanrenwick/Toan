@@ -9,8 +9,9 @@ public record DrawTextureCall : DrawCall
 
     private Point TextureSize => new(Texture.Width, Texture.Height);
     private Vector2? _size;
-    public Vector2 Size {
-        get => _size ?? TextureSize.ToVector2();
+    public Vector2 Size
+    {
+        get  => _size ?? TextureSize.ToVector2();
         init => _size = value;
     }
 
@@ -20,10 +21,15 @@ public record DrawTextureCall : DrawCall
     );
 
     public Vector2 SourcePosition { get; init; } = Vector2.Zero;
-    public Vector2? SourceSize { get; init; }
+    private Vector2? _sourceSize;
+    public Vector2 SourceSize 
+    {
+        get  => _sourceSize ?? TextureSize.ToVector2();
+        init => _sourceSize = value;
+    }
 
     public Rectangle SourceRect => new(
-        location : SourcePosition.ToPoint(),
-        size     : SourceSize?.ToPoint() ?? TextureSize
+        location : MathUtil.RoundToPoint(SourcePosition),
+        size     : MathUtil.RoundToPoint(SourceSize)
     );
 }
