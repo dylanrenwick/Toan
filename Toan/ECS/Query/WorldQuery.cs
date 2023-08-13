@@ -96,3 +96,25 @@ public class WorldQuery<TQueryable1, TQueryable2, TQueryable3, TQueryable4> : Wo
     }
 }
 
+public class WorldQuery<TQueryable1, TQueryable2, TQueryable3, TQueryable4, TQueryable5> : WorldQuery
+    where TQueryable1 : IWorldQueryable
+    where TQueryable2 : IWorldQueryable
+    where TQueryable3 : IWorldQueryable
+    where TQueryable4 : IWorldQueryable
+    where TQueryable5 : IWorldQueryable
+{
+    public override IReadOnlySet<Type> Types()
+    {
+        if (_types.Count != 1)
+        {
+            _types.Clear();
+            _types.Add(typeof(TQueryable1));
+            _types.Add(typeof(TQueryable2));
+            _types.Add(typeof(TQueryable3));
+            _types.Add(typeof(TQueryable4));
+            _types.Add(typeof(TQueryable5));
+        }
+
+        return base.Types();
+    }
+}
