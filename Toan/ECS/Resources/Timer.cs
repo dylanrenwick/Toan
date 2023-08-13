@@ -7,7 +7,7 @@ public class Timer : Resource
     public required double Interval { get; set; }
 
     public bool IsCompleted => Completed > 0;
-    public int Completed => (int)(_elapsed / Interval);
+    public int Completed => MathUtil.FloorToInt(_elapsed / Interval);
     public bool JustCompleted { get; private set; }
 
     private double _elapsed = 0.0;

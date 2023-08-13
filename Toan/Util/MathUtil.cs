@@ -85,5 +85,20 @@ public static class MathUtil
 
 		return points;
 	}
+
+    public static int FloorToInt(float val)
+        => (int)Math.Floor(val);
+    public static int FloorToInt(double val)
+        => (int)Math.Floor(val);
+
+    public static int CeilingToInt(float val)
+        => (int)Math.Ceiling(val);
+    public static int CeilingToInt(double val)
+        => (int)Math.Ceiling(val);
+
+    public static int RoundToInt(float val)
+        => (int)Math.Round(val);
+    public static int RoundToInt(double val)
+        => (int)Math.Round(val);
 }
 
