@@ -260,6 +260,27 @@ public class ComponentStorage_Tests
 		Assert.Throws<InvalidOperationException>(() => enumerator.Current);
 	}
 
+	[Fact]
+	public void EnumerationOnlyReturnsActiveComponents_Emptied()
+	{
+		ComponentPool<IntComponent> pool = [];
+
+		Assert.Empty(pool);
+		Assert.Equal(0, pool.Count);
+
+		Guid entity = Guid.NewGuid();
+		pool.Add(entity, new IntComponent(1));
+		pool.Remove(entity);
+
+		IEnumerator<IntComponent> genericEnumerator = pool.GetEnumerator();
+		Assert.False(genericEnumerator.MoveNext());
+		Assert.Throws<InvalidOperationException>(() => genericEnumerator.Current);
+
+		IEnumerator enumerator = ((IEnumerable)pool).GetEnumerator();
+		Assert.False(enumerator.MoveNext());
+		Assert.Throws<InvalidOperationException>(() => enumerator.Current);
+	}
+
 	[Theory]
 	// 3 will produce capacity of 4, partial fill
 	[InlineData(3)]
