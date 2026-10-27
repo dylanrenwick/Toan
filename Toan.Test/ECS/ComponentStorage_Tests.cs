@@ -241,6 +241,18 @@ public class ComponentStorage_Tests
 		Assert.False(pool.HasEntity(removedEntity));
 		Assert.Equal(entityCount, pool.Get(checkEntity).Value);
 		Assert.Equal(entityCount + 1, pool.Get(movedEntity).Value);
+
+		for (int i = 0; i < entityCount; i++)
+		{
+			Guid entity = entities[i];
+			if (entity == removedEntity || entity == checkEntity || entity == movedEntity)
+			{
+				continue;
+			}
+
+			Assert.True(pool.HasEntity(entity));
+			Assert.Equal(i, pool.Get(entity).Value);
+		}
 	}
 
 	[Fact]
