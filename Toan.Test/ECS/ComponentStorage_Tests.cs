@@ -255,7 +255,7 @@ public class ComponentStorage_Tests
 		Assert.False(genericEnumerator.MoveNext());
 		Assert.Throws<InvalidOperationException>(() => genericEnumerator.Current);
 
-		IEnumerator enumerator = pool.GetEnumerator();
+		IEnumerator enumerator = ((IEnumerable)pool).GetEnumerator();
 		Assert.False(enumerator.MoveNext());
 		Assert.Throws<InvalidOperationException>(() => enumerator.Current);
 	}
@@ -300,7 +300,7 @@ public class ComponentStorage_Tests
 		}
 		Assert.Equal(entityCount, index);
 
-		IEnumerator enumerator = pool.GetEnumerator();
+		IEnumerator enumerator = ((IEnumerable)pool).GetEnumerator();
 		index = 0;
 		while (enumerator.MoveNext())
 		{
@@ -359,7 +359,7 @@ public class ComponentStorage_Tests
 		}
 		Assert.Equal(expectedCount, index);
 
-		IEnumerator enumerator = pool.GetEnumerator();
+		IEnumerator enumerator = ((IEnumerable)pool).GetEnumerator();
 		index = 0;
 		while (enumerator.MoveNext())
 		{
