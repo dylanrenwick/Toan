@@ -205,4 +205,39 @@ public class ComponentStorage_Tests
 			Assert.False(pool.HasEntity(entity));
 		}
 	}
+
+	[Fact]
+	public void AddingComponentToExistingEntityOverwrites()
+	{
+		const int entityCount = 10;
+		Guid[] entities = new Guid[entityCount];
+		ComponentPool<IntComponent> pool = [];
+
+		for (int i = 0; i < entityCount; i++)
+		{
+			Guid entity = Guid.NewGuid();
+			entities[i] = entity;
+			pool.Add(entity, new IntComponent(i));
+		}
+
+		Assert.Equal(entityCount, pool.Count);
+		// Remove first entity to force a move
+		Guid removedEntity = entities[0];
+		Assert.True(pool.Remove(removedEntity));
+		Assert.False(pool.HasEntity(removedEntity));
+
+		Guid checkEntity = entities[1];
+		Guid movedEntity = entities[^1];
+
+		Assert.Equal(1, pool.Get(checkEntity).Value);
+		Assert.Equal(entityCount - 1, pool.Get(movedEntity).Value);
+
+		pool.Add(checkEntity, new IntComponent(entityCount));
+		pool.Add(movedEntity, new IntComponent(entityCount + 1));
+
+		Assert.Equal(entityCount - 1, pool.Count);
+		Assert.False(pool.HasEntity(removedEntity));
+		Assert.Equal(entityCount, pool.Get(checkEntity).Value);
+		Assert.Equal(entityCount + 1, pool.Get(movedEntity).Value);
+	}
 }
