@@ -74,6 +74,50 @@ public class ComponentStorage_Tests
 	}
 
 	[Fact]
+	public void RemovalsPreserveMappings()
+	{
+		// Confirm entities are moved as expected as they are removed, to ensure internal array remains packed
+		const int entityCount = 3;
+		Guid[] entities = new Guid[entityCount];
+		List<Guid> removedEntities = [];
+		ComponentPool<IntComponent> pool = [];
+
+		for (int i = 0; i < entityCount; i++)
+		{
+			Guid entity = Guid.NewGuid();
+			entities[i] = entity;
+			pool.Add(entity, new IntComponent(i));
+		}
+
+		Assert.Equal(entityCount, pool.Count);
+
+		for (int i = 0; i < entityCount; i++)
+		{
+			Guid entity = i == 0
+				? entities[i]
+				: entities[^i];
+
+			Assert.True(pool.Remove(entity));
+			removedEntities.Add(entity);
+			Assert.Equal(entityCount - removedEntities.Count, pool.Count);
+
+			for (int j = 0; j < entityCount; j++)
+			{
+				Guid checkEntity = entities[j];
+				if (removedEntities.Contains(checkEntity))
+				{
+					Assert.False(pool.HasEntity(checkEntity));
+				}
+				else
+				{
+					IntComponent component = pool.Get(checkEntity);
+					Assert.Equal(j, component.Value);
+				}
+			}
+		}
+	}
+
+	[Fact]
 	public void CapacityGrowthPreservesMappings()
 	{
 		// Fill a pool enough to trigger capacity growth
