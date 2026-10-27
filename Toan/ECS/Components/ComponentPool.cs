@@ -73,6 +73,8 @@ public class ComponentPool<TComponent> : IComponentPool, IEnumerable<TComponent>
         {
             var lastLink = _entityLink[LastComponentIndex];
             _components[componentIndex] = _components[LastComponentIndex];
+			_entityLink[componentIndex] = lastLink;
+			_entityLink[LastComponentIndex] = default;
             _entityMappings[lastLink] = componentIndex;
             _entityMappings.Remove(entityId);
         }
