@@ -351,3 +351,5 @@ MigrationBackup/
 .config/
 
 !Toan/Debug/
+
+docs/
