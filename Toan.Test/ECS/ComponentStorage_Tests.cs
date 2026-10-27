@@ -411,6 +411,14 @@ public class ComponentStorage_Tests
 		Assert.True(pool.HasEntity(extantEntity));
 		Assert.Equal(1, pool.Get(extantEntity).Value);
 
+		Assert.True(pool.Remove(extantEntity));
+		Assert.Equal(0, pool.Count);
+
+		Assert.False(pool.Remove(extantEntity));
+		Assert.False(pool.Remove(removedEntity));
+		Assert.False(pool.Remove(missingEntity));
+		Assert.Equal(0, pool.Count);
+
 		// Confirm removals haven't underflowed internal index
 		for (int i = 0; i < 10; i++)
 		{
@@ -418,7 +426,8 @@ public class ComponentStorage_Tests
 			pool.Add(entity, new IntComponent(i + 3));
 		}
 
-		Assert.Equal(11, pool.Count);
+		Assert.Equal(10, pool.Count);
+		Assert.False(pool.HasEntity(extantEntity));
 		Assert.False(pool.HasEntity(removedEntity));
 		Assert.False(pool.HasEntity(missingEntity));
 	}
