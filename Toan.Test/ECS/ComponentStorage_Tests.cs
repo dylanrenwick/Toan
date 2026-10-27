@@ -72,4 +72,93 @@ public class ComponentStorage_Tests
 			}
 		}
 	}
+
+	[Fact]
+	public void CapacityGrowthPreservesMappings()
+	{
+		// Fill a pool enough to trigger capacity growth
+		// Remove several entities
+		// Refill it enough to reuse the removed entities' space, *and* trigger another capacity growth
+		// Verify expected entities remain present and removed entities are removed throughout
+
+		// Due to equality check, pool can never be full
+		// Insert N, where N is a power of 2, resulting in capacity 2N
+		const int initialEntityCount = 4;
+		int valueAccumulator = 0;
+		Dictionary<Guid, int> entities = [];
+		List<Guid> removedEntities = [];
+		ComponentPool<IntComponent> pool = [];
+
+		for (int i = 0; i < initialEntityCount; i++)
+		{
+			Guid entity = Guid.NewGuid();
+			entities.Add(entity, valueAccumulator);
+			pool.Add(entity, new IntComponent(valueAccumulator++));
+		}
+
+		Assert.Equal(entities.Count, pool.Count);
+		for (int i = 0; i < entities.Count; i++)
+		{
+			Guid entity = entities.Keys.ElementAt(i);
+			int expectedValue = entities[entity];
+			IntComponent component = pool.Get(entity);
+
+			Assert.Equal(expectedValue, component.Value);
+		}
+
+		// Removing N/2 entities results in N/2 entityCount and 2N capacity
+		const int entitiesToRemove = initialEntityCount / 2;
+
+		for (int i = 0; i < entitiesToRemove; i++)
+		{
+			Guid entity = entities.Keys.ElementAt(i);
+			entities.Remove(entity);
+			Assert.True(pool.Remove(entity));
+			removedEntities.Add(entity);
+		}
+
+		Assert.Equal(initialEntityCount - entitiesToRemove, pool.Count);
+		Assert.Equal(entities.Count, pool.Count);
+		for (int i = 0; i < entities.Count; i++)
+		{
+			Guid entity = entities.Keys.ElementAt(i);
+			int expectedValue = entities[entity];
+			IntComponent component = pool.Get(entity);
+
+			Assert.Equal(expectedValue, component.Value);
+		}
+
+		for (int i = 0; i < removedEntities.Count; i++)
+		{
+			Guid entity = removedEntities[i];
+			Assert.False(pool.HasEntity(entity));
+		}
+
+		// Adding 2N entities results in 2.5N entities, guarantees capacity growth from previous capacity of 2N
+		const int entitiesToRefill = initialEntityCount * 2;
+
+		for (int i = 0; i < entitiesToRefill; i++)
+		{
+			Guid entity = Guid.NewGuid();
+			entities.Add(entity, valueAccumulator);
+			pool.Add(entity, new IntComponent(valueAccumulator++));
+		}
+
+		Assert.Equal(entitiesToRefill + initialEntityCount - entitiesToRemove, pool.Count);
+		Assert.Equal(entities.Count, pool.Count);
+		for (int i = 0; i < entities.Count; i++)
+		{
+			Guid entity = entities.Keys.ElementAt(i);
+			int expectedValue = entities[entity];
+			IntComponent component = pool.Get(entity);
+
+			Assert.Equal(expectedValue, component.Value);
+		}
+
+		for (int i = 0; i < removedEntities.Count; i++)
+		{
+			Guid entity = removedEntities[i];
+			Assert.False(pool.HasEntity(entity));
+		}
+	}
 }
