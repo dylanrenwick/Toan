@@ -1,3 +1,5 @@
+using System.Collections;
+
 using Toan.ECS.Components;
 
 namespace Toan.Test.ECS;
@@ -239,5 +241,132 @@ public class ComponentStorage_Tests
 		Assert.False(pool.HasEntity(removedEntity));
 		Assert.Equal(entityCount, pool.Get(checkEntity).Value);
 		Assert.Equal(entityCount + 1, pool.Get(movedEntity).Value);
+	}
+
+	[Fact]
+	public void EnumerationOnlyReturnsActiveComponents_Empty()
+	{
+		ComponentPool<IntComponent> pool = [];
+
+		Assert.Empty(pool);
+		Assert.Equal(0, pool.Count);
+
+		IEnumerator<IntComponent> genericEnumerator = pool.GetEnumerator();
+		Assert.False(genericEnumerator.MoveNext());
+		Assert.Throws<InvalidOperationException>(() => genericEnumerator.Current);
+
+		IEnumerator enumerator = pool.GetEnumerator();
+		Assert.False(enumerator.MoveNext());
+		Assert.Throws<InvalidOperationException>(() => enumerator.Current);
+	}
+
+	[Theory]
+	// 3 will produce capacity of 4, partial fill
+	[InlineData(3)]
+	// 4 could produce full capacity
+	// Due to quirk in array resizing, completely full pool is impossible
+	// Last insert will trigger capacity growth
+	// This test retained for regression coverage
+	[InlineData(4)]
+	public void EnumerationOnlyReturnsActiveComponents_Fill(int entityCount)
+	{
+		Guid[] entities = new Guid[entityCount];
+		List<IntComponent> components = [];
+		ComponentPool<IntComponent> pool = [];
+
+		for (int i = 0; i < entityCount; i++)
+		{
+			Guid entity = Guid.NewGuid();
+			entities[i] = entity;
+			IntComponent component = i == 0
+				? default
+				: new IntComponent(i);
+			pool.Add(entity, component);
+			components.Add(component);
+		}
+
+		Assert.Equal(entityCount, pool.Count);
+		Assert.Equal(entityCount, pool.Count());
+
+		IEnumerator<IntComponent> genericEnumerator = pool.GetEnumerator();
+		int index = 0;
+		while (genericEnumerator.MoveNext())
+		{
+			int found = components.IndexOf(genericEnumerator.Current);
+			Assert.True(found >= 0);
+			components.RemoveAt(found);
+			index++;
+		}
+		Assert.Equal(entityCount, index);
+
+		IEnumerator enumerator = pool.GetEnumerator();
+		index = 0;
+		while (enumerator.MoveNext())
+		{
+			IntComponent component = Assert.IsType<IntComponent>(enumerator.Current);
+			int found = components.IndexOf(component);
+			Assert.True(found >= 0);
+			components.RemoveAt(found);
+			index++;
+		}
+		Assert.Equal(entityCount, index);
+	}
+
+	[Fact]
+	public void EnumerationOnlyReturnsActiveComponents_SomeRemoved()
+	{
+		const int entityCount = 5;
+		const int entitiesToRemove = 2;
+		Guid[] entities = new Guid[entityCount];
+		List<IntComponent> components = [];
+		ComponentPool<IntComponent> pool = [];
+
+		for (int i = 0; i < entityCount; i++)
+		{
+			Guid entity = Guid.NewGuid();
+			entities[i] = entity;
+			IntComponent component = i == 0
+				? default
+				: new IntComponent(i);
+			pool.Add(entity, component);
+			components.Add(component);
+		}
+
+		Assert.Equal(entityCount, pool.Count);
+		Assert.Equal(entityCount, pool.Count());
+
+		for (int i = 0; i < entitiesToRemove; i++)
+		{
+			Guid entity = entities[i];
+			pool.Remove(entity);
+			components.RemoveAt(i);
+		}
+
+		const int expectedCount = entityCount - entitiesToRemove;
+		Assert.Equal(expectedCount, pool.Count);
+		Assert.Equal(expectedCount, pool.Count());
+
+		IEnumerator<IntComponent> genericEnumerator = pool.GetEnumerator();
+		int index = 0;
+		while (genericEnumerator.MoveNext())
+		{
+			int found = components.IndexOf(genericEnumerator.Current);
+			Assert.True(found >= 0);
+			components.RemoveAt(found);
+			index++;
+		}
+		Assert.Equal(expectedCount, index);
+
+		IEnumerator enumerator = pool.GetEnumerator();
+		index = 0;
+		while (enumerator.MoveNext())
+		{
+			IntComponent component = Assert.IsType<IntComponent>(enumerator.Current);
+			int found = components.IndexOf(component);
+			Assert.True(found >= 0);
+			components.RemoveAt(found);
+			index++;
+		}
+		Assert.Equal(expectedCount, index);
 	}
 }
