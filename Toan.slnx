@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Toan.Test/Toan.Test.csproj" />
+  <Project Path="Toan/Toan.csproj" />
+</Solution>
