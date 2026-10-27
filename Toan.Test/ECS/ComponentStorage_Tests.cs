@@ -340,7 +340,7 @@ public class ComponentStorage_Tests
 		{
 			Guid entity = entities[i];
 			pool.Remove(entity);
-			components.RemoveAt(i);
+			components.RemoveAt(0);
 		}
 
 		const int expectedCount = entityCount - entitiesToRemove;
