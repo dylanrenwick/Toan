@@ -1,7 +1,44 @@
+using Microsoft.Xna.Framework;
+
 namespace Toan.Test.Physics;
 
 public class Geometry_Tests
 {
+	[Fact]
+	public void Rectangle_ContainsCenter()
+	{
+		FloatRect rect = new(0f, 5f, 10.5f, 10f / 3f);
+		Vector2 center = new(5.75f, 6.66f);
+
+		Assert.True(rect.Contains(center));
+	}
+
+	[Theory]
+	[InlineData(1f, 6f)]
+	[InlineData(10f, 8.33f)]
+	public void Rectangle_ContainsInner(float x, float y)
+	{
+		FloatRect rect = new(0f, 5f, 10.5f, 10f / 3f);
+		Vector2 point = new(x, y);
+
+		Assert.True(rect.Contains(point));
+	}
+
+	[Theory]
+	[InlineData(1f, 0f)]
+	[InlineData(1f, 10f)]
+	[InlineData(-1f, 6f)]
+	[InlineData(12f, 6f)]
+	[InlineData(-1f, 0f)]
+	[InlineData(12f, 10f)]
+	public void Rectangle_DoesntContainOuter(float x, float y)
+	{
+		FloatRect rect = new(0f, 5f, 10.5f, 10f / 3f);
+		Vector2 point = new(x, y);
+
+		Assert.False(rect.Contains(point));
+	}
+
 	[Fact]
 	public void Rectangle_OverlapsSelf()
 	{
