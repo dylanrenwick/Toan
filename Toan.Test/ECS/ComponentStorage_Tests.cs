@@ -380,6 +380,10 @@ public class ComponentStorage_Tests
 		Guid missingEntity = Guid.NewGuid();
 		ComponentPool<IntComponent> pool = [];
 
+		Assert.Equal(0, pool.Count);
+		Assert.False(pool.Remove(missingEntity));
+		Assert.Equal(0, pool.Count);
+
 		pool.Add(removedEntity, new IntComponent(2));
 
 		Assert.Equal(1, pool.Count);
