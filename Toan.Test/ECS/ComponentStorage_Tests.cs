@@ -369,4 +369,51 @@ public class ComponentStorage_Tests
 		}
 		Assert.Equal(expectedCount, index);
 	}
+
+	[Fact]
+	public void RemovingMissingEntitiesDoesNothing()
+	{
+		Guid extantEntity = Guid.NewGuid();
+		Guid removedEntity = Guid.NewGuid();
+		Guid missingEntity = Guid.NewGuid();
+		ComponentPool<IntComponent> pool = [];
+
+		pool.Add(removedEntity, new IntComponent(2));
+
+		Assert.Equal(1, pool.Count);
+		Assert.True(pool.Remove(removedEntity));
+		Assert.Equal(0, pool.Count);
+		pool.Add(extantEntity, new IntComponent(1));
+		Assert.Equal(1, pool.Count);
+
+		Assert.False(pool.HasEntity(removedEntity));
+		Assert.False(pool.HasEntity(missingEntity));
+		Assert.Throws<ArgumentException>(() => pool.Get(removedEntity));
+		Assert.Throws<ArgumentException>(() => pool.Get(missingEntity));
+
+		Assert.False(pool.Remove(missingEntity));
+		Assert.False(pool.Remove(missingEntity));
+		Assert.False(pool.Remove(missingEntity));
+		Assert.False(pool.Remove(missingEntity));
+		Assert.Equal(1, pool.Count);
+		Assert.False(pool.Remove(removedEntity));
+		Assert.False(pool.Remove(removedEntity));
+		Assert.False(pool.Remove(removedEntity));
+		Assert.False(pool.Remove(removedEntity));
+		Assert.Equal(1, pool.Count);
+
+		Assert.True(pool.HasEntity(extantEntity));
+		Assert.Equal(1, pool.Get(extantEntity).Value);
+
+		// Confirm removals haven't underflowed internal index
+		for (int i = 0; i < 10; i++)
+		{
+			Guid entity = Guid.NewGuid();
+			pool.Add(entity, new IntComponent(i + 3));
+		}
+
+		Assert.Equal(11, pool.Count);
+		Assert.False(pool.HasEntity(removedEntity));
+		Assert.False(pool.HasEntity(missingEntity));
+	}
 }
