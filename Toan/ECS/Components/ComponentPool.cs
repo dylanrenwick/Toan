@@ -88,6 +88,45 @@ public class ComponentPool<TComponent> : IComponentPool, IEnumerable<TComponent>
         ? _entityMappings[entityId]
         : LastComponentIndex + 1;
 
-    public IEnumerator<TComponent> GetEnumerator() => ((IEnumerable<TComponent>)_components).GetEnumerator();
-    IEnumerator IEnumerable.GetEnumerator() => _components.GetEnumerator();
+    public IEnumerator<TComponent> GetEnumerator() => new ComponentPoolEnumerator<TComponent>(_components, LastComponentIndex);
+    IEnumerator IEnumerable.GetEnumerator() => new ComponentPoolEnumerator<TComponent>(_components, LastComponentIndex);
+}
+
+public sealed class ComponentPoolEnumerator<TComponent> : IEnumerator, IEnumerator<TComponent>
+	where TComponent : struct
+{
+	private readonly TComponent[] _components;
+	private readonly int _lastIndex;
+
+	private int _index = -1;
+
+	internal ComponentPoolEnumerator(TComponent[] components, int lastIndex)
+	{
+		_components = components;
+		_lastIndex = lastIndex;
+	}
+
+	public TComponent Current => _index >= 0 && _index <= _lastIndex
+		? _components[_index]
+		: throw new InvalidOperationException("");
+
+	object IEnumerator.Current => Current;
+
+	public void Dispose() { }
+
+	public bool MoveNext()
+	{
+		if (_index >= _lastIndex)
+		{
+			return false;
+		}
+
+		_index++;
+		return true;
+	}
+
+	public void Reset()
+	{
+		_index = 0;
+	}
 }

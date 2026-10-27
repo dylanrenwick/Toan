@@ -40,7 +40,7 @@ public struct FloatRect
 
     public bool Contains(Vector2 point)
         => point.X > Left && point.X < Right
-            && point.Y > Bottom && point.Y < Top;
+            && point.Y > Top && point.Y < Bottom;
 
     public FloatRect Offset(Vector2 offset)
         => new FloatRect(Position + offset, Size);
@@ -48,7 +48,7 @@ public struct FloatRect
     public bool Overlaps(FloatRect other)
     {
         return Right > other.Left && Left < other.Right
-            && Top > other.Bottom && Bottom < other.Top;
+            && Top < other.Bottom && Bottom > other.Top;
     }
 
     public Rectangle ToRectangle()
