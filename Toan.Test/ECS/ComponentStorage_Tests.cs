@@ -289,12 +289,13 @@ public class ComponentStorage_Tests
 		Assert.Equal(entityCount, pool.Count());
 
 		IEnumerator<IntComponent> genericEnumerator = pool.GetEnumerator();
+		List<IntComponent> componentsCopy = [..components];
 		int index = 0;
 		while (genericEnumerator.MoveNext())
 		{
-			int found = components.IndexOf(genericEnumerator.Current);
+			int found = componentsCopy.IndexOf(genericEnumerator.Current);
 			Assert.True(found >= 0);
-			components.RemoveAt(found);
+			componentsCopy.RemoveAt(found);
 			index++;
 		}
 		Assert.Equal(entityCount, index);
@@ -347,12 +348,13 @@ public class ComponentStorage_Tests
 		Assert.Equal(expectedCount, pool.Count());
 
 		IEnumerator<IntComponent> genericEnumerator = pool.GetEnumerator();
+		List<IntComponent> componentsCopy = [..components];
 		int index = 0;
 		while (genericEnumerator.MoveNext())
 		{
-			int found = components.IndexOf(genericEnumerator.Current);
+			int found = componentsCopy.IndexOf(genericEnumerator.Current);
 			Assert.True(found >= 0);
-			components.RemoveAt(found);
+			componentsCopy.RemoveAt(found);
 			index++;
 		}
 		Assert.Equal(expectedCount, index);
